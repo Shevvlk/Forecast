@@ -10,9 +10,13 @@
 		A893304F25500C74004C50F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A893304E25500C74004C50F9 /* AppDelegate.swift */; };
 		A893305125500C74004C50F9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A893305025500C74004C50F9 /* SceneDelegate.swift */; };
 		A893305325500C74004C50F9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A893305225500C74004C50F9 /* ViewController.swift */; };
-		A893305625500C74004C50F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A893305425500C74004C50F9 /* Main.storyboard */; };
 		A893305825500C76004C50F9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A893305725500C76004C50F9 /* Assets.xcassets */; };
 		A893305B25500C76004C50F9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A893305925500C76004C50F9 /* LaunchScreen.storyboard */; };
+		A893306625506E1F004C50F9 /* NetworkWeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A893306525506E1F004C50F9 /* NetworkWeatherManager.swift */; };
+		A893306925506E47004C50F9 /* CurrentWeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A893306825506E47004C50F9 /* CurrentWeatherData.swift */; };
+		A893306C25506E69004C50F9 /* CurrentWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = A893306B25506E69004C50F9 /* CurrentWeather.swift */; };
+		A893306F25506E8C004C50F9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A893306E25506E8C004C50F9 /* Constants.swift */; };
+		A893307225506EB4004C50F9 /* ViewController+alertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A893307125506EB4004C50F9 /* ViewController+alertController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,10 +24,14 @@
 		A893304E25500C74004C50F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A893305025500C74004C50F9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		A893305225500C74004C50F9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		A893305525500C74004C50F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A893305725500C76004C50F9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A893305A25500C76004C50F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A893305C25500C76004C50F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A893306525506E1F004C50F9 /* NetworkWeatherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkWeatherManager.swift; sourceTree = "<group>"; };
+		A893306825506E47004C50F9 /* CurrentWeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeatherData.swift; sourceTree = "<group>"; };
+		A893306B25506E69004C50F9 /* CurrentWeather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeather.swift; sourceTree = "<group>"; };
+		A893306E25506E8C004C50F9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		A893307125506EB4004C50F9 /* ViewController+alertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+alertController.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,10 +67,14 @@
 				A893304E25500C74004C50F9 /* AppDelegate.swift */,
 				A893305025500C74004C50F9 /* SceneDelegate.swift */,
 				A893305225500C74004C50F9 /* ViewController.swift */,
-				A893305425500C74004C50F9 /* Main.storyboard */,
 				A893305725500C76004C50F9 /* Assets.xcassets */,
 				A893305925500C76004C50F9 /* LaunchScreen.storyboard */,
 				A893305C25500C76004C50F9 /* Info.plist */,
+				A893306525506E1F004C50F9 /* NetworkWeatherManager.swift */,
+				A893306825506E47004C50F9 /* CurrentWeatherData.swift */,
+				A893306B25506E69004C50F9 /* CurrentWeather.swift */,
+				A893306E25506E8C004C50F9 /* Constants.swift */,
+				A893307125506EB4004C50F9 /* ViewController+alertController.swift */,
 			);
 			path = Forecast;
 			sourceTree = "<group>";
@@ -126,7 +138,6 @@
 			files = (
 				A893305B25500C76004C50F9 /* LaunchScreen.storyboard in Resources */,
 				A893305825500C76004C50F9 /* Assets.xcassets in Resources */,
-				A893305625500C74004C50F9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,21 +150,18 @@
 			files = (
 				A893305325500C74004C50F9 /* ViewController.swift in Sources */,
 				A893304F25500C74004C50F9 /* AppDelegate.swift in Sources */,
+				A893306925506E47004C50F9 /* CurrentWeatherData.swift in Sources */,
 				A893305125500C74004C50F9 /* SceneDelegate.swift in Sources */,
+				A893306F25506E8C004C50F9 /* Constants.swift in Sources */,
+				A893307225506EB4004C50F9 /* ViewController+alertController.swift in Sources */,
+				A893306C25506E69004C50F9 /* CurrentWeather.swift in Sources */,
+				A893306625506E1F004C50F9 /* NetworkWeatherManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		A893305425500C74004C50F9 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A893305525500C74004C50F9 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		A893305925500C76004C50F9 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
