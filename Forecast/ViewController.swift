@@ -1,9 +1,3 @@
-//
-//  ViewController.swift
-//  Forecast
-//
-//  Created by Alexandr on 02.11.2020.
-//
 
 import UIKit
 
@@ -29,6 +23,7 @@ class ViewController: UIViewController {
     
     let weatherIconImageView: UIImageView = {
         let myweatherIconImageView = UIImageView()
+        myweatherIconImageView.contentMode = .scaleAspectFit
         myweatherIconImageView.translatesAutoresizingMaskIntoConstraints = false
         return myweatherIconImageView
     }()
