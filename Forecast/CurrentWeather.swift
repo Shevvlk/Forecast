@@ -7,9 +7,9 @@ struct CurrentWeather {
     let temperature: Double
     var temperatureString: String {
         if  Int(temperature.rounded()) - 273 > 0 {
-            return "+\(Int(temperature.rounded()) - 273)°C"
+            return "+\(Int(temperature.rounded()) - 273)°"
         } else {
-            return "\(Int(temperature.rounded()) - 273)°C"
+            return "\(Int(temperature.rounded()) - 273)°"
         }
     }
     
@@ -34,10 +34,17 @@ struct CurrentWeather {
     }
     
     init?(currentWeatherData: CurrentWeatherData) {
-        cityName = currentWeatherData.name
-        temperature = currentWeatherData.main.temp
-        feelsLikeTemperature = currentWeatherData.main.feelsLike
-        conditionCode = currentWeatherData.weather.first!.id
+        self.cityName = currentWeatherData.name
+        self.temperature = currentWeatherData.main.temp
+        self.feelsLikeTemperature = currentWeatherData.main.feelsLike
+        self.conditionCode = currentWeatherData.weather.first!.id
+    }
+    
+    init(cityName: String, temperature: Double, feelsLikeTemperature: Double, conditionCode: Int ) {
+        self.cityName = cityName
+        self.temperature = temperature
+        self.feelsLikeTemperature = feelsLikeTemperature
+        self.conditionCode = conditionCode
     }
     
 }

@@ -1,7 +1,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class DetailsViewController: UIViewController {
     
     let cityLabel: UILabel = {
         let label = UILabel()

@@ -4,7 +4,6 @@ class NetworkWeatherManager {
     
     var onCompletion: ((CurrentWeather)-> Void)?
     
-    
     func fetchCurrentWeatherManager (forCity city: String)  {
         
         let urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&appid=\(apiKey)"
