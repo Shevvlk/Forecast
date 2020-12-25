@@ -5,6 +5,7 @@ import UIKit
 class ListViewController: UITableViewController {
     
     var currentWeatherArray: [CurrentWeather] = []
+    
     let coreDataService = CoreDataService()
     
     let networkWeatherManager = NetworkWeatherManager()
@@ -12,13 +13,13 @@ class ListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.tableFooterView = UIView()
+        
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "City"
         
-
-        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(searchPressed))
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: nil)
+        self.navigationItem.leftBarButtonItem = self.editButtonItem
 
         tableView.register(CustomListTableViewCell.self, forCellReuseIdentifier: "Cell")
         
@@ -49,8 +50,6 @@ class ListViewController: UITableViewController {
         }
     }
 
-    // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
     
         return 1
@@ -63,16 +62,38 @@ class ListViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? CustomListTableViewCell else { fatalError("Unable to Dequeue Image Table View Cell") }
-
         cell.cityNameLabel.text = currentWeatherArray[indexPath.row].cityName
         cell.weatherImageView.image = UIImage(systemName: currentWeatherArray[indexPath.row].systemIconNameString)
         cell.temperatureLabel.text = currentWeatherArray[indexPath.row].temperatureString
+        cell.dateLabel.text = currentWeatherArray[indexPath.row].dtString
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tabBarController?.selectedIndex = 0
+        let viewControllersFirst = tabBarController?.viewControllers?.first as? DetailsViewController
+        viewControllersFirst?.cityLabel.text = currentWeatherArray[indexPath.row].cityName
+        viewControllersFirst?.temperatureLabel.text = currentWeatherArray[indexPath.row].temperatureString
+        viewControllersFirst?.weatherIconImageView.image = UIImage(systemName: currentWeatherArray[indexPath.row].systemIconNameString)?.withTintColor(.systemBlue, renderingMode: .alwaysOriginal)
+        
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
        return 70
    }
+    
+    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            coreDataService.deleteCity(currentWeather: currentWeatherArray[indexPath.row])
+            currentWeatherArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

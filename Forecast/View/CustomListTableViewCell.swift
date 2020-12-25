@@ -21,6 +21,14 @@ class CustomListTableViewCell: UITableViewCell {
         return label
     }()
     
+    let dateLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Geeza Pro", size: 11)
+        label.textColor =  #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     let temperatureLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Geeza Pro", size: 23)
@@ -28,11 +36,21 @@ class CustomListTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
- 
+    
+    let containerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = true
+        return view
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        containerView.addSubview(cityNameLabel)
+        containerView.addSubview(dateLabel)
         contentView.addSubview(weatherImageView)
-        contentView.addSubview(cityNameLabel)
+        contentView.addSubview(containerView)
         contentView.addSubview(temperatureLabel)
         constraints ()
     }
@@ -47,15 +65,23 @@ class CustomListTableViewCell: UITableViewCell {
         weatherImageView.widthAnchor.constraint(equalToConstant:40).isActive = true
         weatherImageView.bottomAnchor.constraint(equalTo:self.contentView.bottomAnchor, constant: -10).isActive = true
         
-        cityNameLabel.topAnchor.constraint(equalTo:self.contentView.topAnchor).isActive = true
-        cityNameLabel.leadingAnchor.constraint(equalTo:self.weatherImageView.trailingAnchor, constant: 10).isActive = true
-        cityNameLabel.trailingAnchor.constraint(equalTo:self.temperatureLabel.leadingAnchor, constant: -5).isActive = true
-        cityNameLabel.bottomAnchor.constraint(equalTo:self.contentView.bottomAnchor).isActive = true
+        cityNameLabel.topAnchor.constraint(equalTo:self.containerView.topAnchor, constant: 7).isActive = true
+        cityNameLabel.leadingAnchor.constraint(equalTo:self.containerView.leadingAnchor).isActive = true
+        cityNameLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor).isActive = true
+        
+        dateLabel.topAnchor.constraint(equalTo:self.cityNameLabel.lastBaselineAnchor,constant: 8).isActive = true
+        dateLabel.leadingAnchor.constraint(equalTo:self.containerView.leadingAnchor).isActive = true
+        dateLabel.trailingAnchor.constraint(equalTo:self.containerView.trailingAnchor).isActive = true
+        dateLabel.bottomAnchor.constraint(equalTo:self.containerView.bottomAnchor, constant: -6).isActive = true
+        
+        containerView.topAnchor.constraint(equalTo:self.contentView.topAnchor).isActive = true
+        containerView.leadingAnchor.constraint(equalTo:self.weatherImageView.trailingAnchor, constant: 10 ).isActive = true
+        containerView.trailingAnchor.constraint(equalTo:self.temperatureLabel.leadingAnchor, constant: -5).isActive = true
+        containerView.bottomAnchor.constraint(equalTo:self.contentView.bottomAnchor).isActive = true
         
         temperatureLabel.topAnchor.constraint(equalTo:self.contentView.topAnchor).isActive = true
         temperatureLabel.widthAnchor.constraint(equalToConstant: 70).isActive = true
         temperatureLabel.trailingAnchor.constraint(equalTo:self.contentView.trailingAnchor).isActive = true
         temperatureLabel.bottomAnchor.constraint(equalTo:self.contentView.bottomAnchor).isActive = true
-        
     }
 }

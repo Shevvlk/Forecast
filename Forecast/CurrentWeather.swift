@@ -5,21 +5,30 @@ import Foundation
 struct CurrentWeather {
     let cityName: String
     let temperature: Double
+    let feelsLikeTemperature: Double
+    let conditionCode: Int
+    let dt: Date
+    
+    var dtString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.setLocalizedDateFormatFromTemplate("dd, HH:mm")
+        let localDate = dateFormatter.string(from: dt)
+        return localDate
+    }
+    
+    
     var temperatureString: String {
-        if  Int(temperature.rounded()) - 273 > 0 {
+        if Int(temperature.rounded()) - 273 > 0 {
             return "+\(Int(temperature.rounded()) - 273)°"
         } else {
             return "\(Int(temperature.rounded()) - 273)°"
         }
     }
     
-    let feelsLikeTemperature: Double
-    
     var feelsLikeTemperatureString: String {
         return "\(feelsLikeTemperature.rounded())"
     }
-    let conditionCode: Int
-    
+  
     var systemIconNameString: String {
         switch conditionCode {
         case 200...232: return "cloud.bolt.rain.fill"
@@ -38,13 +47,15 @@ struct CurrentWeather {
         self.temperature = currentWeatherData.main.temp
         self.feelsLikeTemperature = currentWeatherData.main.feelsLike
         self.conditionCode = currentWeatherData.weather.first!.id
+        self.dt = currentWeatherData.dt
     }
     
-    init(cityName: String, temperature: Double, feelsLikeTemperature: Double, conditionCode: Int ) {
+    init(cityName: String, temperature: Double, feelsLikeTemperature: Double, conditionCode: Int, dt: Date ) {
         self.cityName = cityName
         self.temperature = temperature
         self.feelsLikeTemperature = feelsLikeTemperature
         self.conditionCode = conditionCode
+        self.dt = dt
     }
     
 }

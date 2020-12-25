@@ -22,7 +22,6 @@ class NetworkWeatherManager {
     func parseJSON (withData data: Data) -> CurrentWeather?  {
         let decoder = JSONDecoder()
         
-        
         do {
             let currentWeatherData = try decoder.decode(CurrentWeatherData.self , from: data)
             guard let currentWeather = CurrentWeather(currentWeatherData: currentWeatherData) else {

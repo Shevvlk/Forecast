@@ -22,5 +22,9 @@ import UIKit
         let tabBarList = [detailsViewController, listViewController]
 
         viewControllers = tabBarList
+        
+        
+//      Отоюражение первого контроллера при запуске приложения 
+        selectedViewController = detailsViewController
     }
  }

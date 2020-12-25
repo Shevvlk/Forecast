@@ -2,7 +2,7 @@
 //  City+CoreDataClass.swift
 //  Forecast
 //
-//  Created by Alexandr on 24.12.2020.
+//  Created by Alexandr on 25.12.2020.
 //
 //
 

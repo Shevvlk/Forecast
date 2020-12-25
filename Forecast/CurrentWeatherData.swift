@@ -5,6 +5,7 @@ struct CurrentWeatherData: Codable   {
     let name:  String
     let main: Main
     let weather: [Weather]
+    let dt: Date
 }
 
 struct Main: Codable {
