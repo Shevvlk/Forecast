@@ -46,7 +46,16 @@ class DetailsViewController: UIViewController {
         return button
     }()
     
-    let networkWeatherManager = NetworkWeatherManager()
+    var currentСityWeather: CurrentСityWeather? {
+        willSet(newValue) {
+            if newValue == nil {
+                lastOpenCity.remove()
+            }
+        }
+    }
+    let networkWeatherManager = NetworkManagerCityWeather()
+    let lastOpenCity = LastOpenCity()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,28 +65,40 @@ class DetailsViewController: UIViewController {
         view.addSubview(weatherIconImageView)
         view.addSubview(temperatureLabel)
         view.addSubview(searchButton)
+        
         exposingConstraint ()
-     
-        searchButton.addTarget(self, action: #selector(searchPressed), for: .touchUpInside)
-        
-        networkWeatherManager.onCompletion = {  [unowned self] currentWeather in
-            self.updateInterfaceWith(weather: currentWeather)
-        }
-        
-        networkWeatherManager.fetchCurrentWeatherManager(forCity: "Moscow")
+ 
     }
     
-    func updateInterfaceWith (weather: CurrentWeather) {
-        DispatchQueue.main.async {
-            self.cityLabel.text = weather.cityName
-            self.temperatureLabel.text = weather.temperatureString
-            self.weatherIconImageView.image = UIImage(systemName: weather.systemIconNameString)?.withTintColor(.systemBlue, renderingMode: .alwaysOriginal)
+    override func viewWillAppear(_ animated: Bool) {
+        if let currentСityWeather = currentСityWeather?.cityName {
+            request(currentСityWeather)
+        } else if let lastOpenCityName = lastOpenCity.getLastOpenCityName() {
+            request(lastOpenCityName)
+        }
+        
+    }
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let currentСityWeather = currentСityWeather {
+            lastOpenCity.saveLastOpenCityName(currentСityWeather: currentСityWeather)
         }
     }
     
-    @objc func searchPressed() {
-        self.presentSearchAlertController(withTitle: "Enter city name", message: nil, style: .alert) { [unowned self] city in
-            self.networkWeatherManager.fetchCurrentWeatherManager(forCity: city)
+    func updateInterfaceWith () {
+        self.cityLabel.text = currentСityWeather?.cityName
+        self.temperatureLabel.text = currentСityWeather?.temperatureString
+        self.weatherIconImageView.image = UIImage(systemName: currentСityWeather?.systemIconNameString ?? "")?.withTintColor(.systemBlue, renderingMode: .alwaysOriginal)
+    }
+    
+    func request(_ city: String) {
+        networkWeatherManager.fetchCurrentWeatherManager(forCity: city) {[weak self] currentWeather in
+            self?.currentСityWeather = currentWeather
+            DispatchQueue.main.async {
+                self?.updateInterfaceWith()
+            }
         }
     }
     
@@ -102,7 +123,6 @@ class DetailsViewController: UIViewController {
         temperatureLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         temperatureLabel.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 30).isActive = true
         temperatureLabel.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -30).isActive = true
-        
         
         searchButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40).isActive = true
         searchButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -40).isActive = true

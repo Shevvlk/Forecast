@@ -1,8 +1,8 @@
 
-
 import Foundation
 
-struct CurrentWeather {
+struct CurrentСityWeather {
+    
     let cityName: String
     let temperature: Double
     let feelsLikeTemperature: Double
@@ -42,7 +42,7 @@ struct CurrentWeather {
         }
     }
     
-    init?(currentWeatherData: CurrentWeatherData) {
+    init?(currentWeatherData: CurrentСityWeatherData) {
         self.cityName = currentWeatherData.name
         self.temperature = currentWeatherData.main.temp
         self.feelsLikeTemperature = currentWeatherData.main.feelsLike

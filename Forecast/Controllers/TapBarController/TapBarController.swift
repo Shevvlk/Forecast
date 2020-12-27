@@ -23,8 +23,7 @@ import UIKit
 
         viewControllers = tabBarList
         
-        
-//      Отоюражение первого контроллера при запуске приложения 
+///      Отображение первого контроллера при запуске приложения
         selectedViewController = detailsViewController
     }
  }

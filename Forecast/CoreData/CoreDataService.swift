@@ -4,7 +4,7 @@ import CoreData
 
 final class CoreDataService: NSObject {
     
-    private let persistentContainer: NSPersistentContainer
+     let persistentContainer: NSPersistentContainer
     private let backgroundContext: NSManagedObjectContext
     
     override init() {
@@ -13,7 +13,7 @@ final class CoreDataService: NSObject {
         backgroundContext = persistentContainer.newBackgroundContext()
     }
     
-    func saveCity(currentWeather: CurrentWeather) {
+    func saveCity(currentWeather: CurrentСityWeather) {
         let context = backgroundContext
         context.perform {
             let city = City(context: context)
@@ -26,18 +26,18 @@ final class CoreDataService: NSObject {
         }
     }
     
-    func getCity() -> [CurrentWeather] {
+    func getCity() -> [CurrentСityWeather] {
         let context = persistentContainer.viewContext
-        var models: [CurrentWeather] = []
+        var models: [CurrentСityWeather] = []
         context.performAndWait {
             let request = NSFetchRequest<City>(entityName: "City")
             let result = try? context.fetch(request)
-            models = result?.map({ return CurrentWeather(cityName: $0.cityName ?? "", temperature: $0.temperature ,feelsLikeTemperature: $0.feelsLikeTemperature , conditionCode: Int($0.conditionCode), dt: $0.dt ?? Date())}) ?? []
+            models = result?.map({ return CurrentСityWeather(cityName: $0.cityName ?? "", temperature: $0.temperature ,feelsLikeTemperature: $0.feelsLikeTemperature , conditionCode: Int($0.conditionCode), dt: $0.dt ?? Date())}) ?? []
         }
         return models
     }
     
-    func deleteCity (currentWeather: CurrentWeather) {
+    func deleteCity (currentWeather: CurrentСityWeather) {
         let context = backgroundContext
         context.perform {
             let request = NSFetchRequest<City>(entityName: "City")
@@ -56,21 +56,8 @@ final class CoreDataService: NSObject {
     }
     
     
-    func rewritingCity (currentWeather: CurrentWeather) {
-//        let context = backgroundContext
-//        let request = NSFetchRequest<City>(entityName: "City")
-//
-//        request.predicate = NSPredicate(format: "ANY cityName = %@", currentWeather.cityName)
-//        
-//        context.perform {
-//            let city = City(context: context)
-//            city.cityName = currentWeather.cityName
-//            city.temperature = currentWeather.temperature
-//            city.conditionCode = Int16(currentWeather.conditionCode)
-//            city.feelsLikeTemperature = currentWeather.feelsLikeTemperature
-//            city.dt = currentWeather.dt
-//            try? context.save()
-//        }
+    func rewritingCity (handler: ()->Void) {
+
     }
     
     
