@@ -58,6 +58,23 @@ class ListViewController: UITableViewController {
                                                                  action: #selector(searchPressed))
         self.navigationItem.leftBarButtonItem = self.editButtonItem
     }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        let receivingManager = ReceivingManager()
+        receivingManager.fetch(cityArray: currentWeatherArray) { (CurrentСityWeatherNew, error) in
+            self.currentWeatherArray = CurrentСityWeatherNew
+            self.tableView.reloadData()
+            print("обновление")
+        }
+    }
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        coreDataService.rewriting(currentWeatherArray: currentWeatherArray)
+    }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
     

@@ -4,7 +4,7 @@ import CoreData
 
 final class CoreDataService: NSObject {
     
-     let persistentContainer: NSPersistentContainer
+    let persistentContainer: NSPersistentContainer
     private let backgroundContext: NSManagedObjectContext
     
     override init() {
@@ -41,10 +41,11 @@ final class CoreDataService: NSObject {
         let context = backgroundContext
         context.perform {
             let request = NSFetchRequest<City>(entityName: "City")
-
+            
             request.predicate = NSPredicate(format: "ANY cityName = %@", currentWeather.cityName)
             
             let result = try! context.fetch(request)
+            
             context.delete(result.first!)
             
             do {
@@ -56,8 +57,24 @@ final class CoreDataService: NSObject {
     }
     
     
-    func rewritingCity (handler: ()->Void) {
-
+    func rewriting (currentWeatherArray:[CurrentСityWeather]) {
+        let context = backgroundContext
+        for currentWeather in currentWeatherArray {
+            context.perform {
+                let request = NSFetchRequest<City>(entityName: "City")
+                request.predicate = NSPredicate(format: "ANY cityName = %@", currentWeather.cityName)
+                let result = try! context.fetch(request)
+                let city = result.first!
+                
+                city.cityName = currentWeather.cityName
+                city.temperature = currentWeather.temperature
+                city.conditionCode = Int16(currentWeather.conditionCode)
+                city.feelsLikeTemperature = currentWeather.feelsLikeTemperature
+                city.dt = currentWeather.dt
+                try? context.save()
+            }
+        }
+        
     }
     
     

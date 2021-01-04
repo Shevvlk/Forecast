@@ -36,16 +36,6 @@ class DetailsViewController: UIViewController {
         return mybackground
     }()
     
-    let searchButton: UIButton = {
-        let button = UIButton()
-        let image = UIImage(systemName: "magnifyingglass.circle")?.withTintColor(#colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1), renderingMode: .alwaysOriginal)
-        button.setImage(image, for: .normal)
-        button.contentHorizontalAlignment = .fill
-        button.contentVerticalAlignment = .fill
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
     var currentСityWeather: CurrentСityWeather? {
         willSet(newValue) {
             if newValue == nil {
@@ -55,8 +45,6 @@ class DetailsViewController: UIViewController {
     }
     let networkWeatherManager = NetworkManagerCityWeather()
     let lastOpenCity = LastOpenCity()
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -64,10 +52,8 @@ class DetailsViewController: UIViewController {
         view.addSubview(cityLabel)
         view.addSubview(weatherIconImageView)
         view.addSubview(temperatureLabel)
-        view.addSubview(searchButton)
-        
+
         exposingConstraint ()
- 
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -110,7 +96,7 @@ class DetailsViewController: UIViewController {
         background.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         background.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
-        cityLabel.topAnchor.constraint(equalTo: view.topAnchor,constant: 50).isActive = true
+        cityLabel.topAnchor.constraint(equalTo: view.topAnchor,constant: 80).isActive = true
         cityLabel.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 30).isActive = true
         cityLabel.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -30).isActive = true
         
@@ -124,11 +110,7 @@ class DetailsViewController: UIViewController {
         temperatureLabel.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 30).isActive = true
         temperatureLabel.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -30).isActive = true
         
-        searchButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40).isActive = true
-        searchButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -40).isActive = true
-        searchButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        searchButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
-    }
+}
     
     
 }
