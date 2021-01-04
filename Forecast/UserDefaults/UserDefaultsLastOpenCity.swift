@@ -1,16 +1,17 @@
 
 import Foundation
 
-class LastOpenCity {
-    
+/// Класс для сохранения, получения и удаления  последнего просмотренного города
+
+class UserDefaultsLastOpenCity: UserDefaultsProtocol {
+   
     let key = "cityName"
     
-    func saveLastOpenCityName (currentСityWeather: CurrentСityWeather) {
-        let cityName = currentСityWeather.cityName
-        UserDefaults.standard.set(cityName, forKey: key)
+    func save (element: String) {
+        UserDefaults.standard.set(element, forKey: key)
     }
     
-    func getLastOpenCityName () -> String? {
+    func get () -> String? {
         let cityName = UserDefaults.standard.string(forKey: key)
         return cityName
     }

@@ -44,7 +44,7 @@ class DetailsViewController: UIViewController {
         }
     }
     let networkWeatherManager = NetworkManagerCityWeather()
-    let lastOpenCity = LastOpenCity()
+    let lastOpenCity = UserDefaultsLastOpenCity()
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -53,13 +53,13 @@ class DetailsViewController: UIViewController {
         view.addSubview(weatherIconImageView)
         view.addSubview(temperatureLabel)
 
-        exposingConstraint ()
+        setupConstraints ()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         if let currentСityWeather = currentСityWeather?.cityName {
             request(currentСityWeather)
-        } else if let lastOpenCityName = lastOpenCity.getLastOpenCityName() {
+        } else if let lastOpenCityName = lastOpenCity.get() {
             request(lastOpenCityName)
         }
         
@@ -69,13 +69,13 @@ class DetailsViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if let currentСityWeather = currentСityWeather {
-            lastOpenCity.saveLastOpenCityName(currentСityWeather: currentСityWeather)
+            lastOpenCity.save(element: currentСityWeather.cityName)
         }
     }
     
     func updateInterfaceWith () {
         self.cityLabel.text = currentСityWeather?.cityName
-        self.temperatureLabel.text = currentСityWeather?.temperatureString
+        self.temperatureLabel.text = currentСityWeather?.temperatureСelsius
         self.weatherIconImageView.image = UIImage(systemName: currentСityWeather?.systemIconNameString ?? "")?.withTintColor(.systemBlue, renderingMode: .alwaysOriginal)
     }
     
@@ -89,7 +89,7 @@ class DetailsViewController: UIViewController {
     }
     
     //  Выставление констрейнтов
-    func exposingConstraint () {
+    func setupConstraints () {
         
         background.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         background.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true

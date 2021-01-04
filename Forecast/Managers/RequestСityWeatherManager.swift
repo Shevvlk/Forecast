@@ -1,9 +1,6 @@
 
 import Foundation
 
-
-
-
 class RequestСityWeatherManager {
     
     let networkManager = NetworkManager()

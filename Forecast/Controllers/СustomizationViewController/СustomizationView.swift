@@ -1,7 +1,7 @@
 
 import UIKit
 
-class SharePromptView: UIScrollView {
+class СustomizationView: UIScrollView {
     
     let unitsLabel : UILabel = {
         let label = UILabel()
@@ -58,7 +58,7 @@ class SharePromptView: UIScrollView {
     
     
     let temperatureSegmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl ( items : [ "Цельсий" , "Фаренгейт"] )
+        let segmentedControl = UISegmentedControl ( items : ["Цельсий", "Фаренгейт", "Кельвин"] )
         segmentedControl.selectedSegmentIndex = 1
         segmentedControl.tintColor = UIColor.red
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
@@ -66,7 +66,7 @@ class SharePromptView: UIScrollView {
     }()
     
     let windSpeedSegmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl ( items : [ "км/ч", "миль/ч","м/с","Узел"] )
+        let segmentedControl = UISegmentedControl ( items : ["км/ч", "миль/ч","м/с","Узел"] )
         segmentedControl.selectedSegmentIndex = 1
         segmentedControl.tintColor = UIColor.red
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
@@ -74,7 +74,7 @@ class SharePromptView: UIScrollView {
     }()
     
     let pressureSegmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl ( items : [ "гПа", "Дюймы","кПа","мм"] )
+        let segmentedControl = UISegmentedControl ( items : ["гПа", "Дюймы","кПа","мм"] )
         segmentedControl.selectedSegmentIndex = 1
         segmentedControl.tintColor = UIColor.red
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
@@ -82,7 +82,7 @@ class SharePromptView: UIScrollView {
     }()
     
     let precipitationSegmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl ( items : [ "Миллиметры", "Дюймы"] )
+        let segmentedControl = UISegmentedControl ( items : ["Миллиметры", "Дюймы"] )
         segmentedControl.selectedSegmentIndex = 1
         segmentedControl.tintColor = UIColor.red
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
@@ -90,7 +90,7 @@ class SharePromptView: UIScrollView {
     }()
     
     let distanceSegmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl ( items : [ "Километры", "Мили"] )
+        let segmentedControl = UISegmentedControl ( items : ["Километры", "Мили"] )
         segmentedControl.selectedSegmentIndex = 1
         segmentedControl.tintColor = UIColor.red
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
@@ -129,34 +129,33 @@ class SharePromptView: UIScrollView {
         frameView.addSubview(distanceSegmentedControl)
         
         addSubview(frameView)
-        createSubviews()
+        setupConstraints()
 
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        createSubviews()
+        setupConstraints()
     }
 
-    func createSubviews() {
+    func setupConstraints() {
         
         temperatureLabel.topAnchor.constraint(equalTo: frameView.topAnchor,constant: 20).isActive = true
         temperatureLabel.leadingAnchor.constraint(equalTo: frameView.leadingAnchor,constant: 20).isActive = true
         temperatureLabel.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
         temperatureLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
-        temperatureSegmentedControl.topAnchor.constraint(equalTo: temperatureLabel.bottomAnchor,constant: 17).isActive = true
+        temperatureSegmentedControl.topAnchor.constraint(equalTo: temperatureLabel.bottomAnchor,constant: 15).isActive = true
         temperatureSegmentedControl.leadingAnchor.constraint(equalTo: frameView.leadingAnchor,constant: 20).isActive = true
         temperatureSegmentedControl.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
         temperatureSegmentedControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
         
         windSpeedLabel.topAnchor.constraint(equalTo: temperatureSegmentedControl.bottomAnchor,constant: 20).isActive = true
         windSpeedLabel.leadingAnchor.constraint(equalTo: frameView.leadingAnchor,constant: 20).isActive = true
         windSpeedLabel.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
         windSpeedLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
-        windSpeedSegmentedControl.topAnchor.constraint(equalTo: windSpeedLabel.bottomAnchor,constant: 17).isActive = true
+        windSpeedSegmentedControl.topAnchor.constraint(equalTo: windSpeedLabel.bottomAnchor,constant: 15).isActive = true
         windSpeedSegmentedControl.leadingAnchor.constraint(equalTo: frameView.leadingAnchor,constant: 20).isActive = true
         windSpeedSegmentedControl.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
         windSpeedSegmentedControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -166,8 +165,7 @@ class SharePromptView: UIScrollView {
         pressureLabel.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
         pressureLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
-        
-        pressureSegmentedControl.topAnchor.constraint(equalTo: pressureLabel.bottomAnchor,constant: 17).isActive = true
+        pressureSegmentedControl.topAnchor.constraint(equalTo: pressureLabel.bottomAnchor,constant: 15).isActive = true
         pressureSegmentedControl.leadingAnchor.constraint(equalTo: frameView.leadingAnchor,constant: 20).isActive = true
         pressureSegmentedControl.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
         pressureSegmentedControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -177,7 +175,7 @@ class SharePromptView: UIScrollView {
         precipitationLabel.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
         precipitationLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
-        precipitationSegmentedControl.topAnchor.constraint(equalTo: precipitationLabel.bottomAnchor,constant: 17).isActive = true
+        precipitationSegmentedControl.topAnchor.constraint(equalTo: precipitationLabel.bottomAnchor,constant: 15).isActive = true
         precipitationSegmentedControl.leadingAnchor.constraint(equalTo: frameView.leadingAnchor,constant: 20).isActive = true
         precipitationSegmentedControl.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
         precipitationSegmentedControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -187,17 +185,15 @@ class SharePromptView: UIScrollView {
         distanceLabel.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
         distanceLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
-        distanceSegmentedControl.topAnchor.constraint(equalTo: distanceLabel.bottomAnchor,constant: 17).isActive = true
+        distanceSegmentedControl.topAnchor.constraint(equalTo: distanceLabel.bottomAnchor,constant: 15).isActive = true
         distanceSegmentedControl.leadingAnchor.constraint(equalTo: frameView.leadingAnchor,constant: 20).isActive = true
         distanceSegmentedControl.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
         distanceSegmentedControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
         
         frameView.topAnchor.constraint(equalTo: self.topAnchor,constant: 20).isActive = true
         frameView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         frameView.widthAnchor.constraint(equalTo: self.widthAnchor, constant: -40).isActive = true
         frameView.bottomAnchor.constraint(equalTo: self.bottomAnchor,constant: -30).isActive = true
         frameView.heightAnchor.constraint(equalToConstant: 480).isActive = true
-        
     }
 }

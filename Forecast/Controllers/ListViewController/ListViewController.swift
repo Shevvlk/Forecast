@@ -108,7 +108,7 @@ class ListViewController: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? CustomListTableViewCell else { fatalError("Unable to Dequeue Image Table View Cell") }
         cell.cityNameLabel.text = currentWeatherArray[indexPath.row].cityName
         cell.weatherImageView.image = UIImage(systemName: currentWeatherArray[indexPath.row].systemIconNameString)
-        cell.temperatureLabel.text = currentWeatherArray[indexPath.row].temperatureString
+        cell.temperatureLabel.text = currentWeatherArray[indexPath.row].temperatureСelsius
         cell.dateLabel.text = currentWeatherArray[indexPath.row].dtString
         return cell
     }

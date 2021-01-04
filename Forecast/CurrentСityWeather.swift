@@ -3,27 +3,59 @@ import Foundation
 
 struct CurrentСityWeather {
     
+    /// Название города
     let cityName: String
+    /// Температура Кельвин
     let temperature: Double
+    /// Температура.Этот температурный параметр объясняет человеческое восприятие погоды. Кельвин
     let feelsLikeTemperature: Double
+    /// Идентификатор погодных условий
     let conditionCode: Int
-    let dt: Date
+    /// Время расчета данных, unix, UTC
+    let date: Date
+    /// Атмосферное давление гПа
+    let pressure: Int
+    /// Влажность %
+    let humidity: Int
+    /// Облачность %
+    let all: Int
+    /// Скорость ветра м/с
+    let speed: Double
     
     var dtString: String {
         let dateFormatter = DateFormatter()
         dateFormatter.setLocalizedDateFormatFromTemplate("dd, HH:mm")
-        let localDate = dateFormatter.string(from: dt)
+        let localDate = dateFormatter.string(from: date)
         return localDate
     }
     
     
-    var temperatureString: String {
-        if Int(temperature.rounded()) - 273 > 0 {
-            return "+\(Int(temperature.rounded()) - 273)°"
+    var temperatureСelsius: String {
+        let temp = Int(temperature.rounded()) - 273
+        if temp > 0 {
+            return "+\(temp)°C"
         } else {
-            return "\(Int(temperature.rounded()) - 273)°"
+            return "\(temp)°C"
         }
     }
+    
+    var temperatureKelvin: String {
+        let temp = Int(temperature.rounded())
+            return "\(temp)K"
+    }
+    
+    var temperatureFahrenheit: String {
+        let temp = Int(temperature * 1.8 - 459)
+        if temp > 0 {
+            return "+\(temp)°F"
+        } else {
+            return "\(temp)°F"
+        }
+    }
+    
+    
+    
+    
     
     var feelsLikeTemperatureString: String {
         return "\(feelsLikeTemperature.rounded())"
@@ -47,15 +79,23 @@ struct CurrentСityWeather {
         self.temperature = currentWeatherData.main.temp
         self.feelsLikeTemperature = currentWeatherData.main.feelsLike
         self.conditionCode = currentWeatherData.weather.first!.id
-        self.dt = currentWeatherData.dt
+        self.date = currentWeatherData.dt
+        self.pressure = currentWeatherData.main.pressure
+        self.humidity = currentWeatherData.main.humidity
+        self.all = currentWeatherData.clouds.all
+        self.speed = currentWeatherData.wind.speed
     }
     
-    init(cityName: String, temperature: Double, feelsLikeTemperature: Double, conditionCode: Int, dt: Date ) {
+    init(cityName: String, temperature: Double, feelsLikeTemperature: Double, conditionCode: Int, date: Date, pressure: Int, humidity: Int, all: Int,speed: Double) {
         self.cityName = cityName
         self.temperature = temperature
         self.feelsLikeTemperature = feelsLikeTemperature
         self.conditionCode = conditionCode
-        self.dt = dt
+        self.date = date
+        self.pressure = pressure
+        self.humidity = humidity
+        self.all = all
+        self.speed = speed
     }
     
 }

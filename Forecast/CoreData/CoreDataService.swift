@@ -21,7 +21,11 @@ final class CoreDataService: NSObject {
             city.temperature = currentWeather.temperature
             city.conditionCode = Int16(currentWeather.conditionCode)
             city.feelsLikeTemperature = currentWeather.feelsLikeTemperature
-            city.dt = currentWeather.dt
+            city.date = currentWeather.date
+            city.all = Int16(currentWeather.all)
+            city.pressure = Int16(currentWeather.pressure)
+            city.humidity = Int16(currentWeather.humidity)
+            city.speed = currentWeather.speed
             try? context.save()
         }
     }
@@ -32,7 +36,7 @@ final class CoreDataService: NSObject {
         context.performAndWait {
             let request = NSFetchRequest<City>(entityName: "City")
             let result = try? context.fetch(request)
-            models = result?.map({ return CurrentСityWeather(cityName: $0.cityName ?? "", temperature: $0.temperature ,feelsLikeTemperature: $0.feelsLikeTemperature , conditionCode: Int($0.conditionCode), dt: $0.dt ?? Date())}) ?? []
+            models = result?.map({ return CurrentСityWeather(cityName: $0.cityName ?? "", temperature: $0.temperature ,feelsLikeTemperature: $0.feelsLikeTemperature , conditionCode: Int($0.conditionCode), date: $0.date ?? Date(),pressure: Int($0.pressure), humidity: Int($0.humidity), all: Int($0.all), speed: $0.speed    )}) ?? []
         }
         return models
     }
@@ -65,12 +69,15 @@ final class CoreDataService: NSObject {
                 request.predicate = NSPredicate(format: "ANY cityName = %@", currentWeather.cityName)
                 let result = try! context.fetch(request)
                 let city = result.first!
-                
                 city.cityName = currentWeather.cityName
                 city.temperature = currentWeather.temperature
                 city.conditionCode = Int16(currentWeather.conditionCode)
                 city.feelsLikeTemperature = currentWeather.feelsLikeTemperature
-                city.dt = currentWeather.dt
+                city.date = currentWeather.date
+                city.all = Int16(currentWeather.all)
+                city.pressure = Int16(currentWeather.pressure)
+                city.humidity = Int16(currentWeather.humidity)
+                city.speed = currentWeather.speed
                 try? context.save()
             }
         }
