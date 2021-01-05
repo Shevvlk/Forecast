@@ -53,10 +53,6 @@ struct CurrentСityWeather {
         }
     }
     
-    
-    
-    
-    
     var feelsLikeTemperatureString: String {
         return "\(feelsLikeTemperature.rounded())"
     }

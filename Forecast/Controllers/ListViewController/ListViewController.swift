@@ -13,6 +13,8 @@ class ListViewController: UITableViewController {
 
     private weak var viewControllerFirst: DetailsViewController? = nil
     
+    private let customizationOfDataDisplay = CustomizationOfDataDisplay()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -61,7 +63,7 @@ class ListViewController: UITableViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        self.tableView.reloadData()
         let receivingManager = ReceivingManager()
         receivingManager.fetch(cityArray: currentWeatherArray) { (CurrentСityWeatherNew, error) in
             self.currentWeatherArray = CurrentСityWeatherNew
@@ -87,6 +89,7 @@ class ListViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
        return 70
    }
     
@@ -106,9 +109,24 @@ class ListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? CustomListTableViewCell else { fatalError("Unable to Dequeue Image Table View Cell") }
+        
+        customizationOfDataDisplay.key = .temperature
+       
+        let temperatureParametr  = customizationOfDataDisplay.get()
+        
+        switch temperatureParametr {
+        case "C":
+            cell.temperatureLabel.text = currentWeatherArray[indexPath.row].temperatureСelsius
+        case "F":
+            cell.temperatureLabel.text = currentWeatherArray[indexPath.row].temperatureFahrenheit
+        case "K":
+            cell.temperatureLabel.text = currentWeatherArray[indexPath.row].temperatureKelvin
+        default:
+            cell.temperatureLabel.text = currentWeatherArray[indexPath.row].temperatureСelsius
+        }
+        
         cell.cityNameLabel.text = currentWeatherArray[indexPath.row].cityName
         cell.weatherImageView.image = UIImage(systemName: currentWeatherArray[indexPath.row].systemIconNameString)
-        cell.temperatureLabel.text = currentWeatherArray[indexPath.row].temperatureСelsius
         cell.dateLabel.text = currentWeatherArray[indexPath.row].dtString
         return cell
     }

@@ -1,12 +1,23 @@
 
 import UIKit
 
+protocol SelectedValueViewDelegate: AnyObject {
+    
+    func selectedValueTemperature(target: UISegmentedControl)
+    func selectedValueWindSpeed(target: UISegmentedControl)
+    func selectedValuePressure(target: UISegmentedControl)
+    func selectedValuePrecipitation(target: UISegmentedControl)
+    func selectedValueDistance (target: UISegmentedControl)
+    
+}
+
 class СustomizationView: UIScrollView {
+    
+    weak var delegateView: SelectedValueViewDelegate?
     
     let unitsLabel : UILabel = {
         let label = UILabel()
         label.text = "Единицы измерения"
-        label.font.withSize(20)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -112,8 +123,7 @@ class СustomizationView: UIScrollView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-       
-
+        
         self.backgroundColor = .white
         
         frameView.addSubview(temperatureLabel)
@@ -129,16 +139,32 @@ class СustomizationView: UIScrollView {
         frameView.addSubview(distanceSegmentedControl)
         
         addSubview(frameView)
+        addSubview(unitsLabel)
+        
+        setupActions()
         setupConstraints()
-
+        
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupConstraints()
     }
-
+    
+    
+    private func setupActions() {
+        temperatureSegmentedControl.addTarget(self, action: #selector(selectedValueTemperature), for: .valueChanged)
+        windSpeedSegmentedControl.addTarget(self, action: #selector(selectedValueWindSpeed), for: .valueChanged)
+        precipitationSegmentedControl.addTarget(self, action: #selector(selectedValuePrecipitation), for: .valueChanged)
+        distanceSegmentedControl.addTarget(self, action: #selector(selectedValueDistance), for: .valueChanged)
+        pressureSegmentedControl.addTarget(self, action: #selector(selectedValuePressure), for: .valueChanged)
+    }
+    
     func setupConstraints() {
+        
+        unitsLabel.topAnchor.constraint(equalTo: self.topAnchor,constant: 20).isActive = true
+        unitsLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor,constant: 20).isActive = true
+        unitsLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -20).isActive = true
         
         temperatureLabel.topAnchor.constraint(equalTo: frameView.topAnchor,constant: 20).isActive = true
         temperatureLabel.leadingAnchor.constraint(equalTo: frameView.leadingAnchor,constant: 20).isActive = true
@@ -190,10 +216,46 @@ class СustomizationView: UIScrollView {
         distanceSegmentedControl.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
         distanceSegmentedControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        frameView.topAnchor.constraint(equalTo: self.topAnchor,constant: 20).isActive = true
+        frameView.topAnchor.constraint(equalTo: self.topAnchor,constant: 60).isActive = true
         frameView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         frameView.widthAnchor.constraint(equalTo: self.widthAnchor, constant: -40).isActive = true
         frameView.bottomAnchor.constraint(equalTo: self.bottomAnchor,constant: -30).isActive = true
         frameView.heightAnchor.constraint(equalToConstant: 480).isActive = true
     }
+}
+
+extension СustomizationView {
+    
+    
+    @objc func selectedValueTemperature(target: UISegmentedControl) {
+        if target == self.temperatureSegmentedControl {
+            delegateView?.selectedValueTemperature(target: target)
+        }
+    }
+    
+    @objc func selectedValueWindSpeed(target: UISegmentedControl) {
+        if target == self.windSpeedSegmentedControl {
+            delegateView?.selectedValueWindSpeed(target: target)
+        }
+    }
+    
+    
+    @objc func selectedValuePressure(target: UISegmentedControl) {
+        if target == self.pressureSegmentedControl {
+            delegateView?.selectedValuePressure(target: target)
+        }
+    }
+    
+    @objc func selectedValuePrecipitation(target: UISegmentedControl) {
+        if target == self.precipitationSegmentedControl {
+            delegateView?.selectedValuePrecipitation(target: target)
+        }
+    }
+    
+    @objc func selectedValueDistance(target: UISegmentedControl) {
+        if target == self.distanceSegmentedControl {
+            delegateView?.selectedValueDistance(target: target)
+        }
+    }
+    
 }

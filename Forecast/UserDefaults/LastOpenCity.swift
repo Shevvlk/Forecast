@@ -3,7 +3,7 @@ import Foundation
 
 /// Класс для сохранения, получения и удаления  последнего просмотренного города
 
-class UserDefaultsLastOpenCity: UserDefaultsProtocol {
+class LastOpenCity: UserDefaultsProtocol {
    
     let key = "cityName"
     

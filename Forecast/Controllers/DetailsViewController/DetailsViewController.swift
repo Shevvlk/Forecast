@@ -44,7 +44,7 @@ class DetailsViewController: UIViewController {
         }
     }
     let networkWeatherManager = NetworkManagerCityWeather()
-    let lastOpenCity = UserDefaultsLastOpenCity()
+    let lastOpenCity = LastOpenCity()
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -109,9 +109,6 @@ class DetailsViewController: UIViewController {
         temperatureLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         temperatureLabel.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 30).isActive = true
         temperatureLabel.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -30).isActive = true
-        
 }
-    
-    
 }
 
