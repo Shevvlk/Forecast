@@ -2,6 +2,7 @@
 import Foundation
 
 struct CurrentСityWeatherData: Codable   {
+    
     let name:  String
     let main: Main
     let wind: Wind

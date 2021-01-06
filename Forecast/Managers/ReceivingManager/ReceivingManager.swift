@@ -1,14 +1,18 @@
 
 import Foundation
 
-protocol ReceivingManagerProtocol: class {
-    func fetchCurrentWeatherManager (forCity city: String, completionHandler: @escaping (CurrentСityWeather?, Error?) -> Void)
-}
-
 class ReceivingManager {
     
-    let requestСityWeatherManager = RequestСityWeatherManager()
-
+    let requestСityWeatherManager: CurrentСityWeatherProtocol = CurrentСityWeatherManager()
+    
+    let dispatchGroup = DispatchGroup()
+    
+    let loadOperationQueue: OperationQueue = {
+        let operationQueue = OperationQueue()
+        operationQueue.maxConcurrentOperationCount = 1
+        return operationQueue
+    }()
+    
     
     func fetchCurrentСityWeather (forCity city: String, completionHandler: @escaping (CurrentСityWeather?, Error?) -> Void) {
         
@@ -19,27 +23,30 @@ class ReceivingManager {
     }
     
     
-    
     func fetch (cityArray: [CurrentСityWeather], completionHandler: @escaping ([CurrentСityWeather], Error?) -> Void) {
         
-        let dispatchGroup = DispatchGroup()
         var cityArrayNew: [CurrentСityWeather] = []
-        let loadQueue = OperationQueue()
-        
-        loadQueue.maxConcurrentOperationCount = 1
         
         for city in cityArray {
             
-            let loadOperation = LoadOperation(cityName: city.cityName)
+            let currentСityWeatherManager = CurrentСityWeatherManager()
+            
+            let loadOperation = LoadOperation(cityName: city.cityName, currentСityWeatherManager: currentСityWeatherManager)
+            
             dispatchGroup.enter()
-            loadQueue.addOperation(loadOperation)
-            loadOperation.completionBlock = {
+            
+            loadOperationQueue.addOperation(loadOperation)
+            
+            loadOperation.completionBlock = { [weak self] in
                 guard let currentСityWeather = loadOperation.currentСityWeather
                 else {
+                    cityArrayNew.append(city)
+                    self?.dispatchGroup.leave()
                     return
                 }
+                
                 cityArrayNew.append(currentСityWeather)
-                dispatchGroup.leave()
+                self?.dispatchGroup.leave()
             }
         }
         

@@ -1,7 +1,11 @@
 
 import Foundation
 
-class RequestСityWeatherManager {
+protocol CurrentСityWeatherProtocol {
+    func fetchCurrentСityWeather (forCity city: String, completionHandler: @escaping (CurrentСityWeather?, Error?) -> Void)
+}
+
+class CurrentСityWeatherManager: CurrentСityWeatherProtocol {
     
     let networkManager = NetworkManager()
     let parseManager = ParseManager()
@@ -16,6 +20,7 @@ class RequestСityWeatherManager {
                 completionHandler(nil,error)
                 return
             }
+            
             self?.parseManager.parseJSON(data: date, model: CurrentСityWeatherData.self) { (data, error) in
                 
                 guard let currentСityWeatherData = data, error == nil else {

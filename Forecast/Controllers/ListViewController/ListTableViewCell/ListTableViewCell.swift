@@ -2,7 +2,7 @@
 import UIKit
 
 
-class CustomListTableViewCell: UITableViewCell {
+class ListTableViewCell: UITableViewCell {
     
     /// Метка ячейки
     var weatherImageView: UIImageView = {

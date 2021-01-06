@@ -2,7 +2,7 @@
 import Foundation
 
 
-class CustomAsyncOperation: Operation {
+class AsyncOperation: Operation {
     
     enum State: String {
         case ready, executing, finished
@@ -25,7 +25,7 @@ class CustomAsyncOperation: Operation {
     }
 }
 
-extension CustomAsyncOperation {
+extension AsyncOperation {
     
     override var isReady: Bool {
         return super.isReady && state == .ready

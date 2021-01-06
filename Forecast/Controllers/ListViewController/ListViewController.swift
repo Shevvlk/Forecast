@@ -21,7 +21,7 @@ class ListViewController: UITableViewController {
         viewControllerFirst = tabBarController?.viewControllers?.first as? DetailsViewController
         
         tableView.tableFooterView = UIView()
-        tableView.register(CustomListTableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(ListTableViewCell.self, forCellReuseIdentifier: "Cell")
         
         setupNavigationBar ()
     
@@ -108,7 +108,7 @@ class ListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? CustomListTableViewCell else { fatalError("Unable to Dequeue Image Table View Cell") }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? ListTableViewCell else { fatalError("Unable to Dequeue Image Table View Cell") }
         
         customizationOfDataDisplay.key = .temperature
        
