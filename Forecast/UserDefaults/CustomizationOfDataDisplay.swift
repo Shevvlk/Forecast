@@ -1,18 +1,18 @@
 
 import Foundation
 
-/// Класс для сохранения, получения и удаления выбранных едениц измерения
+/// Класс для сохранения, получения и удаления параметров
 
 class CustomizationOfDataDisplay: UserDefaultsProtocol {
     
-    /// Перечисление настраиваемых едениц измерения 
+    /// Перечисление сохраняемых параметров
     
     enum Parameter: String {
+        case cityName
         case temperature
-        case windSpeed
+        case speed
         case pressure
-        case precipitation
-        case distance
+        case all
     }
    
     var key: Parameter?
@@ -35,5 +35,4 @@ class CustomizationOfDataDisplay: UserDefaultsProtocol {
         
         UserDefaults.standard.removeObject(forKey: key.rawValue)
     }
-    
 }

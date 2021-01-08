@@ -13,14 +13,14 @@ final class CoreDataService: NSObject {
         backgroundContext = persistentContainer.newBackgroundContext()
     }
     
-    func saveCity(currentWeather: CurrentСityWeather) {
+    func saveCity(currentWeather: Сity) {
         let context = backgroundContext
         context.perform {
             let city = City(context: context)
             city.cityName = currentWeather.cityName
             city.temperature = currentWeather.temperature
             city.conditionCode = Int16(currentWeather.conditionCode)
-            city.feelsLikeTemperature = currentWeather.feelsLikeTemperature
+            city.feelsLikeTemperature = currentWeather.feelsLike
             city.date = currentWeather.date
             city.all = Int16(currentWeather.all)
             city.pressure = Int16(currentWeather.pressure)
@@ -30,13 +30,13 @@ final class CoreDataService: NSObject {
         }
     }
     
-    func getCity() -> [CurrentСityWeather] {
+    func getСities() -> [Сity] {
         let context = persistentContainer.viewContext
-        var models: [CurrentСityWeather] = []
+        var models: [Сity] = []
         context.performAndWait {
             let request = NSFetchRequest<City>(entityName: "City")
             let result = try? context.fetch(request)
-            models = result?.map({ return CurrentСityWeather(cityName: $0.cityName ?? "",
+            models = result?.map({ return Сity(cityName: $0.cityName ?? "",
                                                               temperature: $0.temperature ,
                                                               feelsLikeTemperature: $0.feelsLikeTemperature,
                                                               conditionCode: Int($0.conditionCode),
@@ -44,12 +44,12 @@ final class CoreDataService: NSObject {
                                                               pressure: Int($0.pressure),
                                                               humidity: Int($0.humidity),
                                                               all: Int($0.all),
-                                                              speed: $0.speed    )}) ?? []
+                                                              speed: $0.speed)}) ?? []
         }
         return models
     }
     
-    func deleteCity (currentWeather: CurrentСityWeather) {
+    func deleteCity (currentWeather: Сity) {
         let context = backgroundContext
         context.perform {
             let request = NSFetchRequest<City>(entityName: "City")
@@ -69,7 +69,7 @@ final class CoreDataService: NSObject {
     }
     
     
-    func rewriting (currentWeatherArray: [CurrentСityWeather]) {
+    func rewriting (currentWeatherArray: [Сity]) {
         let context = backgroundContext
         for currentWeather in currentWeatherArray {
             context.perform {
@@ -82,7 +82,7 @@ final class CoreDataService: NSObject {
                 city.cityName = currentWeather.cityName
                 city.temperature = currentWeather.temperature
                 city.conditionCode = Int16(currentWeather.conditionCode)
-                city.feelsLikeTemperature = currentWeather.feelsLikeTemperature
+                city.feelsLikeTemperature = currentWeather.feelsLike
                 city.date = currentWeather.date
                 city.all = Int16(currentWeather.all)
                 city.pressure = Int16(currentWeather.pressure)

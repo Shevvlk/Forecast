@@ -81,7 +81,7 @@ class ListTableViewCell: UITableViewCell {
         
         temperatureLabel.topAnchor.constraint(equalTo:self.contentView.topAnchor).isActive = true
         temperatureLabel.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        temperatureLabel.trailingAnchor.constraint(equalTo:self.contentView.trailingAnchor).isActive = true
+        temperatureLabel.trailingAnchor.constraint(equalTo:self.contentView.trailingAnchor, constant: -5).isActive = true
         temperatureLabel.bottomAnchor.constraint(equalTo:self.contentView.bottomAnchor).isActive = true
     }
 }

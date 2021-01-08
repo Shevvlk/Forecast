@@ -9,10 +9,50 @@ class СustomizationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Настройки"
+        title = "Settings"
         navigationController?.navigationBar.prefersLargeTitles = true
-
+        
         view = сustomizationView
+        
+        customizationOfDataDisplay.key = .temperature
+        let temperature = customizationOfDataDisplay.get()
+        
+        switch temperature {
+        case "F":
+            сustomizationView.temperatureSegmentedControl.selectedSegmentIndex = 1
+        case "K":
+            сustomizationView.temperatureSegmentedControl.selectedSegmentIndex = 2
+        default:
+            сustomizationView.temperatureSegmentedControl.selectedSegmentIndex = 0
+        }
+        
+        customizationOfDataDisplay.key = .speed
+        let speed = customizationOfDataDisplay.get()
+        
+        switch speed {
+        case "km":
+            сustomizationView.windSpeedSegmentedControl.selectedSegmentIndex = 0
+        case "milie":
+            сustomizationView.windSpeedSegmentedControl.selectedSegmentIndex = 1
+        case "kn":
+            сustomizationView.windSpeedSegmentedControl.selectedSegmentIndex = 3
+        default:
+            сustomizationView.windSpeedSegmentedControl.selectedSegmentIndex = 2
+        }
+        
+        customizationOfDataDisplay.key = .pressure
+        let pressure = customizationOfDataDisplay.get()
+        
+        switch pressure {
+        case "kPa":
+            сustomizationView.pressureSegmentedControl.selectedSegmentIndex = 2
+        case "mm":
+            сustomizationView.pressureSegmentedControl.selectedSegmentIndex = 3
+        case "inch":
+            сustomizationView.pressureSegmentedControl.selectedSegmentIndex = 1
+        default:
+            сustomizationView.pressureSegmentedControl.selectedSegmentIndex = 0
+        }
         
         сustomizationView.delegateView = self
     }
@@ -22,81 +62,64 @@ class СustomizationViewController: UIViewController {
 extension СustomizationViewController: SelectedValueViewDelegate {
     
     func selectedValueTemperature(target: UISegmentedControl) {
+        customizationOfDataDisplay.key = .temperature
         switch target.selectedSegmentIndex {
         case 0:
-            customizationOfDataDisplay.key = .temperature
             customizationOfDataDisplay.save(element: "C")
         case 1:
-            customizationOfDataDisplay.key = .temperature
             customizationOfDataDisplay.save(element: "F")
-
+            
         case 2:
-            customizationOfDataDisplay.key = .temperature
             customizationOfDataDisplay.save(element: "K")
         default:
             break
         }
-        print(target.selectedSegmentIndex)
-        print("selectedValueTemperature")
     }
     
     func selectedValueWindSpeed(target: UISegmentedControl) {
-//        switch target.selectedSegmentIndex {
-//        case 0:
-//            customizationOfDataDisplay.key = .windSpeed
-//            customizationOfDataDisplay.save(element: "км/ч")
-//        case 1:
-//            customizationOfDataDisplay.key = .windSpeed
-//            customizationOfDataDisplay.save(element: "миль/ч")
-//
-//        case 2:
-//            customizationOfDataDisplay.key = .windSpeed
-//            customizationOfDataDisplay.save(element: "м/с")
-//        case 3:
-//            customizationOfDataDisplay.key = .windSpeed
-//            customizationOfDataDisplay.save(element: "Узел")
-//        default:
-//            break
-//        }
-        print(target.selectedSegmentIndex)
-        print("selectedValueWindSpeed")
+        customizationOfDataDisplay.key = .speed
+        switch target.selectedSegmentIndex {
+        case 0:
+            customizationOfDataDisplay.save(element: "km")
+        case 1:
+            customizationOfDataDisplay.save(element: "milie")
+        case 2:
+            customizationOfDataDisplay.save(element: "m")
+        case 3:
+            customizationOfDataDisplay.save(element: "kn")
+        default:
+            break
+        }
     }
     
     func selectedValuePressure(target: UISegmentedControl) {
-//        switch target.selectedSegmentIndex {
-//        case 0:
-//            customizationOfDataDisplay.key = .pressure
-//            customizationOfDataDisplay.save(element: "гПа")
-//        case 1:
-//            customizationOfDataDisplay.key = .pressure
-//            customizationOfDataDisplay.save(element: "Дюймы")
-//
-//        case 2:
-//            customizationOfDataDisplay.key = .pressure
-//            customizationOfDataDisplay.save(element: "кПа")
-//        case 3:
-//            customizationOfDataDisplay.key = .pressure
-//            customizationOfDataDisplay.save(element: "мм")
-//        default:
-//            break
-//        }
-        print(target.selectedSegmentIndex)
-        print("selectedValuePressure")
+        customizationOfDataDisplay.key = .pressure
+        switch target.selectedSegmentIndex {
+        case 0:
+            customizationOfDataDisplay.save(element: "hPa")
+        case 1:
+            customizationOfDataDisplay.save(element: "inch")
+            
+        case 2:
+            customizationOfDataDisplay.save(element: "kPa")
+        case 3:
+            customizationOfDataDisplay.save(element: "mm")
+        default:
+            break
+        }
     }
     
     func selectedValuePrecipitation(target: UISegmentedControl) {
-//        switch target.selectedSegmentIndex {
-//        case 0:
-//            customizationOfDataDisplay.key = .precipitation
-//            customizationOfDataDisplay.save(element: "Миллиметры")
-//        case 1:
-//            customizationOfDataDisplay.key = .pressure
-//            customizationOfDataDisplay.save(element: "Дюймы")
-//        default:
-//            break
-//        }
-        print(target.selectedSegmentIndex)
-        print("selectedValuePrecipitation")
+        //        switch target.selectedSegmentIndex {
+        //        case 0:
+        //            customizationOfDataDisplay.key = .precipitation
+        //            customizationOfDataDisplay.save(element: "Миллиметры")
+        //        case 1:
+        //            customizationOfDataDisplay.key = .pressure
+        //            customizationOfDataDisplay.save(element: "Дюймы")
+        //        default:
+        //            break
+        //        }
     }
     
     func selectedValueDistance(target: UISegmentedControl) {

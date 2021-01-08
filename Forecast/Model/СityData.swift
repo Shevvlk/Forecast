@@ -1,7 +1,7 @@
 
 import Foundation
 
-struct CurrentСityWeatherData: Codable   {
+struct СityData: Codable   {
     
     let name:  String
     let main: Main

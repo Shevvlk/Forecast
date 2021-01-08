@@ -2,7 +2,7 @@
 import Foundation
 
 protocol CurrentСityWeatherProtocol {
-    func fetchCurrentСityWeather (forCity city: String, completionHandler: @escaping (CurrentСityWeather?, Error?) -> Void)
+    func fetchCurrentСityWeather (forCity city: String, completionHandler: @escaping (Сity?, Error?) -> Void)
 }
 
 class CurrentСityWeatherManager: CurrentСityWeatherProtocol {
@@ -10,7 +10,7 @@ class CurrentСityWeatherManager: CurrentСityWeatherProtocol {
     let networkManager = NetworkManager()
     let parseManager = ParseManager()
     
-    func fetchCurrentСityWeather (forCity city: String, completionHandler: @escaping (CurrentСityWeather?, Error?) -> Void) {
+    func fetchCurrentСityWeather (forCity city: String, completionHandler: @escaping (Сity?, Error?) -> Void) {
         
     let urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&appid=\(apiKey)"
         
@@ -21,14 +21,14 @@ class CurrentСityWeatherManager: CurrentСityWeatherProtocol {
                 return
             }
             
-            self?.parseManager.parseJSON(data: date, model: CurrentСityWeatherData.self) { (data, error) in
+            self?.parseManager.parseJSON(data: date, model: СityData.self) { (data, error) in
                 
                 guard let currentСityWeatherData = data, error == nil else {
                     completionHandler(nil,error)
                     return
                 }
                 
-                guard let currentWeather = CurrentСityWeather(currentWeatherData: currentСityWeatherData) else {
+                guard let currentWeather = Сity(currentWeatherData: currentСityWeatherData) else {
                     completionHandler(nil,nil)
                     return
                 }

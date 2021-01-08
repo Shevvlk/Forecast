@@ -5,104 +5,135 @@ import CoreData
 
 class ListViewController: UITableViewController {
     
-    private var currentWeatherArray: [CurrentСityWeather] = []
+    private let coreDataService:            CoreDataService
+    private weak var detailsViewController: DetailsViewController?
+    private let customizationOfDataDisplay: UserDefaultsProtocol
+    private let receivingManager:           ReceivingManagerProtocol
+    private var citiesArray:   [Сity] = []
     
-    private let coreDataService = CoreDataService()
     
-    private let networkWeatherManager = NetworkManagerCityWeather()
-
-    private weak var viewControllerFirst: DetailsViewController? = nil
+    init(receivingManager: ReceivingManagerProtocol,
+         customizationOfDataDisplay: UserDefaultsProtocol,
+         coreDataService: CoreDataService,
+         viewControllerFirst: DetailsViewController) {
+        
+        self.receivingManager = receivingManager
+        self.customizationOfDataDisplay = customizationOfDataDisplay
+        self.coreDataService = coreDataService
+        self.detailsViewController = viewControllerFirst
+        super.init(nibName: nil, bundle: nil)
+        
+    }
     
-    private let customizationOfDataDisplay = CustomizationOfDataDisplay()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewControllerFirst = tabBarController?.viewControllers?.first as? DetailsViewController
         
         tableView.tableFooterView = UIView()
         tableView.register(ListTableViewCell.self, forCellReuseIdentifier: "Cell")
         
         setupNavigationBar ()
-    
-        updateInterfaceWith(weather: nil)
+        getСities ()
     }
     
-    @objc func searchPressed() {
-        self.presentSearchAlertController(withTitle: "Enter city name", message: nil, style: .alert) { [weak self] city in
-            self?.networkWeatherManager.fetchCurrentWeatherManager(forCity: city) { [weak self] currentWeather in
-                self?.updateInterfaceWith(weather: currentWeather)
+    @objc func requestByCityName () {
+        
+        self.presentSearchAlertController(withTitle: "Enter city cityName", message: nil, style: .alert) { [weak self] city in
+            
+            self?.receivingManager.fetchCurrentСityWeather(forCity: city) { [weak self] currentWeather, error  in
+                
+                if let currentWeather = currentWeather{
+                    DispatchQueue.main.async {
+                        self?.addingNewCity(city: currentWeather)
+                    }
+                } else {
+                    /// Получение информации об ошибке
+                    let errorr = error!
+                    print(errorr)
+                }
             }
         }
+        
     }
     
-    func updateInterfaceWith (weather: CurrentСityWeather?) {
-        if let weather = weather {
-            coreDataService.saveCity(currentWeather: weather)
-            currentWeatherArray.append(weather)
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.viewControllerFirst?.currentСityWeather = weather
-                self.viewControllerFirst?.updateInterfaceWith()
-            }
-        } else {
-            self.currentWeatherArray = self.coreDataService.getCity()
-        }
+    func addingNewCity (city: Сity) {
+        coreDataService.saveCity(currentWeather: city)
+        citiesArray.append(city)
+        
+        tableView.reloadData()
+        
+        detailsViewController?.selectedСity = city
+        detailsViewController?.updateInterfaceWith()
+    }
+    
+    
+    func getСities () {
+        self.citiesArray = self.coreDataService.getСities()
     }
     
     
     func setupNavigationBar () {
-///     Большой заголовок
+        ///     Большой заголовок
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "City"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                                  target: self,
-                                                                 action: #selector(searchPressed))
+                                                                 action: #selector(requestByCityName))
         self.navigationItem.leftBarButtonItem = self.editButtonItem
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.reloadData()
-        let receivingManager = ReceivingManager()
-        receivingManager.fetch(cityArray: currentWeatherArray) { (CurrentСityWeatherNew, error) in
-            self.currentWeatherArray = CurrentСityWeatherNew
+        receivingManager.fetchCurrentСitiesWeather(cityArray: citiesArray) { (currentСityWeatherNew, error) in
+            self.citiesArray = currentСityWeatherNew
             self.tableView.reloadData()
-            print("обновление")
         }
     }
     
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        coreDataService.rewriting(currentWeatherArray: currentWeatherArray)
+        coreDataService.rewriting(currentWeatherArray: citiesArray)
     }
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
     
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        
         return 1
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
-        return currentWeatherArray.count
+        
+        return citiesArray.count
     }
-
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-       return 70
-   }
+        return 70
+    }
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .delete
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
         if editingStyle == .delete {
-            coreDataService.deleteCity(currentWeather: currentWeatherArray[indexPath.row])
-            currentWeatherArray.remove(at: indexPath.row)
-            viewControllerFirst?.currentСityWeather = currentWeatherArray.first
-            viewControllerFirst?.updateInterfaceWith()
+            coreDataService.deleteCity(currentWeather: citiesArray[indexPath.row])
+            citiesArray.remove(at: indexPath.row)
+//
+//            if (indexPath.row - 1) < 0 {
+                detailsViewController?.selectedСity = citiesArray.first
+//            } else {
+//                detailsViewController?.city = citiesArray[indexPath.row - 1]
+//            }
+            
+            detailsViewController?.updateInterfaceWith()
+            
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
@@ -110,31 +141,35 @@ class ListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? ListTableViewCell else { fatalError("Unable to Dequeue Image Table View Cell") }
         
-        customizationOfDataDisplay.key = .temperature
-       
-        let temperatureParametr  = customizationOfDataDisplay.get()
+        let customization = customizationOfDataDisplay as! CustomizationOfDataDisplay
+        
+        customization.key = .temperature
+        
+        let temperatureParametr  = customization.get()
         
         switch temperatureParametr {
         case "C":
-            cell.temperatureLabel.text = currentWeatherArray[indexPath.row].temperatureСelsius
+            cell.temperatureLabel.text = citiesArray[indexPath.row].temperatureСelsius
         case "F":
-            cell.temperatureLabel.text = currentWeatherArray[indexPath.row].temperatureFahrenheit
+            cell.temperatureLabel.text = citiesArray[indexPath.row].temperatureFahrenheit
         case "K":
-            cell.temperatureLabel.text = currentWeatherArray[indexPath.row].temperatureKelvin
+            cell.temperatureLabel.text = citiesArray[indexPath.row].temperatureKelvin
         default:
-            cell.temperatureLabel.text = currentWeatherArray[indexPath.row].temperatureСelsius
+            cell.temperatureLabel.text = citiesArray[indexPath.row].temperatureСelsius
         }
         
-        cell.cityNameLabel.text = currentWeatherArray[indexPath.row].cityName
-        cell.weatherImageView.image = UIImage(systemName: currentWeatherArray[indexPath.row].systemIconNameString)
-        cell.dateLabel.text = currentWeatherArray[indexPath.row].dtString
+        cell.cityNameLabel.text = citiesArray[indexPath.row].cityName
+        cell.weatherImageView.image = UIImage(systemName: citiesArray[indexPath.row].systemIconNameString)
+        cell.dateLabel.text = citiesArray[indexPath.row].dtString
+        
         return cell
     }
     
+    /// Переход на DetailsViewController  отображение детальных данных погоды выбранного города)
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewControllerFirst?.currentСityWeather = currentWeatherArray[indexPath.row]
-        viewControllerFirst?.updateInterfaceWith()
+        detailsViewController?.selectedСity = citiesArray[indexPath.row]
+        detailsViewController?.updateInterfaceWith()
         tabBarController?.selectedIndex = 0
     }
-
+    
 }

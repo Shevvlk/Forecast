@@ -1,10 +1,15 @@
 
 import Foundation
 
-class ReceivingManager {
+protocol ReceivingManagerProtocol {
+    func fetchCurrentСityWeather (forCity city: String, completionHandler: @escaping (Сity?, Error?) -> Void)
+    func fetchCurrentСitiesWeather (cityArray: [Сity], completionHandler: @escaping ([Сity], Error?) -> Void)
+}
+
+class ReceivingManager: ReceivingManagerProtocol {
     
     let requestСityWeatherManager: CurrentСityWeatherProtocol = CurrentСityWeatherManager()
-    
+
     let dispatchGroup = DispatchGroup()
     
     let loadOperationQueue: OperationQueue = {
@@ -14,7 +19,7 @@ class ReceivingManager {
     }()
     
     
-    func fetchCurrentСityWeather (forCity city: String, completionHandler: @escaping (CurrentСityWeather?, Error?) -> Void) {
+    func fetchCurrentСityWeather (forCity city: String, completionHandler: @escaping (Сity?, Error?) -> Void) {
         
         requestСityWeatherManager.fetchCurrentСityWeather(forCity: city) { (currentСityWeather, error) in
             completionHandler(currentСityWeather, error)
@@ -23,9 +28,9 @@ class ReceivingManager {
     }
     
     
-    func fetch (cityArray: [CurrentСityWeather], completionHandler: @escaping ([CurrentСityWeather], Error?) -> Void) {
+    func fetchCurrentСitiesWeather (cityArray: [Сity], completionHandler: @escaping ([Сity], Error?) -> Void) {
         
-        var cityArrayNew: [CurrentСityWeather] = []
+        var cityArrayNew: [Сity] = []
         
         for city in cityArray {
             
@@ -44,7 +49,6 @@ class ReceivingManager {
                     self?.dispatchGroup.leave()
                     return
                 }
-                
                 cityArrayNew.append(currentСityWeather)
                 self?.dispatchGroup.leave()
             }

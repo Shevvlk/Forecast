@@ -6,7 +6,7 @@ final class LoadOperation: AsyncOperation {
     
     let cityName: String
     let requestСityWeatherManager: CurrentСityWeatherProtocol?
-    var currentСityWeather: CurrentСityWeather?
+    var currentСityWeather: Сity?
     var error: Error?
     
     
