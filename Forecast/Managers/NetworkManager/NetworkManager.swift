@@ -3,7 +3,7 @@ import Foundation
 
 class NetworkManager {
     
-    let urlSession = URLSession(configuration: .default)
+   private let urlSession = URLSession(configuration: .default)
     
     func fetchRequest (urlString: String, completionHandler: @escaping (Data?, Error?) -> Void)  {
         

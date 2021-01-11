@@ -31,6 +31,7 @@ class ListTableViewCell: UITableViewCell {
     
     let temperatureLabel: UILabel = {
         let label = UILabel()
+        label.textAlignment = .right
         label.font = UIFont(name: "Geeza Pro", size: 23)
         label.textColor =  #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -76,12 +77,12 @@ class ListTableViewCell: UITableViewCell {
         
         containerView.topAnchor.constraint(equalTo:self.contentView.topAnchor).isActive = true
         containerView.leadingAnchor.constraint(equalTo:self.weatherImageView.trailingAnchor, constant: 10 ).isActive = true
-        containerView.trailingAnchor.constraint(equalTo:self.temperatureLabel.leadingAnchor, constant: -5).isActive = true
+        containerView.trailingAnchor.constraint(equalTo:self.temperatureLabel.leadingAnchor, constant: -25).isActive = true
         containerView.bottomAnchor.constraint(equalTo:self.contentView.bottomAnchor).isActive = true
         
         temperatureLabel.topAnchor.constraint(equalTo:self.contentView.topAnchor).isActive = true
-        temperatureLabel.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        temperatureLabel.trailingAnchor.constraint(equalTo:self.contentView.trailingAnchor, constant: -5).isActive = true
+        temperatureLabel.widthAnchor.constraint(equalToConstant: 90).isActive = true
+        temperatureLabel.trailingAnchor.constraint(equalTo:self.contentView.trailingAnchor, constant: -10).isActive = true
         temperatureLabel.bottomAnchor.constraint(equalTo:self.contentView.bottomAnchor).isActive = true
     }
 }

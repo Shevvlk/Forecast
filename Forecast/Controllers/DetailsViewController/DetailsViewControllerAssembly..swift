@@ -9,7 +9,9 @@ final class DetailsViewControllerAssembly {
         let customizationOfDataDisplay = CustomizationOfDataDisplay()
         let receivingManager = ReceivingManager()
        
-        let detailsViewController = DetailsViewController(receivingManager: receivingManager, customizationOfDataDisplay: customizationOfDataDisplay, coreDataService: coreDataService)
+        let detailsViewController = DetailsViewController(receivingManager: receivingManager,
+                                                          customizationOfDataDisplay: customizationOfDataDisplay,
+                                                          coreDataService: coreDataService)
         
         return detailsViewController
     } 

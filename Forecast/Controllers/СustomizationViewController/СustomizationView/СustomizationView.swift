@@ -2,13 +2,11 @@
 import UIKit
 
 protocol SelectedValueViewDelegate: AnyObject {
-    
     func selectedValueTemperature(target: UISegmentedControl)
     func selectedValueWindSpeed(target: UISegmentedControl)
     func selectedValuePressure(target: UISegmentedControl)
     func selectedValuePrecipitation(target: UISegmentedControl)
     func selectedValueDistance (target: UISegmentedControl)
-    
 }
 
 class СustomizationView: UIScrollView {

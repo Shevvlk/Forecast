@@ -59,7 +59,6 @@ class DetailsView: UIView {
         return label
     }()
     
-    
     let pressureName: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 25)
@@ -69,7 +68,6 @@ class DetailsView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
     
     let pressure: UILabel = {
         let label = UILabel()
@@ -137,12 +135,9 @@ class DetailsView: UIView {
         return label
     }()
     
-    
-    
-
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+     
         self.backgroundColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
         
         container.addSubview(feelsLikeTemperatureName)
@@ -162,14 +157,12 @@ class DetailsView: UIView {
         self.addSubview(container)
         
         setupConstraints()
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupConstraints()
     }
-    
     
     func setupConstraints() {
         
@@ -238,3 +231,4 @@ class DetailsView: UIView {
         container.heightAnchor.constraint(equalToConstant:200).isActive = true
     }
 }
+

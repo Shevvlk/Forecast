@@ -3,10 +3,10 @@ import Foundation
 import CoreData
 
 
-extension City {
+extension CityWeather {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<City> {
-        return NSFetchRequest<City>(entityName: "City")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<CityWeather> {
+        return NSFetchRequest<CityWeather>(entityName: "CityWeather")
     }
 
     @NSManaged public var all: Int16
@@ -21,6 +21,6 @@ extension City {
 
 }
 
-extension City : Identifiable {
+extension CityWeather : Identifiable {
 
 }

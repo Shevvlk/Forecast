@@ -9,7 +9,7 @@ class DetailsViewController: UIViewController {
     
     private let detailsView = DetailsView()
     
-    var selectedСity: Сity? {
+    var selectedСityWeatherCopy: СityWeatherCopy? {
         willSet(newValue) {
             if newValue == nil {
                 customizationOfDataDisplay.key = .cityName
@@ -39,37 +39,51 @@ class DetailsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         customizationOfDataDisplay.key = .cityName
-        if let currentСityWeather = selectedСity?.cityName {
-            request(currentСityWeather)
+        
+        if let cityName = selectedСityWeatherCopy?.cityName {
+            request(cityWeatherCopy: cityName)
         } else if let lastOpenCityName = customizationOfDataDisplay.get() {
-            request(lastOpenCityName)
-        }        
+            request(cityWeatherCopy: lastOpenCityName)
+        }
+        
     }
-    
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let city = selectedСity {
+        if let cityWeatherCopy  = selectedСityWeatherCopy {
             customizationOfDataDisplay.key = .cityName
-            customizationOfDataDisplay.save(element: city.cityName)
+            customizationOfDataDisplay.save(element: cityWeatherCopy .cityName)
+        }
+    }
+    
+    func request(cityWeatherCopy: String) {
+        receivingManager.fetchСityWeatherCopy(cityName: cityWeatherCopy) {[weak self] cityWeatherCopy, error  in
+            self?.selectedСityWeatherCopy = cityWeatherCopy
+            DispatchQueue.main.async {
+                self?.updateInterfaceWith()
+            }
         }
     }
     
     func updateInterfaceWith () {
+        
+        detailsView.cityNameLabel.text = selectedСityWeatherCopy?.cityName
+        
+        detailsView.weatherIconImageView.image = UIImage(systemName: selectedСityWeatherCopy?.systemIconNameString ?? "")?.withTintColor(.systemBlue, renderingMode: .alwaysOriginal)
         
         customizationOfDataDisplay.key = .temperature
         let temperature = customizationOfDataDisplay.get()
         
         switch temperature {
         case "F":
-            detailsView.temperatureLabel.text = selectedСity?.temperatureFahrenheit
-            detailsView.feelsLikeTemperature.text = selectedСity?.feelsLikeTemperatureFahrenheit
+            detailsView.temperatureLabel.text = selectedСityWeatherCopy?.temperatureFahrenheit
+            detailsView.feelsLikeTemperature.text = selectedСityWeatherCopy?.feelsLikeTemperatureFahrenheit
         case "K":
-            detailsView.temperatureLabel.text = selectedСity?.temperatureKelvin
-            detailsView.feelsLikeTemperature.text = selectedСity?.feelsLikeTemperatureKelvin
+            detailsView.temperatureLabel.text = selectedСityWeatherCopy?.temperatureKelvin
+            detailsView.feelsLikeTemperature.text = selectedСityWeatherCopy?.feelsLikeTemperatureKelvin
         default:
-            detailsView.temperatureLabel.text = selectedСity?.temperatureСelsius
-            detailsView.feelsLikeTemperature.text = selectedСity?.feelsLikeTemperatureСelsius
+            detailsView.temperatureLabel.text = selectedСityWeatherCopy?.temperatureСelsius
+            detailsView.feelsLikeTemperature.text = selectedСityWeatherCopy?.feelsLikeTemperatureСelsius
         }
         
         customizationOfDataDisplay.key = .speed
@@ -77,13 +91,13 @@ class DetailsViewController: UIViewController {
         
         switch speed {
         case "km":
-            detailsView.speed.text = selectedСity?.speedKM
+            detailsView.speed.text = selectedСityWeatherCopy?.speedKM
         case "milie":
-            detailsView.speed.text = selectedСity?.speedMilie
+            detailsView.speed.text = selectedСityWeatherCopy?.speedMilie
         case "kn":
-            detailsView.speed.text = selectedСity?.speedKn
+            detailsView.speed.text = selectedСityWeatherCopy?.speedKn
         default:
-            detailsView.speed.text = selectedСity?.speedM
+            detailsView.speed.text = selectedСityWeatherCopy?.speedM
         }
         
         customizationOfDataDisplay.key = .pressure
@@ -91,34 +105,19 @@ class DetailsViewController: UIViewController {
         
         switch pressure {
         case "kPa":
-            detailsView.pressure.text = selectedСity?.pressurekPa
+            detailsView.pressure.text = selectedСityWeatherCopy?.pressurekPa
         case "mm":
-            detailsView.pressure.text = selectedСity?.pressureMM
+            detailsView.pressure.text = selectedСityWeatherCopy?.pressureMM
         case "inch":
-            detailsView.pressure.text = selectedСity?.pressureInch
+            detailsView.pressure.text = selectedСityWeatherCopy?.pressureInch
         default:
-            detailsView.pressure.text = selectedСity?.pressurehPa
+            detailsView.pressure.text = selectedСityWeatherCopy?.pressurehPa
         }
         
-        detailsView.humidity.text = selectedСity?.humidityString
+        detailsView.humidity.text = selectedСityWeatherCopy?.humidityString
         
-        detailsView.all.text = selectedСity?.allString
-        
-        
-        detailsView.cityNameLabel.text = selectedСity?.cityName
-        
-        detailsView.weatherIconImageView.image = UIImage(systemName: selectedСity?.systemIconNameString ?? "")?.withTintColor(.systemBlue, renderingMode: .alwaysOriginal)
+        detailsView.all.text = selectedСityWeatherCopy?.allString
     }
     
-    func request(_ city: String) {
-        receivingManager.fetchCurrentСityWeather(forCity: city) {[weak self] currentWeather, error  in
-            self?.selectedСity = currentWeather
-            DispatchQueue.main.async {
-                self?.updateInterfaceWith()
-            }
-        }
-    }
-    
-
 }
 

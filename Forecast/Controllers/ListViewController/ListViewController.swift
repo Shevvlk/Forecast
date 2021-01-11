@@ -9,7 +9,7 @@ class ListViewController: UITableViewController {
     private weak var detailsViewController: DetailsViewController?
     private let customizationOfDataDisplay: UserDefaultsProtocol
     private let receivingManager:           ReceivingManagerProtocol
-    private var citiesArray:   [Сity] = []
+    private var cityWeatherCopyArray:   [СityWeatherCopy] = []
     
     
     init(receivingManager: ReceivingManagerProtocol,
@@ -32,7 +32,8 @@ class ListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        tableView.showsVerticalScrollIndicator = false
+        tableView.separatorInset.left = 60
         tableView.tableFooterView = UIView()
         tableView.register(ListTableViewCell.self, forCellReuseIdentifier: "Cell")
         
@@ -44,11 +45,11 @@ class ListViewController: UITableViewController {
         
         self.presentSearchAlertController(withTitle: "Enter city cityName", message: nil, style: .alert) { [weak self] city in
             
-            self?.receivingManager.fetchCurrentСityWeather(forCity: city) { [weak self] currentWeather, error  in
+            self?.receivingManager.fetchСityWeatherCopy(cityName: city) { [weak self] currentWeatherCopy, error  in
                 
-                if let currentWeather = currentWeather{
+                if let currentWeatherCopy = currentWeatherCopy{
                     DispatchQueue.main.async {
-                        self?.addingNewCity(city: currentWeather)
+                        self?.addingNewCityWeatherCopy(cityWeatherCopy: currentWeatherCopy)
                     }
                 } else {
                     /// Получение информации об ошибке
@@ -60,19 +61,19 @@ class ListViewController: UITableViewController {
         
     }
     
-    func addingNewCity (city: Сity) {
-        coreDataService.saveCity(currentWeather: city)
-        citiesArray.append(city)
+    func addingNewCityWeatherCopy (cityWeatherCopy: СityWeatherCopy) {
+        coreDataService.saveСityWeather(cityWeatherCopy: cityWeatherCopy)
+        cityWeatherCopyArray.append(cityWeatherCopy)
         
         tableView.reloadData()
         
-        detailsViewController?.selectedСity = city
+        detailsViewController?.selectedСityWeatherCopy = cityWeatherCopy
         detailsViewController?.updateInterfaceWith()
     }
     
     
     func getСities () {
-        self.citiesArray = self.coreDataService.getСities()
+        self.cityWeatherCopyArray = self.coreDataService.getСitiesWeatherCopy()
     }
     
     
@@ -89,8 +90,8 @@ class ListViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.reloadData()
-        receivingManager.fetchCurrentСitiesWeather(cityArray: citiesArray) { (currentСityWeatherNew, error) in
-            self.citiesArray = currentСityWeatherNew
+        receivingManager.fetchСitiesWeatherCopy(сityWeatherCopyArray: cityWeatherCopyArray) { (currentCityWeatherCopyArray, error) in
+            self.cityWeatherCopyArray = currentCityWeatherCopyArray
             self.tableView.reloadData()
         }
     }
@@ -98,21 +99,18 @@ class ListViewController: UITableViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        coreDataService.rewriting(currentWeatherArray: citiesArray)
+        coreDataService.rewritingСitiesWeather(cityWeatherCopyArray: cityWeatherCopyArray)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        
         return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return citiesArray.count
+        return cityWeatherCopyArray.count
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
         return 70
     }
     
@@ -123,14 +121,14 @@ class ListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete {
-            coreDataService.deleteCity(currentWeather: citiesArray[indexPath.row])
-            citiesArray.remove(at: indexPath.row)
-//
-//            if (indexPath.row - 1) < 0 {
-                detailsViewController?.selectedСity = citiesArray.first
-//            } else {
-//                detailsViewController?.city = citiesArray[indexPath.row - 1]
-//            }
+            coreDataService.deleteСityWeather(cityWeatherCopy: cityWeatherCopyArray[indexPath.row])
+            cityWeatherCopyArray.remove(at: indexPath.row)
+            //
+            //            if (indexPath.row - 1) < 0 {
+            detailsViewController?.selectedСityWeatherCopy = cityWeatherCopyArray.first
+            //            } else {
+            //                detailsViewController?.city = citiesArray[indexPath.row - 1]
+            //            }
             
             detailsViewController?.updateInterfaceWith()
             
@@ -149,25 +147,25 @@ class ListViewController: UITableViewController {
         
         switch temperatureParametr {
         case "C":
-            cell.temperatureLabel.text = citiesArray[indexPath.row].temperatureСelsius
+            cell.temperatureLabel.text = cityWeatherCopyArray[indexPath.row].temperatureСelsius
         case "F":
-            cell.temperatureLabel.text = citiesArray[indexPath.row].temperatureFahrenheit
+            cell.temperatureLabel.text = cityWeatherCopyArray[indexPath.row].temperatureFahrenheit
         case "K":
-            cell.temperatureLabel.text = citiesArray[indexPath.row].temperatureKelvin
+            cell.temperatureLabel.text = cityWeatherCopyArray[indexPath.row].temperatureKelvin
         default:
-            cell.temperatureLabel.text = citiesArray[indexPath.row].temperatureСelsius
+            cell.temperatureLabel.text = cityWeatherCopyArray[indexPath.row].temperatureСelsius
         }
         
-        cell.cityNameLabel.text = citiesArray[indexPath.row].cityName
-        cell.weatherImageView.image = UIImage(systemName: citiesArray[indexPath.row].systemIconNameString)
-        cell.dateLabel.text = citiesArray[indexPath.row].dtString
+        cell.cityNameLabel.text = cityWeatherCopyArray[indexPath.row].cityName
+        cell.weatherImageView.image = UIImage(systemName: cityWeatherCopyArray[indexPath.row].systemIconNameString)
+        cell.dateLabel.text = cityWeatherCopyArray[indexPath.row].dtString
         
         return cell
     }
     
     /// Переход на DetailsViewController  отображение детальных данных погоды выбранного города)
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        detailsViewController?.selectedСity = citiesArray[indexPath.row]
+        detailsViewController?.selectedСityWeatherCopy = cityWeatherCopyArray[indexPath.row]
         detailsViewController?.updateInterfaceWith()
         tabBarController?.selectedIndex = 0
     }

@@ -5,26 +5,25 @@ import Foundation
 final class LoadOperation: AsyncOperation {
     
     let cityName: String
-    let requestСityWeatherManager: CurrentСityWeatherProtocol?
-    var currentСityWeather: Сity?
-    var error: Error?
+    let currentСityWeatherCopyManager: CurrentСityWeatherCopyProtocol?
+    var cityWeatherCopy: СityWeatherCopy?
     
     
-    init(cityName: String, currentСityWeatherManager: CurrentСityWeatherProtocol)   {
+    init(cityName: String, currentСityWeatherCopyManager: CurrentСityWeatherCopyProtocol)   {
         self.cityName = cityName
-        self.requestСityWeatherManager = currentСityWeatherManager
+        self.currentСityWeatherCopyManager = currentСityWeatherCopyManager
         super.init()
     }
     
     override func main() {
-        requestСityWeatherManager?.fetchCurrentСityWeather(forCity: cityName) { [weak self] (currentСityWeather, error) in
+        currentСityWeatherCopyManager?.fetchCurrentСityWeatherCopy(cityName: cityName) { [weak self] (currentСityWeatherCopy, error) in
             if error == nil {
-                self?.currentСityWeather = currentСityWeather
+                self?.cityWeatherCopy = currentСityWeatherCopy
                 self?.state = .finished
             } else {
-                self?.currentСityWeather = nil
+                self?.cityWeatherCopy = nil
                 self?.state = .finished
-                self?.error = error
+                print(error?.localizedDescription)
             }
         }
     }

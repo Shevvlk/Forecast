@@ -2,60 +2,58 @@
 import Foundation
 
 protocol ReceivingManagerProtocol {
-    func fetchCurrentСityWeather (forCity city: String, completionHandler: @escaping (Сity?, Error?) -> Void)
-    func fetchCurrentСitiesWeather (cityArray: [Сity], completionHandler: @escaping ([Сity], Error?) -> Void)
+    func fetchСityWeatherCopy (cityName: String, completionHandler: @escaping (СityWeatherCopy?, Error?) -> Void)
+    func fetchСitiesWeatherCopy (сityWeatherCopyArray: [СityWeatherCopy], completionHandler: @escaping ([СityWeatherCopy], Error?) -> Void)
 }
 
 class ReceivingManager: ReceivingManagerProtocol {
     
-    let requestСityWeatherManager: CurrentСityWeatherProtocol = CurrentСityWeatherManager()
-
-    let dispatchGroup = DispatchGroup()
-    
-    let loadOperationQueue: OperationQueue = {
+    private let currentСityWeatherCopyManager = CurrentСityWeatherCopyManager()
+    private let dispatchGroup = DispatchGroup()
+    private let loadOperationQueue: OperationQueue = {
         let operationQueue = OperationQueue()
         operationQueue.maxConcurrentOperationCount = 1
         return operationQueue
     }()
     
     
-    func fetchCurrentСityWeather (forCity city: String, completionHandler: @escaping (Сity?, Error?) -> Void) {
+    func fetchСityWeatherCopy (cityName: String, completionHandler: @escaping (СityWeatherCopy?, Error?) -> Void) {
         
-        requestСityWeatherManager.fetchCurrentСityWeather(forCity: city) { (currentСityWeather, error) in
-            completionHandler(currentСityWeather, error)
+        currentСityWeatherCopyManager.fetchCurrentСityWeatherCopy(cityName: cityName) { (cityWeatherCopy, error) in
+            completionHandler(cityWeatherCopy, error)
         }
         
     }
     
     
-    func fetchCurrentСitiesWeather (cityArray: [Сity], completionHandler: @escaping ([Сity], Error?) -> Void) {
+    func fetchСitiesWeatherCopy (сityWeatherCopyArray: [СityWeatherCopy], completionHandler: @escaping ([СityWeatherCopy], Error?) -> Void) {
         
-        var cityArrayNew: [Сity] = []
+        var сityWeatherCopyArrayNew: [СityWeatherCopy] = []
         
-        for city in cityArray {
+        for cityWeatherCopy in сityWeatherCopyArray {
             
-            let currentСityWeatherManager = CurrentСityWeatherManager()
+            let currentСityWeatherCopyManager = CurrentСityWeatherCopyManager()
             
-            let loadOperation = LoadOperation(cityName: city.cityName, currentСityWeatherManager: currentСityWeatherManager)
+            let loadOperation = LoadOperation(cityName: cityWeatherCopy.cityName, currentСityWeatherCopyManager: currentСityWeatherCopyManager)
             
             dispatchGroup.enter()
             
             loadOperationQueue.addOperation(loadOperation)
             
             loadOperation.completionBlock = { [weak self] in
-                guard let currentСityWeather = loadOperation.currentСityWeather
+                guard let currentСityWeatherCopy = loadOperation.cityWeatherCopy
                 else {
-                    cityArrayNew.append(city)
+                    сityWeatherCopyArrayNew.append(cityWeatherCopy)
                     self?.dispatchGroup.leave()
                     return
                 }
-                cityArrayNew.append(currentСityWeather)
+                сityWeatherCopyArrayNew.append(currentСityWeatherCopy)
                 self?.dispatchGroup.leave()
             }
         }
         
         dispatchGroup.notify( queue: DispatchQueue.main) {
-            completionHandler(cityArrayNew, nil)
+            completionHandler(сityWeatherCopyArrayNew, nil)
         }
     }
 }

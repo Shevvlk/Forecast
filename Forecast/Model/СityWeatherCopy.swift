@@ -1,13 +1,13 @@
 
 import Foundation
 
-struct Сity {
+struct СityWeatherCopy {
     
     /// Название города
     let cityName: String
     /// Температура Кельвин
     let temperature: Double
-    /// Температура.Этот температурный параметр объясняет человеческое восприятие погоды. Кельвин
+    /// Температура. Человеческое восприятие погоды. Кельвин
     let feelsLike: Double
     /// Идентификатор погодных условий
     let conditionCode: Int
@@ -29,7 +29,7 @@ struct Сity {
         return localDate
     }
     
-    
+    /// Температура цельсий
     var temperatureСelsius: String {
         let temp = Int(temperature - 273)
         if temp > 0 {
@@ -39,11 +39,13 @@ struct Сity {
         }
     }
     
+    /// Температура кельвин
     var temperatureKelvin: String {
         let temp = Int(temperature)
         return "\(temp) K"
     }
     
+    /// Температура  фаренгейт
     var temperatureFahrenheit: String {
         let temp = Int((temperature * 1.8 - 459))
         if temp > 0 {
@@ -53,6 +55,7 @@ struct Сity {
         }
     }
     
+    /// Температура восприятия цельсий
     var feelsLikeTemperatureСelsius: String {
         let temp = Int(feelsLike - 273 )
         if temp > 0 {
@@ -62,11 +65,13 @@ struct Сity {
         }
     }
     
+    /// Температура восприятия кельвин
     var feelsLikeTemperatureKelvin: String {
         let temp = Int(feelsLike)
         return "\(temp) K"
     }
     
+    /// Температура восприятия фаренгейт
     var feelsLikeTemperatureFahrenheit: String {
         let temp = Int(feelsLike * 1.8 - 459)
         if temp > 0 {
@@ -76,59 +81,70 @@ struct Сity {
         }
     }
     
+    /// Атмосферное давление гектопаскаль
     var pressurehPa: String {
         return "\(pressure) hPa"
     }
     
+    /// Атмосферное давление килопаскаль
     var pressurekPa: String {
         let pressureDouble = Double(pressure)/10
         let pressureString = String(format: "%.1f", pressureDouble)
         return "\(pressureString) kPa"
     }
     
+    /// Атмосферное давление  миллиметры ртутного столба
     var pressureMM: String {
         let pressureDouble = Double(pressure) * 0.750063755419211
         let pressureString = String(format: "%.1f", pressureDouble)
         return "\(pressureString) mm"
     }
     
+    /// Атмосферное давление  дюймы
     var pressureInch: String {
         let pressureDouble = Double(pressure) * 0.02953
         let pressureString = String(format: "%.1f", pressureDouble)
         return "\(pressureString) inch"
     }
     
+    /// Скорость ветра км/ч
     var speedKM: String {
         let speedDouble = speed * 3.6
         let speedString = String(format: "%.1f", speedDouble)
         return "\(speedString) km/h"
     }
     
+    /// Скорость ветра м/с
     var speedM: String {
         let speedString = String(format: "%.1f", speed)
         return "\(speedString) m/c"
     }
     
+    /// Скорость ветра мили/ч
     var speedMilie: String {
         let speedDouble = speed * 2.24
         let speedString = String(format: "%.1f", speedDouble)
         return "\(speedString) milie/h"
     }
     
+    /// Скорость ветра узел
     var speedKn: String {
         let speedDouble = speed * 1.94
         let speedString = String(format: "%.1f", speedDouble)
         return "\(speedString) kn"
     }
     
+    /// Облачность %
     var allString: String {
         return "\(all) %"
     }
     
+    /// Влажность %
     var humidityString : String {
         return "\(humidity) %"
     }
     
+    /// Идентификатор значка погоды
     var systemIconNameString: String {
         switch conditionCode {
         case 200...232: return "cloud.bolt.rain.fill"
@@ -142,19 +158,19 @@ struct Сity {
         }
     }
     
-    init?(currentWeatherData: СityData) {
-        self.cityName = currentWeatherData.name
-        self.temperature = currentWeatherData.main.temp
-        self.feelsLike = currentWeatherData.main.feelsLike
-        self.conditionCode = currentWeatherData.weather.first!.id
-        self.date = currentWeatherData.dt
-        self.pressure = currentWeatherData.main.pressure
-        self.humidity = currentWeatherData.main.humidity
-        self.all = currentWeatherData.clouds.all
-        self.speed = currentWeatherData.wind.speed
+    init?(cityWeatherData: СityWeatherData) {
+        self.cityName = cityWeatherData.name
+        self.temperature = cityWeatherData.main.temp
+        self.feelsLike = cityWeatherData.main.feelsLike
+        self.conditionCode = cityWeatherData.weather.first!.id
+        self.date = cityWeatherData.dt
+        self.pressure = cityWeatherData.main.pressure
+        self.humidity = cityWeatherData.main.humidity
+        self.all = cityWeatherData.clouds.all
+        self.speed = cityWeatherData.wind.speed
     }
     
-    init(cityName: String, temperature: Double, feelsLikeTemperature: Double, conditionCode: Int, date: Date, pressure: Int, humidity: Int, all: Int,speed: Double) {
+    init(cityName:  String, temperature: Double, feelsLikeTemperature: Double, conditionCode: Int, date: Date, pressure: Int, humidity: Int, all: Int,speed: Double) {
         self.cityName = cityName
         self.temperature = temperature
         self.feelsLike = feelsLikeTemperature
