@@ -23,7 +23,7 @@ final class LoadOperation: AsyncOperation {
             } else {
                 self?.cityWeatherCopy = nil
                 self?.state = .finished
-                print(error?.localizedDescription)
+                print(error as! NetworkManagerError)
             }
         }
     }

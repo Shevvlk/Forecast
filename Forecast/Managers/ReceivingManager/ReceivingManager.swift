@@ -3,7 +3,7 @@ import Foundation
 
 protocol ReceivingManagerProtocol {
     func fetchСityWeatherCopy (cityName: String, completionHandler: @escaping (СityWeatherCopy?, Error?) -> Void)
-    func fetchСitiesWeatherCopy (сityWeatherCopyArray: [СityWeatherCopy], completionHandler: @escaping ([СityWeatherCopy], Error?) -> Void)
+    func fetchСitiesWeatherCopy (сityWeatherCopyArray: [СityWeatherCopy], completionHandler: @escaping ([СityWeatherCopy]) -> Void)
 }
 
 class ReceivingManager: ReceivingManagerProtocol {
@@ -26,7 +26,7 @@ class ReceivingManager: ReceivingManagerProtocol {
     }
     
     
-    func fetchСitiesWeatherCopy (сityWeatherCopyArray: [СityWeatherCopy], completionHandler: @escaping ([СityWeatherCopy], Error?) -> Void) {
+    func fetchСitiesWeatherCopy (сityWeatherCopyArray: [СityWeatherCopy], completionHandler: @escaping ([СityWeatherCopy]) -> Void) {
         
         var сityWeatherCopyArrayNew: [СityWeatherCopy] = []
         
@@ -53,7 +53,7 @@ class ReceivingManager: ReceivingManagerProtocol {
         }
         
         dispatchGroup.notify( queue: DispatchQueue.main) {
-            completionHandler(сityWeatherCopyArrayNew, nil)
+            completionHandler(сityWeatherCopyArrayNew)
         }
     }
 }

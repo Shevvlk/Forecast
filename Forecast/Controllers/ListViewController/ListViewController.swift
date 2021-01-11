@@ -90,9 +90,9 @@ class ListViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.reloadData()
-        receivingManager.fetchСitiesWeatherCopy(сityWeatherCopyArray: cityWeatherCopyArray) { (currentCityWeatherCopyArray, error) in
-            self.cityWeatherCopyArray = currentCityWeatherCopyArray
-            self.tableView.reloadData()
+        receivingManager.fetchСitiesWeatherCopy(сityWeatherCopyArray: cityWeatherCopyArray) { [weak self] currentCityWeatherCopyArray   in
+            self?.cityWeatherCopyArray = currentCityWeatherCopyArray
+            self?.tableView.reloadData()
         }
     }
     
@@ -123,12 +123,12 @@ class ListViewController: UITableViewController {
         if editingStyle == .delete {
             coreDataService.deleteСityWeather(cityWeatherCopy: cityWeatherCopyArray[indexPath.row])
             cityWeatherCopyArray.remove(at: indexPath.row)
-            //
-            //            if (indexPath.row - 1) < 0 {
-            detailsViewController?.selectedСityWeatherCopy = cityWeatherCopyArray.first
-            //            } else {
-            //                detailsViewController?.city = citiesArray[indexPath.row - 1]
-            //            }
+            
+            if (indexPath.row - 1) < 0 {
+                detailsViewController?.selectedСityWeatherCopy = cityWeatherCopyArray.first
+            } else {
+                detailsViewController?.selectedСityWeatherCopy = cityWeatherCopyArray[indexPath.row - 1]
+            }
             
             detailsViewController?.updateInterfaceWith()
             

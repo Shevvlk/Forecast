@@ -41,9 +41,30 @@ class DetailsViewController: UIViewController {
         customizationOfDataDisplay.key = .cityName
         
         if let cityName = selectedСityWeatherCopy?.cityName {
-            request(cityWeatherCopy: cityName)
+            request(cityWeatherCopy: cityName) { [weak self] cityWeatherCopy, error  in
+                
+                guard let cityWeatherCopy = cityWeatherCopy else {
+                    print(error as! NetworkManagerError)
+                    return
+                }
+                self?.selectedСityWeatherCopy = cityWeatherCopy
+                DispatchQueue.main.async {
+                    self?.updateInterfaceWith()
+                }
+            }
+            
         } else if let lastOpenCityName = customizationOfDataDisplay.get() {
-            request(cityWeatherCopy: lastOpenCityName)
+            request(cityWeatherCopy: lastOpenCityName) { [weak self] cityWeatherCopy, error  in
+                
+                guard let cityWeatherCopy = cityWeatherCopy else {
+                    print(error as! NetworkManagerError)
+                    return
+                }
+                self?.selectedСityWeatherCopy = cityWeatherCopy
+                DispatchQueue.main.async {
+                    self?.updateInterfaceWith()
+                }
+            }
         }
         
     }
@@ -56,12 +77,9 @@ class DetailsViewController: UIViewController {
         }
     }
     
-    func request(cityWeatherCopy: String) {
-        receivingManager.fetchСityWeatherCopy(cityName: cityWeatherCopy) {[weak self] cityWeatherCopy, error  in
-            self?.selectedСityWeatherCopy = cityWeatherCopy
-            DispatchQueue.main.async {
-                self?.updateInterfaceWith()
-            }
+    func request(cityWeatherCopy: String, completionHandler: @escaping (СityWeatherCopy?, Error?) -> Void) {
+        receivingManager.fetchСityWeatherCopy(cityName: cityWeatherCopy) {cityWeatherCopy, error  in
+            completionHandler(cityWeatherCopy, error)
         }
     }
     

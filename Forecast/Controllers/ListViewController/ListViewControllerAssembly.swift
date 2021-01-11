@@ -1,10 +1,10 @@
 
-import UIKit
+import Foundation
 
 /// Сборщик List контроллера
 final class ListViewControllerAssembly {
     func createViewController(viewControllerFirst:DetailsViewController) -> ListViewController {
-       
+        
         let coreDataService = CoreDataService()
         let customizationOfDataDisplay = CustomizationOfDataDisplay()
         let receivingManager = ReceivingManager()

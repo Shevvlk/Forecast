@@ -1,5 +1,5 @@
 
-import UIKit
+import Foundation
 
 /// Сборщик Details контроллера
 final class DetailsViewControllerAssembly {
@@ -8,7 +8,7 @@ final class DetailsViewControllerAssembly {
         let coreDataService = CoreDataService()
         let customizationOfDataDisplay = CustomizationOfDataDisplay()
         let receivingManager = ReceivingManager()
-       
+        
         let detailsViewController = DetailsViewController(receivingManager: receivingManager,
                                                           customizationOfDataDisplay: customizationOfDataDisplay,
                                                           coreDataService: coreDataService)

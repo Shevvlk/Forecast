@@ -9,7 +9,11 @@ final class CoreDataService: NSObject {
     
     override init() {
         persistentContainer = NSPersistentContainer(name: "CityWeatherModel")
-        persistentContainer.loadPersistentStores(completionHandler: { _, _ in })
+        persistentContainer.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                print(error.localizedDescription)
+            }
+        })
         backgroundContext = persistentContainer.newBackgroundContext()
     }
     

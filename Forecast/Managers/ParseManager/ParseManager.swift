@@ -3,7 +3,7 @@ import Foundation
 
 class ParseManager {
     
-   private let decoder = JSONDecoder()
+    private let decoder = JSONDecoder()
     
     func parseJSON<T:Codable> (data: Data, model: T.Type, completionHandler: @escaping (T?, Error?) -> Void) {
         

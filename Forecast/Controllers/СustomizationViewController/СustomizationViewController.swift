@@ -3,8 +3,8 @@ import UIKit
 
 class СustomizationViewController: UIViewController {
     
-   private let сustomizationView = СustomizationView()
-   private let customizationOfDataDisplay = CustomizationOfDataDisplay ()
+    private let сustomizationView = СustomizationView()
+    private let customizationOfDataDisplay = CustomizationOfDataDisplay ()
     
     override func viewDidLoad() {
         super.viewDidLoad()
