@@ -28,6 +28,7 @@
 		A893306C25506E69004C50F9 /* СityWeatherCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A893306B25506E69004C50F9 /* СityWeatherCopy.swift */; };
 		A893306F25506E8C004C50F9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A893306E25506E8C004C50F9 /* Constants.swift */; };
 		A8B2438625A66F3000C800DF /* ListViewControllerAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B2438525A66F3000C800DF /* ListViewControllerAssembly.swift */; };
+		A8B3EC6625C2379C00CC0D5E /* DetailsViewController+AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B3EC6525C2379C00CC0D5E /* DetailsViewController+AlertController.swift */; };
 		A8B606DF25A5DC1F00962EC7 /* NetworkManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B606DE25A5DC1F00962EC7 /* NetworkManagerError.swift */; };
 		A8D5ADD525948FE900DF72DD /* TapBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D5ADD425948FE900DF72DD /* TapBarController.swift */; };
 		A8D5ADDE2594959500DF72DD /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D5ADDD2594959500DF72DD /* ListViewController.swift */; };
@@ -63,6 +64,7 @@
 		A893306B25506E69004C50F9 /* СityWeatherCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СityWeatherCopy.swift"; sourceTree = "<group>"; };
 		A893306E25506E8C004C50F9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		A8B2438525A66F3000C800DF /* ListViewControllerAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewControllerAssembly.swift; sourceTree = "<group>"; };
+		A8B3EC6525C2379C00CC0D5E /* DetailsViewController+AlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailsViewController+AlertController.swift"; sourceTree = "<group>"; };
 		A8B606DE25A5DC1F00962EC7 /* NetworkManagerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerError.swift; sourceTree = "<group>"; };
 		A8D5ADD425948FE900DF72DD /* TapBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapBarController.swift; sourceTree = "<group>"; };
 		A8D5ADDD2594959500DF72DD /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
@@ -251,6 +253,7 @@
 			children = (
 				A806689925A8722600639F46 /* DetailsViewControllerAssembly..swift */,
 				A893305225500C74004C50F9 /* DetailsViewController.swift */,
+				A8B3EC6525C2379C00CC0D5E /* DetailsViewController+AlertController.swift */,
 				A806689D25A8727500639F46 /* DetailsView */,
 			);
 			path = DetailsViewController;
@@ -350,6 +353,7 @@
 				A8E587492598D58F0087282C /* ListViewController+AlertController.swift in Sources */,
 				A806689A25A8722600639F46 /* DetailsViewControllerAssembly..swift in Sources */,
 				A823483B25A7115100E86EC4 /* DetailsView.swift in Sources */,
+				A8B3EC6625C2379C00CC0D5E /* DetailsViewController+AlertController.swift in Sources */,
 				A893304F25500C74004C50F9 /* AppDelegate.swift in Sources */,
 				A893306925506E47004C50F9 /* СityWeatherData.swift in Sources */,
 				A85F70DE25A08BA800600884 /* LoadOperation.swift in Sources */,

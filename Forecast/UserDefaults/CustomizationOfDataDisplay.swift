@@ -4,8 +4,6 @@ import Foundation
 /// Класс для сохранения, получения и удаления параметров
 class CustomizationOfDataDisplay: UserDefaultsProtocol {
     
-    private let userDefaults = UserDefaults.standard
-    
     /// Перечисление сохраняемых параметров
     enum Parameter: String {
         case cityName
@@ -15,7 +13,9 @@ class CustomizationOfDataDisplay: UserDefaultsProtocol {
         case all
     }
     
+    private let userDefaults = UserDefaults.standard
     var key: Parameter?
+    
     
     func save (element: String) {
         

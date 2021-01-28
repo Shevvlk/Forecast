@@ -31,13 +31,13 @@ class DetailsViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+
+    override func loadView() {
         view = detailsView
     }
     
     override func viewWillAppear(_ animated: Bool) {
+
         customizationOfDataDisplay.key = .cityName
         
         if let cityName = selectedСityWeatherCopy?.cityName {
@@ -47,6 +47,7 @@ class DetailsViewController: UIViewController {
                     print(error as! NetworkManagerError)
                     return
                 }
+                
                 self?.selectedСityWeatherCopy = cityWeatherCopy
                 DispatchQueue.main.async {
                     self?.updateInterfaceWith()
@@ -57,6 +58,9 @@ class DetailsViewController: UIViewController {
             request(cityWeatherCopy: lastOpenCityName) { [weak self] cityWeatherCopy, error  in
                 
                 guard let cityWeatherCopy = cityWeatherCopy else {
+                    DispatchQueue.main.async {
+                        self?.presentNetworkFailureAlert()
+                    } 
                     print(error as! NetworkManagerError)
                     return
                 }
@@ -67,6 +71,10 @@ class DetailsViewController: UIViewController {
             }
         }
         
+    }
+
+    override func viewDidLayoutSubviews() {
+//        self.view.gradientOfView(withColours:.systemBlue,.white)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -133,9 +141,9 @@ class DetailsViewController: UIViewController {
         }
         
         detailsView.humidity.text = selectedСityWeatherCopy?.humidityString
-        
         detailsView.all.text = selectedСityWeatherCopy?.allString
     }
     
 }
+
 

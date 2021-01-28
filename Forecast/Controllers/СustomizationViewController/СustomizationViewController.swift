@@ -6,13 +6,14 @@ class СustomizationViewController: UIViewController {
     private let сustomizationView = СustomizationView()
     private let customizationOfDataDisplay = CustomizationOfDataDisplay ()
     
+    override func loadView() {
+        view = сustomizationView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         title = "Settings"
         navigationController?.navigationBar.prefersLargeTitles = true
-        
-        view = сustomizationView
         сustomizationView.delegateView = self
         installingSegmentedControl()
     }

@@ -12,7 +12,9 @@ class CurrentСityWeatherCopyManager: CurrentСityWeatherCopyProtocol {
     
     func fetchCurrentСityWeatherCopy (cityName: String, completionHandler: @escaping (СityWeatherCopy?, Error?) -> Void) {
         
-        let urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(cityName)&appid=\(apiKey)"
+        let name = cityName.split(separator:" ").joined(separator: "%20")
+        
+        let urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(name)&appid=\(apiKey)"
         
         networkManager.fetchRequest(urlString: urlString) { [weak self] (date, error) in
             

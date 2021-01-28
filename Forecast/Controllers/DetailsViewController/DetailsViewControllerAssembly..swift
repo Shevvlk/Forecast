@@ -3,9 +3,14 @@ import Foundation
 
 /// Сборщик Details контроллера
 final class DetailsViewControllerAssembly {
+    private let coreDataService: CoreDataService
+
+    init(coreDataService: CoreDataService) {
+        self.coreDataService = coreDataService
+    }
+
     func createViewController() -> DetailsViewController {
         
-        let coreDataService = CoreDataService()
         let customizationOfDataDisplay = CustomizationOfDataDisplay()
         let receivingManager = ReceivingManager()
         
@@ -14,5 +19,5 @@ final class DetailsViewControllerAssembly {
                                                           coreDataService: coreDataService)
         
         return detailsViewController
-    } 
+    }
 }

@@ -3,7 +3,7 @@ import Foundation
 
 struct СityWeatherData: Codable   {
     
-    let name:  String
+    let name: String
     let main: Main
     let wind: Wind
     let weather: [Weather]
@@ -15,7 +15,7 @@ struct СityWeatherData: Codable   {
 struct Main: Codable {
     /// Температура Кельвин
     let temp: Double
-    // Температура.Этот температурный параметр объясняет человеческое восприятие погоды. Кельвин
+    /// Температура. Этот температурный параметр объясняет человеческое восприятие погоды. Кельвин
     let feelsLike: Double
     /// Атмосферное давление  гПа
     let pressure: Int

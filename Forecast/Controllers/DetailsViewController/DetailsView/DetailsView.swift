@@ -137,9 +137,14 @@ class DetailsView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-     
-        self.backgroundColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
         
+        let gradient = CAGradientLayer()
+        gradient.frame = self.bounds
+        gradient.colors = [UIColor.white.cgColor, UIColor.black.cgColor]
+
+        self.layer.addSublayer(gradient)
+        
+        self.backgroundColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
         container.addSubview(feelsLikeTemperatureName)
         container.addSubview(feelsLikeTemperature)
         container.addSubview(pressureName)
@@ -156,12 +161,12 @@ class DetailsView: UIView {
         self.addSubview(temperatureLabel)
         self.addSubview(container)
         
+        
         setupConstraints()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        setupConstraints()
     }
     
     func setupConstraints() {
@@ -225,10 +230,38 @@ class DetailsView: UIView {
         speed.rightAnchor.constraint(equalTo: container.rightAnchor,constant: -10).isActive = true
         speed.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
+//        let const = container.topAnchor.constraint(equalTo:  temperatureLabel.bottomAnchor, constant: 30)
+        container.topAnchor.constraint(lessThanOrEqualTo: temperatureLabel.bottomAnchor, constant: 300).isActive = true
         container.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -100).isActive = true
         container.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 7).isActive = true
         container.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -7).isActive = true
         container.heightAnchor.constraint(equalToConstant:200).isActive = true
+        
+        speedName.topAnchor.constraint(equalTo: allName.bottomAnchor, constant: 10).isActive = true
+        speedName.leftAnchor.constraint(equalTo: container.leftAnchor,constant: 10).isActive = true
+        speedName.rightAnchor.constraint(equalTo: pressure.rightAnchor,constant: -5).isActive = true
+        speedName.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        
     }
+}
+
+
+extension UIView {
+   
+    func gradientOfView(withColours: UIColor...) {
+
+        var cgColours = [CGColor]()
+
+        for colour in withColours {
+            cgColours.append(colour.cgColor)
+        }
+        
+        let grad = CAGradientLayer()
+        grad.frame = self.bounds
+        grad.colors = cgColours
+        self.layer.insertSublayer(grad, at: 0)
+    }
+    
 }
 

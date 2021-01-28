@@ -9,7 +9,6 @@ protocol ReceivingManagerProtocol {
 class ReceivingManager: ReceivingManagerProtocol {
     
     private let currentСityWeatherCopyManager = CurrentСityWeatherCopyManager()
-    private let dispatchGroup = DispatchGroup()
     private let loadOperationQueue: OperationQueue = {
         let operationQueue = OperationQueue()
         operationQueue.maxConcurrentOperationCount = 1
@@ -27,7 +26,7 @@ class ReceivingManager: ReceivingManagerProtocol {
     
     
     func fetchСitiesWeatherCopy (сityWeatherCopyArray: [СityWeatherCopy], completionHandler: @escaping ([СityWeatherCopy]) -> Void) {
-        
+
         var сityWeatherCopyArrayNew: [СityWeatherCopy] = []
         
         for cityWeatherCopy in сityWeatherCopyArray {
@@ -35,25 +34,23 @@ class ReceivingManager: ReceivingManagerProtocol {
             let currentСityWeatherCopyManager = CurrentСityWeatherCopyManager()
             
             let loadOperation = LoadOperation(cityName: cityWeatherCopy.cityName, currentСityWeatherCopyManager: currentСityWeatherCopyManager)
-            
-            dispatchGroup.enter()
-            
-            loadOperationQueue.addOperation(loadOperation)
-            
-            loadOperation.completionBlock = { [weak self] in
-                guard let currentСityWeatherCopy = loadOperation.cityWeatherCopy
+
+            loadOperation.completionBlock = { [weak loadOperation] in
+                guard let currentСityWeatherCopy = loadOperation?.cityWeatherCopy
                 else {
                     сityWeatherCopyArrayNew.append(cityWeatherCopy)
-                    self?.dispatchGroup.leave()
                     return
                 }
                 сityWeatherCopyArrayNew.append(currentСityWeatherCopy)
-                self?.dispatchGroup.leave()
             }
+            loadOperationQueue.addOperation(loadOperation)
         }
-        
-        dispatchGroup.notify( queue: DispatchQueue.main) {
-            completionHandler(сityWeatherCopyArrayNew)
+
+        /// для serial queue
+        loadOperationQueue.addOperation {
+            DispatchQueue.main.async {
+                completionHandler(сityWeatherCopyArrayNew)
+            }
         }
     }
 }

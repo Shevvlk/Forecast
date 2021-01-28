@@ -8,6 +8,7 @@ class ListTableViewCell: UITableViewCell {
     var weatherImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = #colorLiteral(red: 0.7244250178, green: 0.8119142652, blue: 0.9637658, alpha: 0.8728561907)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

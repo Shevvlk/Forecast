@@ -5,11 +5,11 @@
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let detailsViewControllerAssembly = DetailsViewControllerAssembly()
+        let coreDataService = CoreDataService()
+        let detailsViewControllerAssembly = DetailsViewControllerAssembly(coreDataService: coreDataService)
         let detailsViewController = detailsViewControllerAssembly.createViewController()
         
-        let listViewControllerAssembly = ListViewControllerAssembly()
+        let listViewControllerAssembly = ListViewControllerAssembly(coreDataService: coreDataService)
         let listViewController = listViewControllerAssembly.createViewController(viewControllerFirst: detailsViewController)
         
         let navigationControllerRootList = UINavigationController(rootViewController: listViewController)

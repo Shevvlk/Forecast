@@ -22,6 +22,7 @@ struct СityWeatherCopy {
     /// Скорость ветра м/с
     let speed: Double
     
+    
     var dtString: String {
         let dateFormatter = DateFormatter()
         dateFormatter.setLocalizedDateFormatFromTemplate("dd, HH:mm")
