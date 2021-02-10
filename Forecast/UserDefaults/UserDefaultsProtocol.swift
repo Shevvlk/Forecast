@@ -2,8 +2,9 @@
 import Foundation
 
 /// Протокол определяющий работу с UserDefaults
-protocol UserDefaultsProtocol {
-    func save (element: String)
-    func get () -> String?
-    func remove ()
+protocol UserDefaultsProtocol{
+    associatedtype ItemType
+    func save (_ element: ItemType, key: ParameterUD)
+    func get (key: ParameterUD) -> ItemType?
+    func remove(key: ParameterUD)
 }

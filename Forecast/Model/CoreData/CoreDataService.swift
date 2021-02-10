@@ -33,6 +33,9 @@ final class CoreDataService: NSObject {
             cityWeather.pressure = Int16(cityWeatherCopy.pressure)
             cityWeather.humidity = Int16(cityWeatherCopy.humidity)
             cityWeather.speed = cityWeatherCopy.speed
+            cityWeather.latitude = cityWeatherCopy.latitude
+            cityWeather.longitude = cityWeatherCopy.longitude
+            cityWeather.descriptionWeather = cityWeatherCopy.description
             
             do {
                 try context.save()
@@ -50,18 +53,43 @@ final class CoreDataService: NSObject {
         context.performAndWait {
             let request = NSFetchRequest<CityWeather>(entityName: "CityWeather")
             let result = try? context.fetch(request)
-            cityWeatherCopyArray = result?.map({ return СityWeatherCopy(cityName: $0.cityName ?? "",
-                                                                         temperature: $0.temperature ,
+            cityWeatherCopyArray = result?.map({ return СityWeatherCopy(cityName: $0.cityName,
+                                                                         temperature: $0.temperature,
                                                                          feelsLikeTemperature: $0.feelsLikeTemperature,
                                                                          conditionCode: Int($0.conditionCode),
-                                                                         date: $0.date ?? Date(),
+                                                                         date: $0.date,
                                                                          pressure: Int($0.pressure),
                                                                          humidity: Int($0.humidity),
                                                                          all: Int($0.all),
-                                                                         speed: $0.speed)}) ?? []
+                                                                         speed: $0.speed,
+                                                                         latitude:  $0.latitude,
+                                                                         longitude: $0.longitude, description: $0.description)}) ?? []
         }
         
         return cityWeatherCopyArray
+    }
+    
+    func getСityWeatherCopy (coordinates: (Double,Double)) -> СityWeatherCopy? {
+        let context = persistentContainer.viewContext
+        
+        var cityWeatherCopy: СityWeatherCopy?
+        
+        context.performAndWait {
+            
+            let request = NSFetchRequest<CityWeather>(entityName: "CityWeather")
+            request.predicate = NSPredicate(format: "latitude = \(coordinates.0) AND longitude = \(coordinates.1)")
+            let result = try? context.fetch(request).first
+            
+            guard let cityWeather = result else {
+                return
+            }
+            
+            cityWeatherCopy = СityWeatherCopy(cityName: cityWeather.cityName , temperature: cityWeather.temperature, feelsLikeTemperature: cityWeather.feelsLikeTemperature, conditionCode: Int(cityWeather.conditionCode), date: cityWeather.date , pressure: Int(cityWeather.pressure), humidity: Int(cityWeather.humidity), all: Int(cityWeather.all), speed: cityWeather.speed,latitude: cityWeather.latitude, longitude: cityWeather.longitude, description: cityWeather.descriptionWeather )
+            
+        }
+        
+        
+        return cityWeatherCopy
     }
     
     
@@ -70,7 +98,7 @@ final class CoreDataService: NSObject {
         
         context.perform {
             let request = NSFetchRequest<CityWeather>(entityName: "CityWeather")
-            request.predicate = NSPredicate(format: "ANY cityName = %@", cityWeatherCopy.cityName)
+            request.predicate = NSPredicate(format: "latitude = \(cityWeatherCopy.latitude) AND longitude = \(cityWeatherCopy.longitude)")
             
             do {
                 let result = try context.fetch(request)
@@ -97,7 +125,7 @@ final class CoreDataService: NSObject {
             context.perform {
                 
                 let request = NSFetchRequest<CityWeather>(entityName: "CityWeather")
-                request.predicate = NSPredicate(format: "ANY cityName = %@", currentWeather.cityName)
+                request.predicate = NSPredicate(format: "latitude = \(currentWeather.latitude) AND longitude = \(currentWeather.longitude)")
                 
                 do {
                     result = try context.fetch(request)
@@ -116,7 +144,9 @@ final class CoreDataService: NSObject {
                 city.pressure = Int16(currentWeather.pressure)
                 city.humidity = Int16(currentWeather.humidity)
                 city.speed = currentWeather.speed
-                
+                city.latitude = currentWeather.latitude
+                city.longitude = currentWeather.longitude
+                city.descriptionWeather = currentWeather.description
                 do {
                     try context.save()
                 } catch {

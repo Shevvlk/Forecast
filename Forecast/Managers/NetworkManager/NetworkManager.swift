@@ -1,18 +1,21 @@
 
 import Foundation
 
-class NetworkManager {
+final class NetworkManager {
     
     private let urlSession = URLSession(configuration: .default)
+    private let parseManager = ParseManager()
     
-    func fetchRequest (urlString: String, completionHandler: @escaping (Data?, Error?) -> Void)  {
+    func fetchRequest (coordinate: (Double,Double), completionHandler: @escaping (СityWeatherCopy?, Error?) -> Void)  {
+        
+        let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(coordinate.0)&lon=\(coordinate.1)&appid=\(apiKey)&lang=ru"
         
         guard let url = URL(string: urlString) else { return completionHandler(nil, NetworkManagerError.errorUrl) }
         
-        let task = urlSession.dataTask(with: url) { (data, response, error) in
+        let task = urlSession.dataTask(with: url) { [weak self] (data, response, error) in
             
-            guard error == nil else {
-                completionHandler(nil, NetworkManagerError.server)
+            guard error == nil, let data = data  else {
+                completionHandler(nil, NetworkManagerError.errorServer)
                 return
             }
             
@@ -27,7 +30,19 @@ class NetworkManager {
                 return
             }
             
-            completionHandler(data,nil)
+            self?.parseManager.parseJSON(data: data, model: СityWeatherData.self) { (data, error) in
+                
+                guard let cityWeatherData = data, error == nil else {
+                    completionHandler(nil,NetworkManagerError.errorParseJSON)
+                    return
+                }
+                
+                guard let cityWeatherCopy = СityWeatherCopy(cityWeatherData: cityWeatherData) else {
+                    completionHandler(nil,nil)
+                    return
+                }
+                completionHandler(cityWeatherCopy,nil)
+            }
         }
         
         task.resume()

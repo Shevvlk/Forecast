@@ -7,18 +7,18 @@ class ListViewController: UITableViewController {
     
     private let coreDataService:            CoreDataService
     private weak var detailsViewController: DetailsViewController?
-    private let customizationOfDataDisplay: UserDefaultsProtocol
+    private let userDefaultsManager:        UserDefaultsManager<String>
     private let receivingManager:           ReceivingManagerProtocol
-    private var cityWeatherCopyArray:   [СityWeatherCopy] = []
+    private var cityWeatherCopyArray:       [СityWeatherCopy] = []
     
     
-    init(receivingManager: ReceivingManagerProtocol,
-         customizationOfDataDisplay: UserDefaultsProtocol,
+    init(queryService: ReceivingManagerProtocol,
+         userDefaultsManager: UserDefaultsManager<String>,
          coreDataService: CoreDataService,
          viewControllerFirst: DetailsViewController) {
         
-        self.receivingManager = receivingManager
-        self.customizationOfDataDisplay = customizationOfDataDisplay
+        self.receivingManager = queryService
+        self.userDefaultsManager = userDefaultsManager
         self.coreDataService = coreDataService
         self.detailsViewController = viewControllerFirst
         super.init(nibName: nil, bundle: nil)
@@ -42,10 +42,11 @@ class ListViewController: UITableViewController {
     }
     
     @objc func requestByCityName () {
+
+        let searchCitiesViewController = SearchCitiesViewController()
         
-        self.presentSearchAlertController(withTitle: "Enter city cityName", message: nil, style: .alert) { [weak self] city in
-            
-            self?.receivingManager.fetchСityWeatherCopy(cityName: city) { [weak self] currentWeatherCopy, error  in
+        searchCitiesViewController.completionHandler = { [weak self] coordinate in
+            self?.receivingManager.fetchСityWeatherCopy (coordinate: (coordinate.latitude,coordinate.longitude)) { [weak self]  currentWeatherCopy, error  in
                 
                 if let currentWeatherCopy = currentWeatherCopy{
                     DispatchQueue.main.async {
@@ -59,6 +60,7 @@ class ListViewController: UITableViewController {
             }
         }
         
+        present(searchCitiesViewController, animated: true, completion: nil)
     }
     
     func addingNewCityWeatherCopy (cityWeatherCopy: СityWeatherCopy) {
@@ -68,7 +70,7 @@ class ListViewController: UITableViewController {
         tableView.reloadData()
         
         detailsViewController?.selectedСityWeatherCopy = cityWeatherCopy
-        detailsViewController?.updateInterfaceWith()
+        detailsViewController?.tableView.reloadData()
     }
     
     
@@ -80,17 +82,16 @@ class ListViewController: UITableViewController {
     func setupNavigationBar () {
         ///     Большой заголовок
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = "City"
+        navigationItem.title = "Города"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                                  target: self,
                                                                  action: #selector(requestByCityName))
-        self.navigationItem.leftBarButtonItem = self.editButtonItem
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.reloadData()
-        receivingManager.fetchСitiesWeatherCopy(сityWeatherCopyArray: cityWeatherCopyArray) { [weak self] currentCityWeatherCopyArray   in
+        receivingManager.fetchСitiesWeatherCopy(сityWeatherCopyArray: cityWeatherCopyArray) { [weak self] currentCityWeatherCopyArray in
             self?.cityWeatherCopyArray = currentCityWeatherCopyArray
             self?.tableView.reloadData()
         }
@@ -130,7 +131,7 @@ class ListViewController: UITableViewController {
                 detailsViewController?.selectedСityWeatherCopy = cityWeatherCopyArray[indexPath.row - 1]
             }
             
-            detailsViewController?.updateInterfaceWith()
+            detailsViewController?.tableView.reloadData()
             
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
@@ -139,13 +140,9 @@ class ListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? ListTableViewCell else { fatalError("Unable to Dequeue Image Table View Cell") }
         
-        let customization = customizationOfDataDisplay as! CustomizationOfDataDisplay
+        let temperature  = userDefaultsManager.get(key: .temperature)
         
-        customization.key = .temperature
-        
-        let temperatureParametr  = customization.get()
-        
-        switch temperatureParametr {
+        switch temperature {
         case "C":
             cell.temperatureLabel.text = cityWeatherCopyArray[indexPath.row].temperatureСelsius
         case "F":
@@ -166,7 +163,7 @@ class ListViewController: UITableViewController {
     /// Переход на DetailsViewController  отображение детальных данных погоды выбранного города)
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         detailsViewController?.selectedСityWeatherCopy = cityWeatherCopyArray[indexPath.row]
-        detailsViewController?.updateInterfaceWith()
+        detailsViewController?.tableView.reloadData()
         tabBarController?.selectedIndex = 0
     }
     

@@ -4,6 +4,7 @@ import Foundation
 struct СityWeatherData: Codable   {
     
     let name: String
+    let coord: Coord
     let main: Main
     let wind: Wind
     let weather: [Weather]
@@ -36,11 +37,18 @@ struct Clouds: Codable {
 }
 
 struct Wind: Codable {
-   /// Скорость ветра метр / сек
-   let speed: Double
+    /// Скорость ветра метр / сек
+    let speed: Double
 }
 
 struct Weather: Codable {
     /// Идентификатор погодных условий
     let id: Int
+    let description: String
+}
+
+/// Координаты 
+struct Coord: Codable {
+    var lat: Double
+    var lon: Double
 }

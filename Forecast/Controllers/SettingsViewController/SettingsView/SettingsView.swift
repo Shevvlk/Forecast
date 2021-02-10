@@ -9,20 +9,20 @@ protocol SelectedValueViewDelegate: AnyObject {
     func selectedValueDistance (target: UISegmentedControl)
 }
 
-class СustomizationView: UIScrollView {
+class SettingsView: UIScrollView {
     
     weak var delegateView: SelectedValueViewDelegate?
     
     let unitsLabel : UILabel = {
         let label = UILabel()
-        label.text = "Units"
+        label.text = "Единицы"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     let temperatureLabel : UILabel = {
         let label = UILabel()
-        label.text = "Temperature"
+        label.text = "Температура"
         label.font.withSize(18)
         label.textColor = .gray
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -31,7 +31,7 @@ class СustomizationView: UIScrollView {
     
     let windSpeedLabel : UILabel = {
         let label = UILabel()
-        label.text = "Wind speed"
+        label.text = "Скорость ветра"
         label.font.withSize(18)
         label.textColor = .gray
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +40,7 @@ class СustomizationView: UIScrollView {
     
     let pressureLabel : UILabel = {
         let label = UILabel()
-        label.text = "Pressure"
+        label.text = "Давление"
         label.font.withSize(18)
         label.textColor = .gray
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -49,7 +49,7 @@ class СustomizationView: UIScrollView {
     
     let precipitationLabel : UILabel = {
         let label = UILabel()
-        label.text = "Precipitation"
+        label.text = "Осадки"
         label.font.withSize(18)
         label.textColor = .gray
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -58,7 +58,7 @@ class СustomizationView: UIScrollView {
     
     let distanceLabel : UILabel = {
         let label = UILabel()
-        label.text = "Distance"
+        label.text = "Расстояние"
         label.font.withSize(18)
         label.textColor = .gray
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -67,7 +67,7 @@ class СustomizationView: UIScrollView {
     
     
     let temperatureSegmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl ( items : ["Celsius", "Fahrenheit", "Kelvin"] )
+        let segmentedControl = UISegmentedControl ( items : ["Цельсий", "Фаренгейт", "Кельвин"] )
         segmentedControl.selectedSegmentIndex = 1
         segmentedControl.tintColor = UIColor.red
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
@@ -75,7 +75,7 @@ class СustomizationView: UIScrollView {
     }()
     
     let windSpeedSegmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl ( items : ["km/h", "mile/h","m/s","kn"] )
+        let segmentedControl = UISegmentedControl ( items : ["км/ч", "миль/ч","м/с","узел"] )
         segmentedControl.selectedSegmentIndex = 1
         segmentedControl.tintColor = UIColor.red
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
@@ -83,7 +83,7 @@ class СustomizationView: UIScrollView {
     }()
     
     let pressureSegmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl ( items : ["hPa", "Inch","kPa","mm"] )
+        let segmentedControl = UISegmentedControl ( items : ["гПА", "Дюймы","кПа","мм"] )
         segmentedControl.selectedSegmentIndex = 1
         segmentedControl.tintColor = UIColor.red
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
@@ -91,7 +91,7 @@ class СustomizationView: UIScrollView {
     }()
     
     let precipitationSegmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl ( items : ["Millimeters", "Inch"] )
+        let segmentedControl = UISegmentedControl ( items : ["Миллиметры", "Дюймы"] )
         segmentedControl.selectedSegmentIndex = 1
         segmentedControl.tintColor = UIColor.red
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
@@ -99,7 +99,7 @@ class СustomizationView: UIScrollView {
     }()
     
     let distanceSegmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl ( items : ["Kilometers", "Miles"] )
+        let segmentedControl = UISegmentedControl ( items : ["Километры", "Мили"] )
         segmentedControl.selectedSegmentIndex = 1
         segmentedControl.tintColor = UIColor.red
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
@@ -222,7 +222,7 @@ class СustomizationView: UIScrollView {
     }
 }
 
-extension СustomizationView {
+extension SettingsView {
     
     
     @objc func selectedValueTemperature(target: UISegmentedControl) {

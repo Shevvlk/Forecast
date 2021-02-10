@@ -16,7 +16,7 @@ class ListTableViewCell: UITableViewCell {
     /// Заголовок
     let cityNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Geeza Pro", size: 23)
+        label.font = UIFont(name: "Geeza Pro", size: 18)
         label.textColor =  #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -33,7 +33,7 @@ class ListTableViewCell: UITableViewCell {
     let temperatureLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .right
-        label.font = UIFont(name: "Geeza Pro", size: 23)
+        label.font = UIFont(name: "Geeza Pro", size: 20)
         label.textColor =  #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

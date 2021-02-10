@@ -1,10 +1,19 @@
 
 import UIKit
 
-class СustomizationViewController: UIViewController {
+class SettingsViewController: UIViewController {
     
-    private let сustomizationView = СustomizationView()
-    private let customizationOfDataDisplay = CustomizationOfDataDisplay ()
+    private let сustomizationView = SettingsView()
+    private var usDefMDataDisplay: UserDefaultsManager<String>
+    
+    init(usDefMDataDisplay: UserDefaultsManager<String>) {
+        self.usDefMDataDisplay = usDefMDataDisplay
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = сustomizationView
@@ -12,16 +21,15 @@ class СustomizationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Settings"
+        title = "Настройки"
         navigationController?.navigationBar.prefersLargeTitles = true
         сustomizationView.delegateView = self
         installingSegmentedControl()
     }
     
     func installingSegmentedControl() {
-        
-        customizationOfDataDisplay.key = .temperature
-        let temperature = customizationOfDataDisplay.get()
+    
+        let temperature = usDefMDataDisplay.get(key: .temperature)
         
         switch temperature {
         case "F":
@@ -32,8 +40,7 @@ class СustomizationViewController: UIViewController {
             сustomizationView.temperatureSegmentedControl.selectedSegmentIndex = 0
         }
         
-        customizationOfDataDisplay.key = .speed
-        let speed = customizationOfDataDisplay.get()
+        let speed = usDefMDataDisplay.get(key: .speed)
         
         switch speed {
         case "km":
@@ -46,8 +53,7 @@ class СustomizationViewController: UIViewController {
             сustomizationView.windSpeedSegmentedControl.selectedSegmentIndex = 2
         }
         
-        customizationOfDataDisplay.key = .pressure
-        let pressure = customizationOfDataDisplay.get()
+        let pressure = usDefMDataDisplay.get(key: .pressure)
         
         switch pressure {
         case "kPa":
@@ -64,49 +70,48 @@ class СustomizationViewController: UIViewController {
 }
 
 
-extension СustomizationViewController: SelectedValueViewDelegate {
+extension SettingsViewController: SelectedValueViewDelegate {
     
     func selectedValueTemperature(target: UISegmentedControl) {
-        customizationOfDataDisplay.key = .temperature
+       
+        
         switch target.selectedSegmentIndex {
         case 0:
-            customizationOfDataDisplay.save(element: "C")
+            usDefMDataDisplay.save("C", key: .temperature)
         case 1:
-            customizationOfDataDisplay.save(element: "F")
+            usDefMDataDisplay.save("F", key: .temperature)
         case 2:
-            customizationOfDataDisplay.save(element: "K")
+            usDefMDataDisplay.save("K", key: .temperature)
         default:
             break
         }
     }
     
     func selectedValueWindSpeed(target: UISegmentedControl) {
-        customizationOfDataDisplay.key = .speed
         switch target.selectedSegmentIndex {
         case 0:
-            customizationOfDataDisplay.save(element: "km")
+            usDefMDataDisplay.save("km", key: .speed)
         case 1:
-            customizationOfDataDisplay.save(element: "milie")
+            usDefMDataDisplay.save("milie", key: .speed)
         case 2:
-            customizationOfDataDisplay.save(element: "m")
+            usDefMDataDisplay.save("m", key: .speed)
         case 3:
-            customizationOfDataDisplay.save(element: "kn")
+            usDefMDataDisplay.save("kn", key: .speed)
         default:
             break
         }
     }
     
     func selectedValuePressure(target: UISegmentedControl) {
-        customizationOfDataDisplay.key = .pressure
         switch target.selectedSegmentIndex {
         case 0:
-            customizationOfDataDisplay.save(element: "hPa")
+            usDefMDataDisplay.save("hPa", key: .pressure)
         case 1:
-            customizationOfDataDisplay.save(element: "inch")
+            usDefMDataDisplay.save("inch", key: .pressure)
         case 2:
-            customizationOfDataDisplay.save(element: "kPa")
+            usDefMDataDisplay.save("kPa", key: .pressure)
         case 3:
-            customizationOfDataDisplay.save(element: "mm")
+            usDefMDataDisplay.save("mm", key: .pressure)
         default:
             break
         }
