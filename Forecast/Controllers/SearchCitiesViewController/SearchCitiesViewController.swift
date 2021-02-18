@@ -28,7 +28,6 @@ class SearchCitiesViewController: UIViewController {
     
     private var searchCompleter: MKLocalSearchCompleter = MKLocalSearchCompleter()
     private var searchResults: [MKLocalSearchCompletion] = [MKLocalSearchCompletion]() {
-       
         didSet {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -38,15 +37,12 @@ class SearchCitiesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-
         view.addSubview(searchBar)
         tableView.tableFooterView = UIView()
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
         searchCompleter.delegate = self
-        
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         view.addSubview(searchBar)
         view.addSubview(tableView)
@@ -68,21 +64,18 @@ class SearchCitiesViewController: UIViewController {
     private func updateSearchResults(selected: MKLocalSearchCompletion) {
         let searchRequest = MKLocalSearch.Request(completion: selected)
         let search = MKLocalSearch(request: searchRequest)
-        searchRequest.naturalLanguageQuery = "coffee"
         
         search.start { (response, error) in
-            if error != nil {
-                //                print(error?.localizedDescription)
+            if let error = error {
+                print(error.localizedDescription)
             }
             let coordinate = response?.mapItems.first?.placemark.coordinate
             if let completionHandler = self.completionHandler, let coordinate = coordinate {
                 completionHandler(coordinate)
             }
-            
             self.dismiss(animated: true, completion: nil)
         }
     }
-    
 }
 
 
@@ -104,7 +97,6 @@ extension SearchCitiesViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         updateSearchResults(selected: searchResults[indexPath.row])
     }
-    
 }
 
 extension SearchCitiesViewController:  UISearchBarDelegate {

@@ -20,7 +20,7 @@ class SettingsView: UIScrollView {
         return label
     }()
     
-    let temperatureLabel : UILabel = {
+    let tempLabel : UILabel = {
         let label = UILabel()
         label.text = "Температура"
         label.font.withSize(18)
@@ -124,7 +124,7 @@ class SettingsView: UIScrollView {
         
         self.backgroundColor = .white
         
-        frameView.addSubview(temperatureLabel)
+        frameView.addSubview(tempLabel)
         frameView.addSubview(windSpeedLabel)
         frameView.addSubview(pressureLabel)
         frameView.addSubview(precipitationLabel)
@@ -164,12 +164,12 @@ class SettingsView: UIScrollView {
         unitsLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor,constant: 20).isActive = true
         unitsLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -20).isActive = true
         
-        temperatureLabel.topAnchor.constraint(equalTo: frameView.topAnchor,constant: 20).isActive = true
-        temperatureLabel.leadingAnchor.constraint(equalTo: frameView.leadingAnchor,constant: 20).isActive = true
-        temperatureLabel.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
-        temperatureLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        tempLabel.topAnchor.constraint(equalTo: frameView.topAnchor,constant: 20).isActive = true
+        tempLabel.leadingAnchor.constraint(equalTo: frameView.leadingAnchor,constant: 20).isActive = true
+        tempLabel.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
+        tempLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
-        temperatureSegmentedControl.topAnchor.constraint(equalTo: temperatureLabel.bottomAnchor,constant: 15).isActive = true
+        temperatureSegmentedControl.topAnchor.constraint(equalTo: tempLabel.bottomAnchor,constant: 15).isActive = true
         temperatureSegmentedControl.leadingAnchor.constraint(equalTo: frameView.leadingAnchor,constant: 20).isActive = true
         temperatureSegmentedControl.trailingAnchor.constraint(equalTo: frameView.trailingAnchor,constant: -20).isActive = true
         temperatureSegmentedControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -223,8 +223,6 @@ class SettingsView: UIScrollView {
 }
 
 extension SettingsView {
-    
-    
     @objc func selectedValueTemperature(target: UISegmentedControl) {
         if target == self.temperatureSegmentedControl {
             delegateView?.selectedValueTemperature(target: target)

@@ -8,16 +8,16 @@ class ListViewController: UITableViewController {
     private let coreDataService:            CoreDataService
     private weak var detailsViewController: DetailsViewController?
     private let userDefaultsManager:        UserDefaultsManager<String>
-    private let receivingManager:           ReceivingManagerProtocol
+    private let queryService:               QueryService
     private var cityWeatherCopyArray:       [СityWeatherCopy] = []
     
     
-    init(queryService: ReceivingManagerProtocol,
+    init(queryService: QueryService,
          userDefaultsManager: UserDefaultsManager<String>,
          coreDataService: CoreDataService,
          viewControllerFirst: DetailsViewController) {
         
-        self.receivingManager = queryService
+        self.queryService = queryService
         self.userDefaultsManager = userDefaultsManager
         self.coreDataService = coreDataService
         self.detailsViewController = viewControllerFirst
@@ -45,13 +45,22 @@ class ListViewController: UITableViewController {
 
         let searchCitiesViewController = SearchCitiesViewController()
         
+        
+        
+        
+        
         searchCitiesViewController.completionHandler = { [weak self] coordinate in
-            self?.receivingManager.fetchСityWeatherCopy (coordinate: (coordinate.latitude,coordinate.longitude)) { [weak self]  currentWeatherCopy, error  in
+                        
+            
+            self?.queryService.fetchСityWeatherCopy(coordinate: (coordinate.latitude, coordinate.longitude)) { [weak self] currentWeatherCopy, error in
                 
                 if let currentWeatherCopy = currentWeatherCopy{
                     DispatchQueue.main.async {
                         self?.addingNewCityWeatherCopy(cityWeatherCopy: currentWeatherCopy)
+                                                print(currentWeatherCopy.cityWeatherHourlyArray)
                     }
+                        
+                    
                 } else {
                     /// Получение информации об ошибке
                     let errorr = error!
@@ -91,7 +100,7 @@ class ListViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.reloadData()
-        receivingManager.fetchСitiesWeatherCopy(сityWeatherCopyArray: cityWeatherCopyArray) { [weak self] currentCityWeatherCopyArray in
+        queryService.fetchСitiesWeatherCopy(сityWeatherCopyArray: cityWeatherCopyArray) { [weak self] currentCityWeatherCopyArray in
             self?.cityWeatherCopyArray = currentCityWeatherCopyArray
             self?.tableView.reloadData()
         }
@@ -141,18 +150,7 @@ class ListViewController: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? ListTableViewCell else { fatalError("Unable to Dequeue Image Table View Cell") }
         
         let temperature  = userDefaultsManager.get(key: .temperature)
-        
-        switch temperature {
-        case "C":
-            cell.temperatureLabel.text = cityWeatherCopyArray[indexPath.row].temperatureСelsius
-        case "F":
-            cell.temperatureLabel.text = cityWeatherCopyArray[indexPath.row].temperatureFahrenheit
-        case "K":
-            cell.temperatureLabel.text = cityWeatherCopyArray[indexPath.row].temperatureKelvin
-        default:
-            cell.temperatureLabel.text = cityWeatherCopyArray[indexPath.row].temperatureСelsius
-        }
-        
+        cell.temperatureLabel.text = cityWeatherCopyArray[indexPath.row].getTemperature(unit: temperature)
         cell.cityNameLabel.text = cityWeatherCopyArray[indexPath.row].cityName
         cell.weatherImageView.image = UIImage(systemName: cityWeatherCopyArray[indexPath.row].systemIconNameString)
         cell.dateLabel.text = cityWeatherCopyArray[indexPath.row].dtString

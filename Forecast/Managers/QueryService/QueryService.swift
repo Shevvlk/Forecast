@@ -6,9 +6,7 @@ protocol ReceivingManagerProtocol {
     func fetchСityWeatherCopy (coordinate: (Double,Double), completionHandler: @escaping (СityWeatherCopy?, Error?) -> Void) 
 }
 
-class QueryService: ReceivingManagerProtocol {
-    
-    private  let networkManager = NetworkManager()
+class QueryService {
     
     private let loadOperationQueue: OperationQueue = {
         let operationQueue = OperationQueue()
@@ -16,39 +14,94 @@ class QueryService: ReceivingManagerProtocol {
         return operationQueue
     }()
     
-    func fetchСityWeatherCopy (coordinate: (Double,Double), completionHandler: @escaping (СityWeatherCopy?, Error?) -> Void) {
+    private let networkManagerCW = NetworkManager(resource: СityWeatherResource())
+    private let networkManagerCWH = NetworkManager(resource: СityWeatherHourlyResource())
+    private var cityWeatherData: СityWeatherData?
+    private var cityWeatherHourlyData: СityWeatherHourlyData?
+    
+    
+    func fetchСityWeatherCopy (coordinate: (Double,Double),  completionHandler: @escaping (СityWeatherCopy?, NetworkManagerError?) -> Void) {
         
-        networkManager.fetchRequest(coordinate: coordinate) { (cityWeatherCopy, error) in
-            completionHandler(cityWeatherCopy,error)
+        networkManagerCW.urlSession.getAllTasks { (tasks) in
+            for task in tasks {
+                task.cancel()
+            }
+        }
+        
+        networkManagerCWH.urlSession.getAllTasks { (tasks) in
+            for task in tasks {
+                task.cancel()
+            }
+        }
+        
+        cityWeatherData = nil
+        cityWeatherHourlyData = nil
+        
+        let dispatchGroup = DispatchGroup()
+        
+        dispatchGroup.enter()
+        networkManagerCW.fetchRequest(coordinates: coordinate) { [weak self] (modelCW, error) in
+            if let cityWeatherData = modelCW {
+                self?.cityWeatherData = cityWeatherData
+            }
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        networkManagerCWH.fetchRequest(coordinates: coordinate) { [weak self] (modelCWH, error) in
+            
+            if let cityWeatherHourlyData = modelCWH {
+                self?.cityWeatherHourlyData = cityWeatherHourlyData
+            }
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: DispatchQueue.global()) { [weak self] in
+            if let cityWeatherData = self?.cityWeatherData, let cityWeatherHourlyData = self?.cityWeatherHourlyData{
+                let cityWeatherCopy = СityWeatherCopy(cityWeatherData: cityWeatherData, cityWeatherHourlyData: cityWeatherHourlyData)
+                completionHandler(cityWeatherCopy,nil)
+            }
+            else {
+                completionHandler(nil, NetworkManagerError.errorServer)
+            }
         }
     }
     
     
     func fetchСitiesWeatherCopy (сityWeatherCopyArray: [СityWeatherCopy], completionHandler: @escaping ([СityWeatherCopy]) -> Void) {
         
+        if loadOperationQueue.operationCount > 0 {
+            return
+        }
+        
         var сityWeatherCopyArrayNew: [СityWeatherCopy] = []
         
         for cityWeatherCopy in сityWeatherCopyArray {
             
-            let networkManager = NetworkManager()
-            
-            let loadOperation = LoadOperation(coordinate: (cityWeatherCopy.latitude, cityWeatherCopy.longitude), networkManager: networkManager)
+            let loadOperation = LoadOperation(coordinate: (cityWeatherCopy.latitude, cityWeatherCopy.longitude))
             
             loadOperation.completionBlock = { [weak loadOperation] in
-                guard let currentСityWeatherCopy = loadOperation?.cityWeatherCopy
+                if let currentСityWeatherCopy = loadOperation?.cityWeatherCopy {
+                    
+                    сityWeatherCopyArrayNew.append(currentСityWeatherCopy)
+                }
                 else {
                     сityWeatherCopyArrayNew.append(cityWeatherCopy)
-                    return
                 }
-                сityWeatherCopyArrayNew.append(currentСityWeatherCopy)
             }
             loadOperationQueue.addOperation(loadOperation)
         }
         
         loadOperationQueue.addOperation {
             DispatchQueue.main.async {
-                completionHandler(сityWeatherCopyArrayNew)
+                if сityWeatherCopyArrayNew.count == сityWeatherCopyArray.count {
+                    completionHandler(сityWeatherCopyArrayNew)
+                } else {
+                    print("Нет")
+                }
             }
         }
+        
+        print(loadOperationQueue.operationCount)
     }
 }

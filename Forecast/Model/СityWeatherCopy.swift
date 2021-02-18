@@ -27,6 +27,9 @@ struct СityWeatherCopy {
     /// Описание
     let description: String
     
+    let cityWeatherHourlyArray: [СityWeatherHourly]?
+    
+    
     var dtString: String {
         let dateFormatter = DateFormatter()
         dateFormatter.setLocalizedDateFormatFromTemplate("dd, HH:mm")
@@ -163,7 +166,59 @@ struct СityWeatherCopy {
         }
     }
     
-    init?(cityWeatherData: СityWeatherData) {
+    func getTemperature (unit: String? ) -> String {
+        switch unit {
+        case "C":
+            return temperatureСelsius
+        case "F":
+            return temperatureFahrenheit
+        case "K":
+            return temperatureKelvin
+        default:
+            return temperatureСelsius
+        }
+    }
+    
+    func getSpeed (unit: String? ) -> String {
+        switch unit {
+        case "km":
+            return speedKM
+        case "milie":
+            return speedMilie
+        case "kn":
+            return speedKn
+        default:
+            return speedM
+        }
+    }
+    
+    func getFeelsLike (unit: String? ) -> String{
+        switch unit {
+        case "C":
+            return feelsLikeTemperatureСelsius
+        case "F":
+            return feelsLikeTemperatureFahrenheit
+        case "K":
+            return feelsLikeTemperatureKelvin
+        default:
+            return feelsLikeTemperatureСelsius
+        }
+    }
+    
+    func getPressure (unit: String? ) -> String{
+        switch unit {
+        case "kPa":
+            return pressurekPa
+        case "mm":
+            return pressureMM
+        case "inch":
+            return pressureInch
+        default:
+            return pressurehPa
+        }
+    }
+    
+    init?(cityWeatherData: СityWeatherData, cityWeatherHourlyData: СityWeatherHourlyData) {
         self.cityName = cityWeatherData.name
         self.temperature = cityWeatherData.main.temp
         self.feelsLike = cityWeatherData.main.feelsLike
@@ -179,6 +234,15 @@ struct СityWeatherCopy {
         self.latitude = cityWeatherData.coord.lat
         self.longitude = cityWeatherData.coord.lon
         self.description = cityWeatherData.weather.first?.description ?? ""
+        
+        var cityWeatherHourlyArray: [СityWeatherHourly] = []
+        
+        for hourly in cityWeatherHourlyData.hourly {
+            let cityWeatherHourly = СityWeatherHourly(dt: hourly.dt, temp: hourly.temp, id: hourly.weather.first?.id ?? 0, timezoneOffset: cityWeatherHourlyData.timezoneOffset)
+            cityWeatherHourlyArray.append(cityWeatherHourly)
+        }
+        
+        self.cityWeatherHourlyArray = cityWeatherHourlyArray
     }
     
     init(cityName:  String, temperature: Double, feelsLikeTemperature: Double, conditionCode: Int, date: Date, pressure: Int, humidity: Int, all: Int,speed: Double, latitude: Double, longitude: Double, description: String ) {
@@ -194,6 +258,7 @@ struct СityWeatherCopy {
         self.latitude = latitude
         self.longitude = longitude
         self.description = description
+        self.cityWeatherHourlyArray = nil
     }
     
 }

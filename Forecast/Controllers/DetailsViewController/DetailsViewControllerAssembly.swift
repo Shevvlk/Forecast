@@ -24,4 +24,5 @@ final class DetailsViewControllerAssembly {
         
         return detailsViewController
     }
+    
 }

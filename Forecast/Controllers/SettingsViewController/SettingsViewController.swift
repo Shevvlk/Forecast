@@ -24,10 +24,10 @@ class SettingsViewController: UIViewController {
         title = "Настройки"
         navigationController?.navigationBar.prefersLargeTitles = true
         сustomizationView.delegateView = self
-        installingSegmentedControl()
+        installSegmentedControl()
     }
     
-    func installingSegmentedControl() {
+    func installSegmentedControl() {
     
         let temperature = usDefMDataDisplay.get(key: .temperature)
         

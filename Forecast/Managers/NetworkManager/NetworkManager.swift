@@ -1,16 +1,28 @@
 
 import Foundation
 
-final class NetworkManager {
-    
-    private let urlSession = URLSession(configuration: .default)
+protocol NetworkRequest: AnyObject {
+    associatedtype ModelType
+    func fetchRequest (coordinates: (Double,Double), completionHandler : @escaping (ModelType?, NetworkManagerError?) -> Void)
+}
+
+final class NetworkManager<Resource: ApiResource>  {
+    var urlSession = URLSession(configuration: .default)
     private let parseManager = ParseManager()
     
-    func fetchRequest (coordinate: (Double,Double), completionHandler: @escaping (СityWeatherCopy?, Error?) -> Void)  {
+    let resource: Resource
+    init(resource: Resource) {
+        self.resource = resource
+    }
+}
+
+extension NetworkManager: NetworkRequest {
+    
+    func fetchRequest (coordinates: (Double,Double), completionHandler: @escaping (Resource.ModelType?, NetworkManagerError?) -> Void) {
         
-        let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(coordinate.0)&lon=\(coordinate.1)&appid=\(apiKey)&lang=ru"
+        var urlResource = resource.gettingURL(coordinates: coordinates)
         
-        guard let url = URL(string: urlString) else { return completionHandler(nil, NetworkManagerError.errorUrl) }
+        guard let url = urlResource else { return completionHandler(nil, NetworkManagerError.errorUrl) }
         
         let task = urlSession.dataTask(with: url) { [weak self] (data, response, error) in
             
@@ -30,21 +42,19 @@ final class NetworkManager {
                 return
             }
             
-            self?.parseManager.parseJSON(data: data, model: СityWeatherData.self) { (data, error) in
+            self?.parseManager.parseJSON(data: data, model: Resource.ModelType.self) { (data, error) in
                 
                 guard let cityWeatherData = data, error == nil else {
                     completionHandler(nil,NetworkManagerError.errorParseJSON)
                     return
                 }
                 
-                guard let cityWeatherCopy = СityWeatherCopy(cityWeatherData: cityWeatherData) else {
-                    completionHandler(nil,nil)
-                    return
-                }
-                completionHandler(cityWeatherCopy,nil)
+                completionHandler(cityWeatherData,nil)
             }
         }
         
         task.resume()
     }
 }
+
+
