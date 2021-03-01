@@ -2,11 +2,10 @@
 import Foundation
 
 protocol ReceivingManagerProtocol {
-    func fetchСitiesWeatherCopy (сityWeatherCopyArray: [СityWeatherCopy], completionHandler: @escaping ([СityWeatherCopy]) -> Void)
-    func fetchСityWeatherCopy (coordinate: (Double,Double), completionHandler: @escaping (СityWeatherCopy?, Error?) -> Void) 
+    func fetchСityWeatherCopy (coordinate: (Double,Double),  completionHandler: @escaping (Result<СityWeatherCopy, Error>) -> Void)
 }
 
-class QueryService {
+final class QueryService {
     
     private let loadOperationQueue: OperationQueue = {
         let operationQueue = OperationQueue()
@@ -16,11 +15,8 @@ class QueryService {
     
     private let networkManagerCW = NetworkManager(resource: СityWeatherResource())
     private let networkManagerCWH = NetworkManager(resource: СityWeatherHourlyResource())
-    private var cityWeatherData: СityWeatherData?
-    private var cityWeatherHourlyData: СityWeatherHourlyData?
     
-    
-    func fetchСityWeatherCopy (coordinate: (Double,Double),  completionHandler: @escaping (СityWeatherCopy?, NetworkManagerError?) -> Void) {
+    func fetchСityWeatherCopy (coordinate: (Double,Double),  completionHandler: @escaping (Result<СityWeatherCopy, Error>) -> Void) {
         
         networkManagerCW.urlSession.getAllTasks { (tasks) in
             for task in tasks {
@@ -34,47 +30,59 @@ class QueryService {
             }
         }
         
-        cityWeatherData = nil
-        cityWeatherHourlyData = nil
+        var cityWeatherDataResult: Result<СityWeatherData, Error>?
+        var cityWeatherHourlyDataResult: Result<СityWeatherHourlyData, Error>?
+        
         
         let dispatchGroup = DispatchGroup()
         
         dispatchGroup.enter()
-        networkManagerCW.fetchRequest(coordinates: coordinate) { [weak self] (modelCW, error) in
-            if let cityWeatherData = modelCW {
-                self?.cityWeatherData = cityWeatherData
-            }
+        networkManagerCW.fetchRequest(coordinates: coordinate) { result in
+            
+            cityWeatherDataResult = result
+            
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
-        networkManagerCWH.fetchRequest(coordinates: coordinate) { [weak self] (modelCWH, error) in
+        networkManagerCWH.fetchRequest(coordinates: coordinate) { result in
             
-            if let cityWeatherHourlyData = modelCWH {
-                self?.cityWeatherHourlyData = cityWeatherHourlyData
-            }
+            cityWeatherHourlyDataResult = result
+            
             dispatchGroup.leave()
         }
         
-        dispatchGroup.notify(queue: DispatchQueue.global()) { [weak self] in
-            if let cityWeatherData = self?.cityWeatherData, let cityWeatherHourlyData = self?.cityWeatherHourlyData{
-                let cityWeatherCopy = СityWeatherCopy(cityWeatherData: cityWeatherData, cityWeatherHourlyData: cityWeatherHourlyData)
-                completionHandler(cityWeatherCopy,nil)
+        dispatchGroup.notify(queue: .global()) {
+            
+            do {
+                let cityWeatherData = try cityWeatherDataResult?.get()
+                let cityWeatherHourlyData = try cityWeatherHourlyDataResult?.get()
+                
+                if let cityWeatherData = cityWeatherData, let cityWeatherHourlyData = cityWeatherHourlyData,  let cityWeatherCopy = СityWeatherCopy(cityWeatherData: cityWeatherData, cityWeatherHourlyData: cityWeatherHourlyData)
+                {
+                    completionHandler(.success(cityWeatherCopy))
+                    
+                } else {
+                    completionHandler(.failure(NetworkManagerError.errorParseJSON))
+                }
+                
+            } catch {
+                completionHandler(.failure(error))
             }
-            else {
-                completionHandler(nil, NetworkManagerError.errorServer)
-            }
+            
         }
     }
     
     
-    func fetchСitiesWeatherCopy (сityWeatherCopyArray: [СityWeatherCopy], completionHandler: @escaping ([СityWeatherCopy]) -> Void) {
+    func fetchСitiesWeatherCopy (сityWeatherCopyArray: [СityWeatherCopy], completionHandler: @escaping ([СityWeatherCopy],[String]) -> Void) {
         
         if loadOperationQueue.operationCount > 0 {
             return
         }
         
         var сityWeatherCopyArrayNew: [СityWeatherCopy] = []
+        var notUpdatedСities: [String] = []
+        
         
         for cityWeatherCopy in сityWeatherCopyArray {
             
@@ -82,26 +90,23 @@ class QueryService {
             
             loadOperation.completionBlock = { [weak loadOperation] in
                 if let currentСityWeatherCopy = loadOperation?.cityWeatherCopy {
-                    
                     сityWeatherCopyArrayNew.append(currentСityWeatherCopy)
                 }
                 else {
                     сityWeatherCopyArrayNew.append(cityWeatherCopy)
+                    notUpdatedСities.append(cityWeatherCopy.cityName)
                 }
             }
+            
             loadOperationQueue.addOperation(loadOperation)
         }
         
         loadOperationQueue.addOperation {
             DispatchQueue.main.async {
                 if сityWeatherCopyArrayNew.count == сityWeatherCopyArray.count {
-                    completionHandler(сityWeatherCopyArrayNew)
-                } else {
-                    print("Нет")
+                    completionHandler(сityWeatherCopyArrayNew, notUpdatedСities)
                 }
             }
         }
-        
-        print(loadOperationQueue.operationCount)
     }
 }

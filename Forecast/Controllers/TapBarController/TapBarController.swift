@@ -9,17 +9,16 @@
         
         let coreDataService = CoreDataService()
         
-        let usDefMDataDisplay = UserDefaultsManager<String>()
-        let usDefMСoordinates = UserDefaultsManager<[String:Double]>()
+        let userDefaultsManager = UserDefaultsManager()
         
-        let detailsViewControllerAssembly = DetailsViewControllerAssembly(coreDataService: coreDataService, usDefMDataDisplay: usDefMDataDisplay, usDefMСoordinates: usDefMСoordinates)
+        let detailsViewControllerAssembly = DetailsViewControllerAssembly(coreDataService: coreDataService, userDefaultsManager: userDefaultsManager)
         let detailsViewController = detailsViewControllerAssembly.createViewController()
         
-        let listViewControllerAssembly = ListViewControllerAssembly(coreDataService: coreDataService, usDefMDataDisplay: usDefMDataDisplay)
+        let listViewControllerAssembly = ListViewControllerAssembly(coreDataService: coreDataService, userDefaultsManager: userDefaultsManager)
         let listViewController = listViewControllerAssembly.createViewController(viewControllerFirst: detailsViewController)
         
         let navigationControllerRootList = UINavigationController(rootViewController: listViewController)
-        let customizationViewController = UINavigationController(rootViewController: SettingsViewController(usDefMDataDisplay: usDefMDataDisplay))
+        let customizationViewController = UINavigationController(rootViewController: SettingsViewController(userDefaultsManager: userDefaultsManager))
         
         let thermometerImage = UIImage(systemName: "thermometer")
         let globeImage = UIImage(systemName: "globe")
@@ -36,8 +35,6 @@
         let tabBarList = [detailsViewController, navigationControllerRootList, customizationViewController]
         
         viewControllers = tabBarList
-        
-        ///      Отображение первого контроллера при запуске приложения
-        selectedViewController = detailsViewController
+
     }
  }

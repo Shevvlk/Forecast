@@ -3,8 +3,30 @@ import UIKit
 
 extension DetailsViewController {
     
-    func presentErrorAlert() {
-        let alertController = UIAlertController(title:"Ошибка передачи данных", message: "Проверьте подключение к сотовой сети или Wi-Fi для доступа к данным", preferredStyle: .alert)
+    func presentErrorAlert(error: Error) {
+        
+        var errorTitle = ""
+        var errorMessage = "Повторите запрос"
+        
+        let error = error as? NetworkManagerError
+        
+        switch error {
+        case .errorStatusCode:
+            errorTitle = "Ошибка при получении данных c сервера"
+        case .errorServer:
+            errorTitle = "Ошибка при получении данных c сервера"
+            errorMessage = "Проверьте подключение к сотовой сети или Wi-Fi для доступа к данным"
+        case .errorParseJSON:
+            errorTitle = "Ошибка сериализации данных"
+        case .errorMimeType:
+            errorTitle = "Сервер вернул неподдерживаемый тип данных"
+        case .errorUrl:
+            errorTitle = "Запрос не может быть принят сервером"
+        default:
+            return
+        }
+        
+        let alertController = UIAlertController(title: errorTitle, message: errorMessage, preferredStyle: .alert)
         
         let cancel = UIAlertAction(title: "OK", style: .cancel, handler: nil)
 

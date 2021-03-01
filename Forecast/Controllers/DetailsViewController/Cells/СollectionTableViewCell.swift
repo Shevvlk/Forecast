@@ -1,10 +1,9 @@
-
 import UIKit
 
-class СollectionTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
+final class СollectionTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    private var cityWeatherHourly: [СityWeatherHourly]?
-    
+    private var cityWeatherHourly: [СityWeatherHourlyCopy] = []
+    private var temperature: String?
     private let collectionView: UICollectionView = {
         let viewLayout = UICollectionViewFlowLayout()
         viewLayout.scrollDirection = .horizontal
@@ -33,25 +32,29 @@ class СollectionTableViewCell: UITableViewCell, UICollectionViewDelegate, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return cityWeatherHourly?.count ?? 0
+        return cityWeatherHourly.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath as IndexPath) as! CollectionViewCell
         
-        let temp = cityWeatherHourly?[indexPath.row].temperature
-        if let temp = temp, let icon = cityWeatherHourly?[indexPath.row].systemIconNameString, let dt = cityWeatherHourly?[indexPath.row].dtString {
-        cell.tempLabel.text =  "\(Int(temp - 273))"
-            cell.iconImageView.image = UIImage(systemName: icon)
-            cell.timeLabel.text = dt
+        let temp = cityWeatherHourly[indexPath.row].getTemperature(unit:temperature)
+        
+        if indexPath.row == 0 {
+            cell.timeLabel.text = "Cейчас"
+        } else {
+            cell.timeLabel.text = cityWeatherHourly[indexPath.row].dtString
         }
-//        cell.timeLabel = cityWeatherHourly?[indexPath.row].dtString
+        cell.tempLabel.text = temp
+        cell.iconImageView.image = UIImage(systemName: cityWeatherHourly[indexPath.row].systemIconName)
+        
         cell.tempLabel.textAlignment = .center
         
         return cell
     }
     
-    func settingParameters(cityWeatherHourly: [СityWeatherHourly]?) {
+    func settingParameters(cityWeatherHourly: [СityWeatherHourlyCopy], temperature: String?) {
+        self.temperature = temperature
         self.cityWeatherHourly = cityWeatherHourly
         self.collectionView.reloadData()
     }
@@ -60,6 +63,10 @@ class СollectionTableViewCell: UITableViewCell, UICollectionViewDelegate, UICol
 extension СollectionTableViewCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
-        return CGSize(width: 60, height: 90)
+        if indexPath.row == 0 {
+            return CGSize(width: 80, height: 90)
+        } else {
+            return CGSize(width: 60, height: 90)
+        }
     }
 }

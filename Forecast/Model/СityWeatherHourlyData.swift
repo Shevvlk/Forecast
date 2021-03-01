@@ -1,10 +1,11 @@
 
 import Foundation
 
-struct СityWeatherHourlyData: Codable {
+/// Почасовой прогноз
+struct СityWeatherHourlyData: Decodable {
     let lat, lon: Double
     let timezone: String
-    let timezoneOffset: Int
+    let timezoneOffset: Int16
     let hourly: [Hourly]
 
     enum CodingKeys: String, CodingKey {

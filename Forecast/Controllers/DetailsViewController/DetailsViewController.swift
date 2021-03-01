@@ -1,11 +1,8 @@
-
-
 import UIKit
 
 class DetailsViewController: UITableViewController {
     
-    private var usDefMDataDisplay: UserDefaultsManager<String>
-    private var usDefMСoordinates: UserDefaultsManager<[String:Double]>
+    private var userDefaultsManager: UserDefaultsManagerProtocol
     private let queryService: QueryService
     private let coreDataService: CoreDataService
     
@@ -14,20 +11,19 @@ class DetailsViewController: UITableViewController {
     
     var selectedСityWeatherCopy: СityWeatherCopy? {
         willSet(newValue) {
+            tableView.reloadData()
             if newValue == nil {
-                usDefMСoordinates.remove(key: .coordinates)
+                userDefaultsManager.remove(key: .coordinates)
             }
         }
     }
     
     init(queryService: QueryService,
-         usDefMDataDisplay: UserDefaultsManager<String>,
-         usDefMСoordinates: UserDefaultsManager<[String:Double]>,
+         userDefaultsManager: UserDefaultsManagerProtocol,
          coreDataService: CoreDataService) {
         
         self.queryService = queryService
-        self.usDefMDataDisplay = usDefMDataDisplay
-        self.usDefMСoordinates = usDefMСoordinates
+        self.userDefaultsManager = userDefaultsManager
         self.coreDataService = coreDataService
         super.init(nibName: nil, bundle: nil)
     }
@@ -39,7 +35,6 @@ class DetailsViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         tableView.tableFooterView = UIView()
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorInset.left = 8
@@ -47,10 +42,9 @@ class DetailsViewController: UITableViewController {
         tableView.separatorColor = #colorLiteral(red: 1, green: 0.9514930844, blue: 0.9390899539, alpha: 1)
         tableView.backgroundColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
         
-        let coordinates = usDefMСoordinates.get(key: .coordinates)
+        let coordinates: [String:Double]? = userDefaultsManager.get(key: .coordinates)
         if let coordinates = coordinates, let latitude = coordinates["lat"], let longitude = coordinates["lon"] {
             selectedСityWeatherCopy = coreDataService.getСityWeatherCopy(coordinates: (latitude,longitude))
-            tableView.reloadData()
         }
     }
     
@@ -66,41 +60,45 @@ class DetailsViewController: UITableViewController {
         super.viewWillDisappear(animated)
         if let cityWeatherCopy = selectedСityWeatherCopy {
             let coordinates = ["lat": cityWeatherCopy.latitude, "lon": cityWeatherCopy.longitude]
-            usDefMСoordinates.save(coordinates, key: .coordinates)
+            userDefaultsManager.save(coordinates, key: .coordinates)
         }
     }
     
     func requestAndUpdate(coordinate: (Double, Double)) {
-        requestСityWeatherCopy(coordinate: coordinate) { [weak self] cityWeatherCopy, error  in
+        requestСityWeatherCopy(coordinate: coordinate) { [weak self] result  in
             
-            guard let cityWeatherCopy = cityWeatherCopy else {
+            do {
+                let cityWeatherCopy = try result.get()
                 DispatchQueue.main.async {
-                    self?.presentErrorAlert()
+                    self?.selectedСityWeatherCopy = cityWeatherCopy
                 }
-                return
-            }
-            
-            self?.selectedСityWeatherCopy = cityWeatherCopy
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
+            } catch  {
+                    DispatchQueue.main.async {
+                        self?.presentErrorAlert(error: error)
+                }
             }
         }
     }
     
     
-    func requestСityWeatherCopy(coordinate: (Double,Double), completionHandler: @escaping (СityWeatherCopy?, Error?) -> Void) {
-        queryService.fetchСityWeatherCopy(coordinate: coordinate) {cityWeatherCopy, error  in
-            completionHandler(cityWeatherCopy, error)
+    func requestСityWeatherCopy(coordinate: (Double,Double), completionHandler: @escaping (Result<СityWeatherCopy, Error>) -> Void) {
+        queryService.fetchСityWeatherCopy(coordinate: coordinate) { result  in
+            completionHandler(result)
         }
     }
-    
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        if selectedСityWeatherCopy == nil {
+            tableView.backgroundView = BackgroundView()
+            return 0
+        } else {
+            tableView.backgroundView = nil
+            return 6
+        }
     }
     
     
@@ -115,32 +113,32 @@ class DetailsViewController: UITableViewController {
             return cell
         }()
         
+        let temperature: String? = userDefaultsManager.get(key: .temperature)
+        
         switch indexPath.row{
         case 0:
             if let cityName = selectedСityWeatherCopy?.cityName, let description = selectedСityWeatherCopy?.description {
                 headingTableViewCell.nameLabel.text = cityName + "\n" + description
             }
             headingTableViewCell.iconImageView.image = UIImage(systemName: selectedСityWeatherCopy?.systemIconNameString ?? "")?.withTintColor(.systemBlue, renderingMode: .alwaysOriginal)
-            let temperature = usDefMDataDisplay.get(key: .temperature)
-            headingTableViewCell.tempLabel.text = selectedСityWeatherCopy?.getTemperature(unit: temperature)
+            //            headingTableViewCell.tempLabel.text = selectedСityWeatherCopy?.getTemperature(unit: temperature)
             return headingTableViewCell
         case 1:
-            collectionTableViewCell.settingParameters(cityWeatherHourly: selectedСityWeatherCopy?.cityWeatherHourlyArray ?? nil)
+            //            collectionTableViewCell.settingParameters(cityWeatherHourly: selectedСityWeatherCopy?.cityWeatherHourlyСopies ?? [], temperature: temperature)
             return collectionTableViewCell
         case 2:
-            let temperature = usDefMDataDisplay.get(key: .temperature)
             defaultTableViewCell.textLabel?.text = "По ощущениям"
             defaultTableViewCell.detailTextLabel?.text = selectedСityWeatherCopy?.getFeelsLike(unit: temperature)
             return defaultTableViewCell
         case 3:
-            let speed = usDefMDataDisplay.get(key: .speed)
+            //            guard let speed: String = userDefaultsManager.get(key: .speed) else {return}
             defaultTableViewCell.textLabel?.text = "Ветер"
-            defaultTableViewCell.detailTextLabel?.text = selectedСityWeatherCopy?.getSpeed(unit: speed)
+            //            defaultTableViewCell.detailTextLabel?.text = selectedСityWeatherCopy?.getSpeed(unit: speed)
             return defaultTableViewCell
         case 4:
-            let pressure = usDefMDataDisplay.get(key: .pressure)
+            //            guard let pressure: String = userDefaultsManager.get(key: .pressure) else {return}
             defaultTableViewCell.textLabel?.text = "Давление"
-            defaultTableViewCell.detailTextLabel?.text = selectedСityWeatherCopy?.getPressure(unit: pressure)
+            //            defaultTableViewCell.detailTextLabel?.text = selectedСityWeatherCopy?.getPressure(unit: pressure)
             return defaultTableViewCell
         case 5:
             defaultTableViewCell.textLabel?.text = "Влажность"

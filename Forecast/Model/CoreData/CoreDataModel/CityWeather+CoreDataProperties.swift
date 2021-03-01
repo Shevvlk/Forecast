@@ -13,6 +13,7 @@ extension CityWeather {
     @NSManaged public var cityName: String
     @NSManaged public var conditionCode: Int16
     @NSManaged public var date: Date
+    @NSManaged public var descriptionWeather: String
     @NSManaged public var feelsLikeTemperature: Double
     @NSManaged public var humidity: Int16
     @NSManaged public var latitude: Double
@@ -20,7 +21,24 @@ extension CityWeather {
     @NSManaged public var pressure: Int16
     @NSManaged public var speed: Double
     @NSManaged public var temperature: Double
-    @NSManaged public var descriptionWeather: String
+    @NSManaged public var hourly: Set<CityWeatherHourly>
+
+}
+
+// MARK: Generated accessors for hourly
+extension CityWeather {
+
+    @objc(addHourlyObject:)
+    @NSManaged public func addToHourly(_ value: CityWeatherHourly)
+
+    @objc(removeHourlyObject:)
+    @NSManaged public func removeFromHourly(_ value: CityWeatherHourly)
+
+    @objc(addHourly:)
+    @NSManaged public func addToHourly(_ values: NSSet)
+
+    @objc(removeHourly:)
+    @NSManaged public func removeFromHourly(_ values: NSSet)
 
 }
 

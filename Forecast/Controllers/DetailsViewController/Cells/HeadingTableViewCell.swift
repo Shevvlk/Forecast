@@ -1,8 +1,6 @@
-
 import UIKit
 
-
-class HeadingTableViewCell: UITableViewCell {
+final class HeadingTableViewCell: UITableViewCell {
     
     let nameLabel: UILabel = {
         let label = UILabel()
@@ -63,3 +61,4 @@ class HeadingTableViewCell: UITableViewCell {
     }
     
 }
+

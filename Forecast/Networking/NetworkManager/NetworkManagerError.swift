@@ -6,5 +6,5 @@ enum NetworkManagerError: Error {
     case errorMimeType
     case errorUrl
     case errorServer
-    case errorParseJSON
+    case errorParseJSON 
 }

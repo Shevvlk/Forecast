@@ -2,7 +2,7 @@
 import Foundation
 
 protocol ApiResource {
-    associatedtype ModelType: Codable
+    associatedtype ModelType: Decodable
     var methodPath: String { get }
     func gettingURL (coordinates: (Double, Double)) -> URL?
 }
@@ -21,7 +21,7 @@ extension ApiResource {
             URLQueryItem(name: "lang", value: "ru")
         ]
         
-        if methodPath == "/data/2.5/onecall" {
+        if methodPath == BasePath.oneCall.rawValue {
             queryItems.insert(URLQueryItem(name: "exclude", value: "daily,current,minutely,alerts"), at: 2)
         }
         

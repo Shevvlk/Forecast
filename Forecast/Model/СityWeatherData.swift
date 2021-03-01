@@ -1,7 +1,8 @@
 
 import Foundation
 
-struct СityWeatherData: Codable   {
+/// Текущий прогноз
+struct СityWeatherData: Decodable   {
     
     let name: String
     let coord: Coord
@@ -19,9 +20,9 @@ struct Main: Codable {
     /// Температура. Этот температурный параметр объясняет человеческое восприятие погоды. Кельвин
     let feelsLike: Double
     /// Атмосферное давление  гПа
-    let pressure: Int
+    let pressure: Int16
     /// Влажность %
-    let humidity: Int
+    let humidity: Int16
     
     enum CodingKeys: String,CodingKey {
         case temp
@@ -33,7 +34,7 @@ struct Main: Codable {
 
 struct Clouds: Codable {
     /// Облачность %
-    let all: Int
+    let all: Int16
 }
 
 struct Wind: Codable {
@@ -43,7 +44,7 @@ struct Wind: Codable {
 
 struct Weather: Codable {
     /// Идентификатор погодных условий
-    let id: Int
+    let id: Int16
     let description: String
 }
 

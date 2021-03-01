@@ -3,14 +3,13 @@ import Foundation
 
 /// Сборщик Details контроллера
 final class DetailsViewControllerAssembly {
-    private let coreDataService: CoreDataService
-    private let usDefMDataDisplay: UserDefaultsManager<String>
-    private let usDefMСoordinates: UserDefaultsManager<[String:Double]>
     
-    init(coreDataService: CoreDataService,usDefMDataDisplay: UserDefaultsManager<String>, usDefMСoordinates: UserDefaultsManager<[String:Double]>) {
+    private let coreDataService: CoreDataService
+    private let userDefaultsManager: UserDefaultsManagerProtocol
+    
+    init(coreDataService: CoreDataService, userDefaultsManager: UserDefaultsManagerProtocol) {
         self.coreDataService = coreDataService
-        self.usDefMDataDisplay = usDefMDataDisplay
-        self.usDefMСoordinates = usDefMСoordinates
+        self.userDefaultsManager = userDefaultsManager
     }
     
     func createViewController() -> DetailsViewController {
@@ -18,8 +17,7 @@ final class DetailsViewControllerAssembly {
         let queryService = QueryService()
         
         let detailsViewController = DetailsViewController(queryService: queryService,
-                                                            usDefMDataDisplay: usDefMDataDisplay,
-                                                            usDefMСoordinates: usDefMСoordinates,
+                                                          userDefaultsManager: userDefaultsManager,
                                                             coreDataService: coreDataService)
         
         return detailsViewController

@@ -4,10 +4,10 @@ import UIKit
 class SettingsViewController: UIViewController {
     
     private let сustomizationView = SettingsView()
-    private var usDefMDataDisplay: UserDefaultsManager<String>
+    private var userDefaultsManager: UserDefaultsManagerProtocol
     
-    init(usDefMDataDisplay: UserDefaultsManager<String>) {
-        self.usDefMDataDisplay = usDefMDataDisplay
+    init(userDefaultsManager: UserDefaultsManagerProtocol) {
+        self.userDefaultsManager = userDefaultsManager
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -29,7 +29,7 @@ class SettingsViewController: UIViewController {
     
     func installSegmentedControl() {
     
-        let temperature = usDefMDataDisplay.get(key: .temperature)
+        let temperature: String? = userDefaultsManager.get(key: .temperature)
         
         switch temperature {
         case "F":
@@ -40,7 +40,7 @@ class SettingsViewController: UIViewController {
             сustomizationView.temperatureSegmentedControl.selectedSegmentIndex = 0
         }
         
-        let speed = usDefMDataDisplay.get(key: .speed)
+        let speed: String? = userDefaultsManager.get(key: .speed)
         
         switch speed {
         case "km":
@@ -53,7 +53,7 @@ class SettingsViewController: UIViewController {
             сustomizationView.windSpeedSegmentedControl.selectedSegmentIndex = 2
         }
         
-        let pressure = usDefMDataDisplay.get(key: .pressure)
+        let pressure: String? = userDefaultsManager.get(key: .pressure)
         
         switch pressure {
         case "kPa":
@@ -77,11 +77,11 @@ extension SettingsViewController: SelectedValueViewDelegate {
         
         switch target.selectedSegmentIndex {
         case 0:
-            usDefMDataDisplay.save("C", key: .temperature)
+            userDefaultsManager.save("C", key: .temperature)
         case 1:
-            usDefMDataDisplay.save("F", key: .temperature)
+            userDefaultsManager.save("F", key: .temperature)
         case 2:
-            usDefMDataDisplay.save("K", key: .temperature)
+            userDefaultsManager.save("K", key: .temperature)
         default:
             break
         }
@@ -90,13 +90,13 @@ extension SettingsViewController: SelectedValueViewDelegate {
     func selectedValueWindSpeed(target: UISegmentedControl) {
         switch target.selectedSegmentIndex {
         case 0:
-            usDefMDataDisplay.save("km", key: .speed)
+            userDefaultsManager.save("km", key: .speed)
         case 1:
-            usDefMDataDisplay.save("milie", key: .speed)
+            userDefaultsManager.save("milie", key: .speed)
         case 2:
-            usDefMDataDisplay.save("m", key: .speed)
+            userDefaultsManager.save("m", key: .speed)
         case 3:
-            usDefMDataDisplay.save("kn", key: .speed)
+            userDefaultsManager.save("kn", key: .speed)
         default:
             break
         }
@@ -105,13 +105,13 @@ extension SettingsViewController: SelectedValueViewDelegate {
     func selectedValuePressure(target: UISegmentedControl) {
         switch target.selectedSegmentIndex {
         case 0:
-            usDefMDataDisplay.save("hPa", key: .pressure)
+            userDefaultsManager.save("hPa", key: .pressure)
         case 1:
-            usDefMDataDisplay.save("inch", key: .pressure)
+            userDefaultsManager.save("inch", key: .pressure)
         case 2:
-            usDefMDataDisplay.save("kPa", key: .pressure)
+            userDefaultsManager.save("kPa", key: .pressure)
         case 3:
-            usDefMDataDisplay.save("mm", key: .pressure)
+            userDefaultsManager.save("mm", key: .pressure)
         default:
             break
         }

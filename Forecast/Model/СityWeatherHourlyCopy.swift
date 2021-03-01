@@ -1,13 +1,12 @@
-
 import Foundation
 
-struct СityWeatherHourly {
+struct СityWeatherHourlyCopy {
     let dt: Date
     let temperature: Double
-    let id: Int
-    let timezoneOffset: Int
+    let id: Int16
+    let timezoneOffset: Int16
 
-    var systemIconNameString: String {
+    var systemIconName: String {
         switch id {
         case 200...232: return "cloud.bolt.rain.fill"
         case 300...321: return "cloud.drizzle.fill"
@@ -52,11 +51,23 @@ struct СityWeatherHourly {
         return localDate
     }
     
-    init(dt: Date, temp: Double, id: Int, timezoneOffset: Int) {
+    func getTemperature (unit: String?) -> String {
+        switch unit {
+        case "C":
+            return temperatureСelsius
+        case "F":
+            return temperatureFahrenheit
+        case "K":
+            return temperatureKelvin
+        default:
+            return temperatureСelsius
+        }
+    }
+    
+    init(dt: Date, temp: Double, id: Int16, timezoneOffset: Int16) {
         self.dt = dt
         self.temperature = temp
         self.id = id
         self.timezoneOffset = timezoneOffset
     }
-    
 }

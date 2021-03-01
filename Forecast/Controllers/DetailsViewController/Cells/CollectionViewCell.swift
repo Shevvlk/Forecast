@@ -1,8 +1,7 @@
 
-
 import UIKit
 
-class CollectionViewCell: UICollectionViewCell {
+final class CollectionViewCell: UICollectionViewCell {
     
     var timeLabel: UILabel = {
         let label = UILabel()
@@ -18,7 +17,6 @@ class CollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textAlignment = .center
 //        label.font = UIFont.systemFont(ofSize: 33)
-        label.text = "temperatureLabel"
         label.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -44,7 +42,6 @@ class CollectionViewCell: UICollectionViewCell {
     }
     
     func setupConstraints() {
-        
         timeLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor,constant: 4).isActive = true
         timeLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor,constant: 3).isActive = true
         timeLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor,constant: -3).isActive = true
@@ -64,4 +61,3 @@ class CollectionViewCell: UICollectionViewCell {
 }
     
     
-

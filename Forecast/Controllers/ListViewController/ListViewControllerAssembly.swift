@@ -4,11 +4,11 @@ import Foundation
 /// Сборщик List контроллера
 final class ListViewControllerAssembly {
     private let coreDataService: CoreDataService
-    private let userDefaultsManager: UserDefaultsManager<String>
+    private let userDefaultsManager: UserDefaultsManagerProtocol
     
-    init(coreDataService: CoreDataService,usDefMDataDisplay: UserDefaultsManager<String> ) {
+    init(coreDataService: CoreDataService,userDefaultsManager: UserDefaultsManagerProtocol ) {
         self.coreDataService = coreDataService
-        self.userDefaultsManager = usDefMDataDisplay
+        self.userDefaultsManager = userDefaultsManager
     }
 
     func createViewController(viewControllerFirst: DetailsViewController) -> ListViewController {
