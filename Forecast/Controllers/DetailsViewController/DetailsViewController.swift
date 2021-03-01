@@ -5,13 +5,17 @@ class DetailsViewController: UITableViewController {
     private var userDefaultsManager: UserDefaultsManagerProtocol
     private let queryService: QueryService
     private let coreDataService: CoreDataService
-    
     private let headingTableViewCell = HeadingTableViewCell()
     private let collectionTableViewCell = СollectionTableViewCell()
     
-    var selectedСityWeatherCopy: СityWeatherCopy? {
+    private var cellModels: [TableViewCellModel] = [] {
         willSet(newValue) {
             tableView.reloadData()
+        }
+    }
+    
+    var selectedСityWeatherCopy: СityWeatherCopy? {
+        willSet(newValue) {
             if newValue == nil {
                 userDefaultsManager.remove(key: .coordinates)
             }
@@ -21,7 +25,6 @@ class DetailsViewController: UITableViewController {
     init(queryService: QueryService,
          userDefaultsManager: UserDefaultsManagerProtocol,
          coreDataService: CoreDataService) {
-        
         self.queryService = queryService
         self.userDefaultsManager = userDefaultsManager
         self.coreDataService = coreDataService
@@ -45,12 +48,13 @@ class DetailsViewController: UITableViewController {
         let coordinates: [String:Double]? = userDefaultsManager.get(key: .coordinates)
         if let coordinates = coordinates, let latitude = coordinates["lat"], let longitude = coordinates["lon"] {
             selectedСityWeatherCopy = coreDataService.getСityWeatherCopy(coordinates: (latitude,longitude))
+            cellModels = createCellModels()
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.reloadData()
+        cellModels = createCellModels()
         if let selectedСityWeatherCopy = selectedСityWeatherCopy  {
             requestAndUpdate(coordinate: (selectedСityWeatherCopy.latitude,selectedСityWeatherCopy.longitude))
         }
@@ -71,6 +75,8 @@ class DetailsViewController: UITableViewController {
                 let cityWeatherCopy = try result.get()
                 DispatchQueue.main.async {
                     self?.selectedСityWeatherCopy = cityWeatherCopy
+                    guard let strongSelf = self else { return }
+                    strongSelf.cellModels = strongSelf.createCellModels()
                 }
             } catch  {
                     DispatchQueue.main.async {
@@ -87,80 +93,63 @@ class DetailsViewController: UITableViewController {
         }
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if selectedСityWeatherCopy == nil {
             tableView.backgroundView = BackgroundView()
             return 0
         } else {
             tableView.backgroundView = nil
-            return 6
+            return cellModels.count
         }
     }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let defaultTableViewCell: UITableViewCell = {
-            let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
-            cell.backgroundColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
-            cell.textLabel?.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            cell.detailTextLabel?.textColor = #colorLiteral(red: 0.9097684026, green: 0.9043604732, blue: 0.9139258265, alpha: 1)
-            cell.selectionStyle = .none
+        let cellModel = cellModels[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellModel.cellType.reuseId,
+                                                 for: indexPath)
+        guard let configurableCell = cell as? (UITableViewCell & ConfigurableWithAny) else {
             return cell
-        }()
-        
-        let temperature: String? = userDefaultsManager.get(key: .temperature)
-        
-        switch indexPath.row{
-        case 0:
-            if let cityName = selectedСityWeatherCopy?.cityName, let description = selectedСityWeatherCopy?.description {
-                headingTableViewCell.nameLabel.text = cityName + "\n" + description
-            }
-            headingTableViewCell.iconImageView.image = UIImage(systemName: selectedСityWeatherCopy?.systemIconNameString ?? "")?.withTintColor(.systemBlue, renderingMode: .alwaysOriginal)
-            //            headingTableViewCell.tempLabel.text = selectedСityWeatherCopy?.getTemperature(unit: temperature)
-            return headingTableViewCell
-        case 1:
-            //            collectionTableViewCell.settingParameters(cityWeatherHourly: selectedСityWeatherCopy?.cityWeatherHourlyСopies ?? [], temperature: temperature)
-            return collectionTableViewCell
-        case 2:
-            defaultTableViewCell.textLabel?.text = "По ощущениям"
-            defaultTableViewCell.detailTextLabel?.text = selectedСityWeatherCopy?.getFeelsLike(unit: temperature)
-            return defaultTableViewCell
-        case 3:
-            //            guard let speed: String = userDefaultsManager.get(key: .speed) else {return}
-            defaultTableViewCell.textLabel?.text = "Ветер"
-            //            defaultTableViewCell.detailTextLabel?.text = selectedСityWeatherCopy?.getSpeed(unit: speed)
-            return defaultTableViewCell
-        case 4:
-            //            guard let pressure: String = userDefaultsManager.get(key: .pressure) else {return}
-            defaultTableViewCell.textLabel?.text = "Давление"
-            //            defaultTableViewCell.detailTextLabel?.text = selectedСityWeatherCopy?.getPressure(unit: pressure)
-            return defaultTableViewCell
-        case 5:
-            defaultTableViewCell.textLabel?.text = "Влажность"
-            defaultTableViewCell.detailTextLabel?.text = selectedСityWeatherCopy?.humidityString
-            return defaultTableViewCell
-        case 6:
-            defaultTableViewCell.textLabel?.text = "Облачность"
-            defaultTableViewCell.detailTextLabel?.text  = selectedСityWeatherCopy?.allString
-            return defaultTableViewCell
-        default:
-            return defaultTableViewCell
         }
+
+        configurableCell.confugire(with: cellModel)
+        
+        return cell
+    }
+    
+    private func createCellModels() -> [TableViewCellModel] {
+        
+        let temp: String? = userDefaultsManager.get(key: .temperature)
+        let speed: String? = userDefaultsManager.get(key: .speed)
+        let pressure: String? = userDefaultsManager.get(key: .pressure)
+       
+        let headingModel = HeadingModel(cityName: selectedСityWeatherCopy?.cityName, description: selectedСityWeatherCopy?.description, temp: selectedСityWeatherCopy?.getTemperature(unit: temp), icon: UIImage(systemName: selectedСityWeatherCopy?.systemIconNameString ?? "nosign"))
+        
+        let сollectionTableModel = CollectionTableModel(temperature: temp, models: selectedСityWeatherCopy?.cityWeatherHourlyСopies)
+        
+        let defaultModelFeelsLike = DefaultModel(title: "По ощущениям", subtitle: selectedСityWeatherCopy?.getFeelsLike(unit: temp))
+        
+        let defaultModelSpeed = DefaultModel(title: "Ветер", subtitle: selectedСityWeatherCopy?.getSpeed(unit: speed))
+        
+        let defaultModelPressure = DefaultModel(title: "Давление", subtitle: selectedСityWeatherCopy?.getPressure(unit: pressure))
+        
+        let defaultModelHumidity = DefaultModel(title: "Влажность", subtitle: selectedСityWeatherCopy?.humidityString)
+        
+        let defaultModelAll = DefaultModel(title: "Облачность", subtitle: selectedСityWeatherCopy?.allString)
+        
+   
+        let cellModel: [TableViewCellModel] = [headingModel, сollectionTableModel,defaultModelFeelsLike,defaultModelSpeed,defaultModelPressure,defaultModelHumidity,defaultModelAll]
+
+        cellModel.forEach({ model in
+            tableView.register(model.cellType, forCellReuseIdentifier: model.cellType.reuseId)
+        })
+
+        return cellModel
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.row {
-        case 0:
-            return 400
-        case 1:
-            return 100
-        default:
-            return 55
-        }
+        return cellModels[indexPath.row].cellHeight
     }
+    
 }

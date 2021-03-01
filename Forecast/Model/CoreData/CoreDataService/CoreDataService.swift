@@ -83,11 +83,6 @@ final class CoreDataService {
                                                                          latitude:  $0.latitude,
                                                                          longitude: $0.longitude, description: $0.description, cityWeatherHourlyArray: $0.hourly.map({ return СityWeatherHourlyCopy(dt: $0.date, temp: $0.temperature, id: $0.id, timezoneOffset: $0.timezoneOffset)
                                                                          }))}) ?? []
-            
-            
-            if  cityWeatherCopyArray.count == 0 {
-                print("Data request error")
-            }
         }
         
         return cityWeatherCopyArray

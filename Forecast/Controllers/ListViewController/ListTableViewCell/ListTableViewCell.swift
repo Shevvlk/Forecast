@@ -8,7 +8,6 @@ class ListTableViewCell: UITableViewCell {
     var weatherImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = #colorLiteral(red: 0.7244250178, green: 0.8119142652, blue: 0.9637658, alpha: 0.8728561907)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -34,7 +33,7 @@ class ListTableViewCell: UITableViewCell {
         let label = UILabel()
         label.textAlignment = .right
         label.font = UIFont(name: "Geeza Pro", size: 20)
-        label.textColor =  #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        label.textColor =  #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

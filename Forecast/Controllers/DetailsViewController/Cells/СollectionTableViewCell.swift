@@ -2,13 +2,15 @@ import UIKit
 
 final class СollectionTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    private var cityWeatherHourly: [СityWeatherHourlyCopy] = []
+    static let reuseId: String = "СollectionTableViewCellReuseId"
+    
+    private var cityWeatherHourly: [СityWeatherHourlyCopy]?
     private var temperature: String?
     private let collectionView: UICollectionView = {
         let viewLayout = UICollectionViewFlowLayout()
         viewLayout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: viewLayout)
-        collectionView.backgroundColor =  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+        collectionView.backgroundColor =  .clear
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }()
@@ -21,6 +23,7 @@ final class СollectionTableViewCell: UITableViewCell, UICollectionViewDelegate,
         collectionView.delegate = self
         collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         self.contentView.addSubview(collectionView)
+        self.backgroundColor = .clear
         collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
         collectionView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
         collectionView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
@@ -32,28 +35,31 @@ final class СollectionTableViewCell: UITableViewCell, UICollectionViewDelegate,
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return cityWeatherHourly.count
+        return cityWeatherHourly?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath as IndexPath) as! CollectionViewCell
         
-        let temp = cityWeatherHourly[indexPath.row].getTemperature(unit:temperature)
         
-        if indexPath.row == 0 {
-            cell.timeLabel.text = "Cейчас"
-        } else {
-            cell.timeLabel.text = cityWeatherHourly[indexPath.row].dtString
+        if let date = cityWeatherHourly?[indexPath.row].dtString,
+           let icon = cityWeatherHourly?[indexPath.row].systemIconName,
+           let temp = cityWeatherHourly?[indexPath.row].getTemperature(unit: temperature) {
+            
+            if indexPath.row == 0 {
+                cell.timeLabel.text = "Cейчас"
+            } else {
+                cell.timeLabel.text = date
+            }
+            
+            cell.iconImageView.image = UIImage(systemName: icon)
+            cell.tempLabel.text = temp
         }
-        cell.tempLabel.text = temp
-        cell.iconImageView.image = UIImage(systemName: cityWeatherHourly[indexPath.row].systemIconName)
-        
-        cell.tempLabel.textAlignment = .center
         
         return cell
     }
     
-    func settingParameters(cityWeatherHourly: [СityWeatherHourlyCopy], temperature: String?) {
+    func settingParameters(cityWeatherHourly: [СityWeatherHourlyCopy]?, temperature: String?) {
         self.temperature = temperature
         self.cityWeatherHourly = cityWeatherHourly
         self.collectionView.reloadData()
@@ -68,5 +74,15 @@ extension СollectionTableViewCell: UICollectionViewDelegateFlowLayout {
         } else {
             return CGSize(width: 60, height: 90)
         }
+    }
+}
+
+
+
+extension СollectionTableViewCell: CellIdentifiable, ConfigurableWithAny {
+    
+    func confugire(with object: Any) {
+        let model = object as? CollectionTableModel
+        settingParameters(cityWeatherHourly: model?.models, temperature: model?.temperature)
     }
 }

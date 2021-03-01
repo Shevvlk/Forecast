@@ -6,7 +6,6 @@ final class CollectionViewCell: UICollectionViewCell {
     var timeLabel: UILabel = {
         let label = UILabel()
 //        label.font = UIFont.systemFont(ofSize: 35)
-        label.text = "time"
         label.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -17,7 +16,7 @@ final class CollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textAlignment = .center
 //        label.font = UIFont.systemFont(ofSize: 33)
-        label.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        label.textColor = #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -45,17 +44,17 @@ final class CollectionViewCell: UICollectionViewCell {
         timeLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor,constant: 4).isActive = true
         timeLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor,constant: 3).isActive = true
         timeLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor,constant: -3).isActive = true
-        timeLabel.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        timeLabel.heightAnchor.constraint(equalToConstant: 13).isActive = true
         
-        iconImageView.topAnchor.constraint(equalTo: self.timeLabel.bottomAnchor,constant: 8).isActive = true
-        iconImageView.bottomAnchor.constraint(equalTo: self.tempLabel.topAnchor,constant: -8).isActive = true
-        iconImageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor,constant: 3).isActive = true
-        iconImageView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor,constant: -3).isActive = true
+        iconImageView.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor).isActive = true
+        iconImageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
+        iconImageView.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        iconImageView.widthAnchor.constraint(equalToConstant: 30).isActive = true
         
-        tempLabel.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        tempLabel.heightAnchor.constraint(equalToConstant: 13).isActive = true
         tempLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor,constant: 3).isActive = true
         tempLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor,constant: 3).isActive = true
-        tempLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -4).isActive = true
+        tempLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor,constant: -4).isActive = true
     }
 
 }

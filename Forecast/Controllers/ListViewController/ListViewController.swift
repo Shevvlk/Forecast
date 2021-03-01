@@ -94,7 +94,24 @@ class ListViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.reloadData()
         queryService.fetchСitiesWeatherCopy(сityWeatherCopyArray: cityWeatherCopyArray) { [weak self] currentCityWeatherCopyArray, notUpdatedСities  in
-            self?.cityWeatherCopyArray = currentCityWeatherCopyArray
+            
+            if self?.cityWeatherCopyArray.count != currentCityWeatherCopyArray.count {
+                
+                for currentCityWeatherCopy in currentCityWeatherCopyArray {
+                    
+                   if self?.cityWeatherCopyArray.contains(where: {
+                        return $0.cityName == currentCityWeatherCopy.cityName
+                   }) == false {
+                
+                    
+                    
+                   }
+                    
+                }
+                
+            } else {
+                self?.cityWeatherCopyArray = currentCityWeatherCopyArray
+            }
             
             if notUpdatedСities.count != 0 {
                 self?.notUpdatedСitiesAlert(cities: notUpdatedСities)
