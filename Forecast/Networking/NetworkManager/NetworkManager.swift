@@ -16,6 +16,7 @@ final class NetworkManager<Resource: ApiResource>  {
     init(resource: Resource) {
         self.resource = resource
     }
+    
 }
 
 extension NetworkManager: NetworkRequest {
@@ -44,7 +45,7 @@ extension NetworkManager: NetworkRequest {
             }
             
             let resultOptional: Result<Resource.ModelType, Error>? = self?.parseManager.parseJSON(data: data)
-        
+            
             
             guard let result = resultOptional else {
                 return completionHandler(.failure(NetworkManagerError.errorParseJSON))

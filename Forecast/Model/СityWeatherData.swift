@@ -1,9 +1,10 @@
 
 import Foundation
 
-/// Текущий прогноз
+/// Текущий прогноз погоды
 struct СityWeatherData: Decodable   {
     
+    /// Название города
     let name: String
     let coord: Coord
     let main: Main
@@ -12,9 +13,10 @@ struct СityWeatherData: Decodable   {
     let clouds: Clouds
     /// Время расчета данных, unix, UTC
     let dt: Date
+    
 }
 
-struct Main: Codable {
+struct Main: Decodable {
     /// Температура Кельвин
     let temp: Double
     /// Температура. Этот температурный параметр объясняет человеческое восприятие погоды. Кельвин
@@ -32,24 +34,24 @@ struct Main: Codable {
     }
 }
 
-struct Clouds: Codable {
+struct Clouds: Decodable {
     /// Облачность %
     let all: Int16
 }
 
-struct Wind: Codable {
-    /// Скорость ветра метр / сек
+struct Wind: Decodable {
+    /// Скорость ветра метр/сек
     let speed: Double
 }
 
-struct Weather: Codable {
+struct Weather: Decodable {
     /// Идентификатор погодных условий
     let id: Int16
+    /// Описание погодных условий
     let description: String
 }
 
 /// Координаты 
-struct Coord: Codable {
-    var lat: Double
-    var lon: Double
+struct Coord: Decodable {
+    var lat, lon: Double
 }

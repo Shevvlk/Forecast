@@ -18,8 +18,7 @@ final class DetailsViewControllerAssembly {
         
         let detailsViewController = DetailsViewController(queryService: queryService,
                                                           userDefaultsManager: userDefaultsManager,
-                                                            coreDataService: coreDataService)
-        
+                                                          coreDataService: coreDataService)
         return detailsViewController
     }
     

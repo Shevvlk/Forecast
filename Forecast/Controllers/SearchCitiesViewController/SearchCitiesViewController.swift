@@ -7,16 +7,20 @@ class SearchCitiesViewController: UIViewController {
     var completionHandler:((CLLocationCoordinate2D) -> Void)?
     
     private let searchBar: UISearchBar = {
+        
         let searchBar = UISearchBar()
+        
         searchBar.showsCancelButton = true
         searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.placeholder = "Поиск"
+        searchBar.prompt = "Добавить город"
+        searchBar.backgroundColor = .white
+        
         if let btnCancel = searchBar.value(forKey: "cancelButton") as? UIButton {
             btnCancel.setTitle("Отмена", for: .normal)
             btnCancel.isEnabled = true
         }
-        searchBar.placeholder = "Поиск"
-        searchBar.prompt = "Добавить город"
-        searchBar.backgroundColor = .white
+        
         return searchBar
     }()
     
@@ -37,15 +41,20 @@ class SearchCitiesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.addSubview(searchBar)
+        
         tableView.tableFooterView = UIView()
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        
         searchBar.delegate = self
         searchCompleter.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        
         view.addSubview(searchBar)
         view.addSubview(tableView)
+        
         setupConstraints ()
     }
     

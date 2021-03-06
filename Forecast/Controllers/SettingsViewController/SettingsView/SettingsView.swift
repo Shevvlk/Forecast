@@ -1,7 +1,7 @@
 
 import UIKit
 
-protocol SelectedValueViewDelegate: AnyObject {
+protocol SelectedValueViewDelegate: class {
     func selectedValueTemperature(target: UISegmentedControl)
     func selectedValueWindSpeed(target: UISegmentedControl)
     func selectedValuePressure(target: UISegmentedControl)

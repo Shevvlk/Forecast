@@ -8,7 +8,9 @@ protocol ApiResource {
 }
 
 extension ApiResource {
+    
     func gettingURL (coordinates: (Double, Double)) -> URL? {
+        
         var components = URLComponents(string: "https://api.openweathermap.org")
         let appid = "540f8d5d4f28c254980258e02d000adf"
         

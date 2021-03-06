@@ -219,12 +219,14 @@ struct СityWeatherCopy {
     }
     
     init?(cityWeatherData: СityWeatherData, cityWeatherHourlyData: СityWeatherHourlyData) {
-        self.cityName = cityWeatherData.name
-        self.temperature = cityWeatherData.main.temp
-        self.feelsLike = cityWeatherData.main.feelsLike
+        
         guard let id = cityWeatherData.weather.first?.id else {
             return nil
         }
+        
+        self.cityName = cityWeatherData.name
+        self.temperature = cityWeatherData.main.temp
+        self.feelsLike = cityWeatherData.main.feelsLike
         self.conditionCode = id
         self.date = cityWeatherData.dt
         self.pressure = cityWeatherData.main.pressure
@@ -238,14 +240,31 @@ struct СityWeatherCopy {
         var cityWeatherHourlyArray: [СityWeatherHourlyCopy] = []
         
         for hourly in cityWeatherHourlyData.hourly {
-            let cityWeatherHourly = СityWeatherHourlyCopy(dt: hourly.dt, temp: hourly.temp, id: hourly.weather.first?.id ?? 0, timezoneOffset: cityWeatherHourlyData.timezoneOffset)
+            
+            let cityWeatherHourly = СityWeatherHourlyCopy(dt: hourly.dt,
+                                                           temp: hourly.temp,
+                                                           id: hourly.weather.first?.id ?? 0)
+            
             cityWeatherHourlyArray.append(cityWeatherHourly)
         }
         
         self.cityWeatherHourlyСopies = cityWeatherHourlyArray
     }
     
-    init(cityName:  String, temperature: Double, feelsLikeTemperature: Double, conditionCode: Int16, date: Date, pressure: Int16, humidity: Int16, all: Int16,speed: Double, latitude: Double, longitude: Double, description: String, cityWeatherHourlyArray: [СityWeatherHourlyCopy]) {
+    init(cityName:  String,
+         temperature: Double,
+         feelsLikeTemperature: Double,
+         conditionCode: Int16,
+         date: Date,
+         pressure: Int16,
+         humidity: Int16,
+         all: Int16,
+         speed: Double,
+         latitude: Double,
+         longitude: Double,
+         description: String,
+         cityWeatherHourlyArray: [СityWeatherHourlyCopy]) {
+        
         self.cityName = cityName
         self.temperature = temperature
         self.feelsLike = feelsLikeTemperature

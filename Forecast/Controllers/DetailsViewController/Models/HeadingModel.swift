@@ -2,9 +2,11 @@
 import UIKit
 
 struct HeadingModel: TableViewCellModel {
+    
     var cellType: (UITableViewCell & CellIdentifiable & ConfigurableWithAny).Type {
         return HeadingTableViewCell.self
     }
+    
     let cellHeight: CGFloat  = 400
     
     let cityName: String?

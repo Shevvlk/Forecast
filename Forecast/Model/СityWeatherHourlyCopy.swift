@@ -1,11 +1,12 @@
+
 import Foundation
 
 struct СityWeatherHourlyCopy {
+    
     let dt: Date
     let temperature: Double
     let id: Int16
-    let timezoneOffset: Int16
-
+    
     var systemIconName: String {
         switch id {
         case 200...232: return "cloud.bolt.rain.fill"
@@ -64,10 +65,9 @@ struct СityWeatherHourlyCopy {
         }
     }
     
-    init(dt: Date, temp: Double, id: Int16, timezoneOffset: Int16) {
+    init(dt: Date, temp: Double, id: Int16) {
         self.dt = dt
         self.temperature = temp
         self.id = id
-        self.timezoneOffset = timezoneOffset
     }
 }

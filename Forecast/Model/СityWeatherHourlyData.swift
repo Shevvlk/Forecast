@@ -3,20 +3,20 @@ import Foundation
 
 /// Почасовой прогноз
 struct СityWeatherHourlyData: Decodable {
+    /// Координаты
     let lat, lon: Double
-    let timezone: String
-    let timezoneOffset: Int16
     let hourly: [Hourly]
 
     enum CodingKeys: String, CodingKey {
-        case lat, lon, timezone
-        case timezoneOffset = "timezone_offset"
+        case lat, lon
         case hourly
     }
 }
 
-struct Hourly: Codable {
+struct Hourly: Decodable {
+    /// Дата
     let dt: Date
+    /// Температура
     let temp: Double
     let weather: [Weather]
 }

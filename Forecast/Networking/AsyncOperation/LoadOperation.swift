@@ -51,4 +51,5 @@ final class LoadOperation: AsyncOperation {
             self?.state = .finished
         }
     }
+    
 }

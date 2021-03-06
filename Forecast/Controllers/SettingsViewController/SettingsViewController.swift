@@ -3,7 +3,7 @@ import UIKit
 
 class SettingsViewController: UIViewController {
     
-    private let сustomizationView = SettingsView()
+    private lazy var сustomizationView = SettingsView()
     private var userDefaultsManager: UserDefaultsManagerProtocol
     
     init(userDefaultsManager: UserDefaultsManagerProtocol) {
@@ -28,7 +28,7 @@ class SettingsViewController: UIViewController {
     }
     
     func installSegmentedControl() {
-    
+        
         let temperature: String? = userDefaultsManager.get(key: .temperature)
         
         switch temperature {
@@ -73,7 +73,6 @@ class SettingsViewController: UIViewController {
 extension SettingsViewController: SelectedValueViewDelegate {
     
     func selectedValueTemperature(target: UISegmentedControl) {
-       
         
         switch target.selectedSegmentIndex {
         case 0:
@@ -88,6 +87,7 @@ extension SettingsViewController: SelectedValueViewDelegate {
     }
     
     func selectedValueWindSpeed(target: UISegmentedControl) {
+        
         switch target.selectedSegmentIndex {
         case 0:
             userDefaultsManager.save("km", key: .speed)
@@ -103,6 +103,7 @@ extension SettingsViewController: SelectedValueViewDelegate {
     }
     
     func selectedValuePressure(target: UISegmentedControl) {
+        
         switch target.selectedSegmentIndex {
         case 0:
             userDefaultsManager.save("hPa", key: .pressure)

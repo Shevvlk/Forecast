@@ -1,6 +1,14 @@
 
 import CoreData
 
+protocol CoreDataServiceProtocol {
+    func saveСityWeather(cityWeatherCopy: СityWeatherCopy)
+    func getСitiesWeatherCopy() -> [СityWeatherCopy]
+    func getСityWeatherCopy (coordinates: (Double,Double)) -> СityWeatherCopy?
+    func deleteСityWeather (cityWeatherCopy: СityWeatherCopy)
+    func rewritingСitiesWeather (cityWeatherCopyArray: [СityWeatherCopy])
+}
+
 
 final class CoreDataService {
     
@@ -8,6 +16,7 @@ final class CoreDataService {
     private let backgroundContext: NSManagedObjectContext
     
     init() {
+        
         persistentContainer = NSPersistentContainer(name: "CityWeatherModel")
         persistentContainer.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
@@ -18,8 +27,12 @@ final class CoreDataService {
         backgroundContext = persistentContainer.newBackgroundContext()
     }
     
+}
+
+extension CoreDataService: CoreDataServiceProtocol {
     
     func saveСityWeather(cityWeatherCopy: СityWeatherCopy) {
+        
         let context = backgroundContext
         
         context.perform {
@@ -46,8 +59,6 @@ final class CoreDataService {
                 cityWeatherHourly.id = cityWeatherHourlyCopy.id
                 cityWeatherHourly.date = cityWeatherHourlyCopy.dt
                 cityWeatherHourly.temperature = cityWeatherHourlyCopy.temperature
-                cityWeatherHourly.timezoneOffset = cityWeatherHourlyCopy.timezoneOffset
-                
                 cityWeather.addToHourly(cityWeatherHourly)
             }
             
@@ -57,12 +68,12 @@ final class CoreDataService {
                 print(error.localizedDescription)
             }
         }
+        
     }
     
     func getСitiesWeatherCopy() -> [СityWeatherCopy] {
         
         let context = persistentContainer.viewContext
-        
         var cityWeatherCopyArray: [СityWeatherCopy] = []
         
         context.performAndWait {
@@ -81,7 +92,11 @@ final class CoreDataService {
                                                                          all: $0.all,
                                                                          speed: $0.speed,
                                                                          latitude:  $0.latitude,
-                                                                         longitude: $0.longitude, description: $0.description, cityWeatherHourlyArray: $0.hourly.map({ return СityWeatherHourlyCopy(dt: $0.date, temp: $0.temperature, id: $0.id, timezoneOffset: $0.timezoneOffset)
+                                                                         longitude: $0.longitude,
+                                                                         description: $0.description,
+                                                                         cityWeatherHourlyArray: $0.hourly.map({ return СityWeatherHourlyCopy(dt: $0.date,
+                                                                                                                                               temp: $0.temperature,
+                                                                                                                                               id: $0.id)
                                                                          }))}) ?? []
         }
         
@@ -89,8 +104,8 @@ final class CoreDataService {
     }
     
     func getСityWeatherCopy (coordinates: (Double,Double)) -> СityWeatherCopy? {
-        let context = persistentContainer.viewContext
         
+        let context = persistentContainer.viewContext
         var cityWeatherCopy: СityWeatherCopy?
         
         context.performAndWait {
@@ -101,27 +116,40 @@ final class CoreDataService {
             let result = try? context.fetch(request)
             
             if let cityWeather = result?.first {
-                cityWeatherCopy = СityWeatherCopy(cityName: cityWeather.cityName , temperature: cityWeather.temperature, feelsLikeTemperature: cityWeather.feelsLikeTemperature, conditionCode: cityWeather.conditionCode, date: cityWeather.date , pressure: cityWeather.pressure, humidity: cityWeather.humidity, all: cityWeather.all, speed: cityWeather.speed,latitude: cityWeather.latitude, longitude: cityWeather.longitude, description: cityWeather.descriptionWeather, cityWeatherHourlyArray: cityWeather.hourly.map({ return СityWeatherHourlyCopy(dt: $0.date, temp: $0.temperature, id: $0.id, timezoneOffset: $0.timezoneOffset)
-                }) )
+                
+                cityWeatherCopy = СityWeatherCopy(cityName: cityWeather.cityName ,
+                                                   temperature: cityWeather.temperature,
+                                                   feelsLikeTemperature: cityWeather.feelsLikeTemperature,
+                                                   conditionCode: cityWeather.conditionCode,
+                                                   date: cityWeather.date ,
+                                                   pressure: cityWeather.pressure,
+                                                   humidity: cityWeather.humidity,
+                                                   all: cityWeather.all,
+                                                   speed: cityWeather.speed,
+                                                   latitude: cityWeather.latitude,
+                                                   longitude: cityWeather.longitude,
+                                                   description: cityWeather.descriptionWeather,
+                                                   cityWeatherHourlyArray: cityWeather.hourly.map({ return СityWeatherHourlyCopy(dt: $0.date,
+                                                                                                                                  temp: $0.temperature,
+                                                                                                                                  id: $0.id)
+                                                   }))
                 
             } else {
                 print("Data request error")
             }
-            
-            
         }
-        
         return cityWeatherCopy
     }
     
     
     func deleteСityWeather (cityWeatherCopy: СityWeatherCopy) {
+        
         let context = backgroundContext
         
         context.perform {
+            
             let request = NSFetchRequest<CityWeather>(entityName: "CityWeather")
             request.predicate = NSPredicate(format: "latitude = \(cityWeatherCopy.latitude) AND longitude = \(cityWeatherCopy.longitude)")
-            
             
             if let cityWeather = try? context.fetch(request).first {
                 
@@ -135,6 +163,7 @@ final class CoreDataService {
             } else {
                 print("Data deletion error")
             }
+            
         }
     }
     
@@ -142,13 +171,13 @@ final class CoreDataService {
     func rewritingСitiesWeather (cityWeatherCopyArray: [СityWeatherCopy]) {
         
         let context = backgroundContext
+        
         for currentWeather in cityWeatherCopyArray {
             
             context.perform {
                 
                 let request = NSFetchRequest<CityWeather>(entityName: "CityWeather")
                 request.predicate = NSPredicate(format: "latitude = \(currentWeather.latitude) AND longitude = \(currentWeather.longitude)")
-
                 
                 if let city = try? context.fetch(request).first {
                     
@@ -177,5 +206,5 @@ final class CoreDataService {
             }
         }
     }
+    
 }
-

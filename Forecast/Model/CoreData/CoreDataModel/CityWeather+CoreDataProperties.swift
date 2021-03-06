@@ -25,7 +25,6 @@ extension CityWeather {
 
 }
 
-// MARK: Generated accessors for hourly
 extension CityWeather {
 
     @objc(addHourlyObject:)

@@ -1,3 +1,4 @@
+
 import UIKit
 
 final class HeadingTableViewCell: UITableViewCell, ConfigurableWithAny, CellIdentifiable {
@@ -6,7 +7,7 @@ final class HeadingTableViewCell: UITableViewCell, ConfigurableWithAny, CellIden
     
     let cityNameLabel: UILabel = {
         let label = UILabel()
-                label.font = UIFont.systemFont(ofSize: 27)
+        label.font = UIFont.systemFont(ofSize: 27)
         label.numberOfLines = 2
         label.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         label.textAlignment = .center
@@ -17,7 +18,7 @@ final class HeadingTableViewCell: UITableViewCell, ConfigurableWithAny, CellIden
     
     let descriptionLabel: UILabel = {
         let label = UILabel()
-                label.font = UIFont.systemFont(ofSize: 17)
+        label.font = UIFont.systemFont(ofSize: 17)
         label.numberOfLines = 1
         label.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         label.textAlignment = .center
@@ -81,7 +82,7 @@ final class HeadingTableViewCell: UITableViewCell, ConfigurableWithAny, CellIden
     
     func confugire(with object: Any) {
         let model = object as? HeadingModel
-        
+    
         cityNameLabel.text = model?.cityName
         descriptionLabel.text = model?.description
         tempLabel.text = model?.temp

@@ -1,10 +1,12 @@
+
 import UIKit
 
 class DetailsViewController: UITableViewController {
     
     private var userDefaultsManager: UserDefaultsManagerProtocol
-    private let queryService: QueryService
-    private let coreDataService: CoreDataService
+    private let queryService:        QueryServiceProtocol
+    private let coreDataService:     CoreDataServiceProtocol
+    
     private let headingTableViewCell = HeadingTableViewCell()
     private let collectionTableViewCell = СollectionTableViewCell()
     
@@ -22,9 +24,9 @@ class DetailsViewController: UITableViewController {
         }
     }
     
-    init(queryService: QueryService,
+    init(queryService: QueryServiceProtocol,
          userDefaultsManager: UserDefaultsManagerProtocol,
-         coreDataService: CoreDataService) {
+         coreDataService: CoreDataServiceProtocol) {
         self.queryService = queryService
         self.userDefaultsManager = userDefaultsManager
         self.coreDataService = coreDataService
@@ -79,8 +81,8 @@ class DetailsViewController: UITableViewController {
                     strongSelf.cellModels = strongSelf.createCellModels()
                 }
             } catch  {
-                    DispatchQueue.main.async {
-                        self?.presentErrorAlert(error: error)
+                DispatchQueue.main.async {
+                    self?.presentErrorAlert(error: error)
                 }
             }
         }
@@ -112,7 +114,7 @@ class DetailsViewController: UITableViewController {
         guard let configurableCell = cell as? (UITableViewCell & ConfigurableWithAny) else {
             return cell
         }
-
+        
         configurableCell.confugire(with: cellModel)
         
         return cell
@@ -123,8 +125,11 @@ class DetailsViewController: UITableViewController {
         let temp: String? = userDefaultsManager.get(key: .temperature)
         let speed: String? = userDefaultsManager.get(key: .speed)
         let pressure: String? = userDefaultsManager.get(key: .pressure)
-       
-        let headingModel = HeadingModel(cityName: selectedСityWeatherCopy?.cityName, description: selectedСityWeatherCopy?.description, temp: selectedСityWeatherCopy?.getTemperature(unit: temp), icon: UIImage(systemName: selectedСityWeatherCopy?.systemIconNameString ?? "nosign"))
+        
+        let headingModel = HeadingModel(cityName: selectedСityWeatherCopy?.cityName,
+                                        description: selectedСityWeatherCopy?.description,
+                                        temp: selectedСityWeatherCopy?.getTemperature(unit: temp),
+                                        icon: UIImage(systemName: selectedСityWeatherCopy?.systemIconNameString ?? "nosign"))
         
         let сollectionTableModel = CollectionTableModel(temperature: temp, models: selectedСityWeatherCopy?.cityWeatherHourlyСopies)
         
@@ -138,13 +143,19 @@ class DetailsViewController: UITableViewController {
         
         let defaultModelAll = DefaultModel(title: "Облачность", subtitle: selectedСityWeatherCopy?.allString)
         
-   
-        let cellModel: [TableViewCellModel] = [headingModel, сollectionTableModel,defaultModelFeelsLike,defaultModelSpeed,defaultModelPressure,defaultModelHumidity,defaultModelAll]
-
+        
+        let cellModel: [TableViewCellModel] = [headingModel,
+                                               сollectionTableModel,
+                                               defaultModelFeelsLike,
+                                               defaultModelSpeed,
+                                               defaultModelPressure,
+                                               defaultModelHumidity,
+                                               defaultModelAll]
+        
         cellModel.forEach({ model in
             tableView.register(model.cellType, forCellReuseIdentifier: model.cellType.reuseId)
         })
-
+        
         return cellModel
     }
     

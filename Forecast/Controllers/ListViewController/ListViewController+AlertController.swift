@@ -29,12 +29,12 @@ extension ListViewController {
         let alertController = UIAlertController(title: errorTitle, message: errorMessage, preferredStyle: .alert)
         
         let cancel = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-
+        
         let settings = UIAlertAction(title: "Настройки", style: .default) { action in
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
             }
-
+            
             if UIApplication.shared.canOpenURL(settingsUrl) {
                 UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
                 })
@@ -52,7 +52,7 @@ extension ListViewController {
         let cities = cities.joined(separator: ", ")
         
         let title = " Грод(а) \(cities) не обновлены"
-
+        
         let alertController = UIAlertController(title: title, message: "", preferredStyle: .actionSheet)
         
         present(alertController, animated: true, completion: nil)

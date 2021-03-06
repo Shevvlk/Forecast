@@ -7,10 +7,9 @@ protocol UserDefaultsManagerProtocol {
     func remove(key: UDParameter)
 }
 
-
 /// Класс для сохранения, получения и удаления параметров
 final class UserDefaultsManager: UserDefaultsManagerProtocol{
-
+    
     private let userDefaults = UserDefaults.standard
     
     func save<T>(_ value: T, key: UDParameter ) {
@@ -21,8 +20,10 @@ final class UserDefaultsManager: UserDefaultsManagerProtocol{
         let value = userDefaults.object(forKey: key.rawValue)
         return value as? T
     }
-
+    
     func remove(key: UDParameter) {
         userDefaults.removeObject(forKey: key.rawValue)
     }
+    
 }
+

@@ -1,11 +1,15 @@
 
 import Foundation
 
-protocol ReceivingManagerProtocol {
+protocol QueryServiceProtocol {
     func fetchСityWeatherCopy (coordinate: (Double,Double),  completionHandler: @escaping (Result<СityWeatherCopy, Error>) -> Void)
+    func fetchСitiesWeatherCopy (сityWeatherCopyArray: [СityWeatherCopy], completionHandler: @escaping ([СityWeatherCopy],[String]) -> Void)
 }
 
 final class QueryService {
+    
+    private let networkManagerCW = NetworkManager(resource: СityWeatherResource())
+    private let networkManagerCWH = NetworkManager(resource: СityWeatherHourlyResource())
     
     private let loadOperationQueue: OperationQueue = {
         let operationQueue = OperationQueue()
@@ -13,8 +17,10 @@ final class QueryService {
         return operationQueue
     }()
     
-    private let networkManagerCW = NetworkManager(resource: СityWeatherResource())
-    private let networkManagerCWH = NetworkManager(resource: СityWeatherHourlyResource())
+}
+
+
+extension QueryService: QueryServiceProtocol {
     
     func fetchСityWeatherCopy (coordinate: (Double,Double),  completionHandler: @escaping (Result<СityWeatherCopy, Error>) -> Void) {
         
@@ -71,6 +77,7 @@ final class QueryService {
             }
             
         }
+        
     }
     
     
@@ -109,4 +116,5 @@ final class QueryService {
             }
         }
     }
+    
 }

@@ -1,3 +1,4 @@
+
 import UIKit
 
 final class СollectionTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource {
@@ -41,7 +42,6 @@ final class СollectionTableViewCell: UITableViewCell, UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath as IndexPath) as! CollectionViewCell
         
-        
         if let date = cityWeatherHourly?[indexPath.row].dtString,
            let icon = cityWeatherHourly?[indexPath.row].systemIconName,
            let temp = cityWeatherHourly?[indexPath.row].getTemperature(unit: temperature) {
@@ -67,14 +67,15 @@ final class СollectionTableViewCell: UITableViewCell, UICollectionViewDelegate,
 }
 
 extension СollectionTableViewCell: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
-    {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.row == 0 {
             return CGSize(width: 80, height: 90)
         } else {
             return CGSize(width: 60, height: 90)
         }
     }
+    
 }
 
 

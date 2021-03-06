@@ -4,7 +4,6 @@
  class TapBarController: UITabBarController {
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         
         let coreDataService = CoreDataService()
@@ -35,6 +34,5 @@
         let tabBarList = [detailsViewController, navigationControllerRootList, customizationViewController]
         
         viewControllers = tabBarList
-
     }
  }

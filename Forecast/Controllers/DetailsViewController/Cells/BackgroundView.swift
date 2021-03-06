@@ -1,7 +1,8 @@
+
 import UIKit
 
 final class BackgroundView: UIView {
-
+    
     let titleLabel : UILabel = {
         let label = UILabel()
         label.text = "Нет города"
@@ -22,7 +23,7 @@ final class BackgroundView: UIView {
         return label
     }()
     
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -30,7 +31,7 @@ final class BackgroundView: UIView {
         
         addSubview(titleLabel)
         addSubview(subTitleLabel)
-           
+        
         setupConstraints()
     }
     
@@ -38,9 +39,8 @@ final class BackgroundView: UIView {
         super.init(coder: aDecoder)
         setupConstraints()
     }
-
+    
     func setupConstraints() {
-        
         titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: -20).isActive = true
         titleLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor,constant: 20).isActive = true
