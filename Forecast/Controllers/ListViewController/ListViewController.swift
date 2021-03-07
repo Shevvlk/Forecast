@@ -103,8 +103,6 @@ class ListViewController: UITableViewController {
                         return $0.cityName == currentCityWeatherCopy.cityName
                     }) == false {
                         
-                        
-                        
                     }
                     
                 }
@@ -163,14 +161,19 @@ class ListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? ListTableViewCell else { fatalError("Unable to Dequeue Image Table View Cell") }
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        
+        guard let configurableCell = cell as? ListTableViewCell else {
+            return cell
+        }
         
         let temperature: String?  = userDefaultsManager.get(key: .temperature)
         
-        cell.temperatureLabel.text = cityWeatherCopyArray[indexPath.row].getTemperature(unit: temperature)
-        cell.cityNameLabel.text = cityWeatherCopyArray[indexPath.row].cityName
-        cell.weatherImageView.image = UIImage(systemName: cityWeatherCopyArray[indexPath.row].systemIconNameString)
-        cell.dateLabel.text = cityWeatherCopyArray[indexPath.row].dtString
+        configurableCell.temperatureLabel.text = cityWeatherCopyArray[indexPath.row].getTemperature(unit: temperature)
+        configurableCell.cityNameLabel.text = cityWeatherCopyArray[indexPath.row].cityName
+        configurableCell.weatherImageView.image = UIImage(systemName: cityWeatherCopyArray[indexPath.row].systemIconNameString)
+        configurableCell.dateLabel.text = cityWeatherCopyArray[indexPath.row].dtString
         
         return cell
     }

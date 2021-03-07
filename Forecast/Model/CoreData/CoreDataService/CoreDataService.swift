@@ -2,7 +2,7 @@
 import CoreData
 
 protocol CoreDataServiceProtocol {
-    func saveСityWeather(cityWeatherCopy: СityWeatherCopy)
+    func saveСityWeather (cityWeatherCopy: СityWeatherCopy)
     func getСitiesWeatherCopy() -> [СityWeatherCopy]
     func getСityWeatherCopy (coordinates: (Double,Double)) -> СityWeatherCopy?
     func deleteСityWeather (cityWeatherCopy: СityWeatherCopy)

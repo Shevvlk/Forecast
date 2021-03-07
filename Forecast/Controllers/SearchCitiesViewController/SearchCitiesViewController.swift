@@ -42,12 +42,10 @@ class SearchCitiesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(searchBar)
-        
         tableView.tableFooterView = UIView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "Cell")
         
         searchBar.delegate = self
         searchCompleter.delegate = self
@@ -100,6 +98,7 @@ extension SearchCitiesViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.textLabel?.text = searchResults[indexPath.row].title
+        cell.detailTextLabel?.text = searchResults[indexPath.row].subtitle
         return cell
     }
     
@@ -115,7 +114,9 @@ extension SearchCitiesViewController:  UISearchBarDelegate {
             searchResults.removeAll()
             return
         }
+        
         searchCompleter.queryFragment = searchText
+        searchCompleter.pointOfInterestFilter = .excludingAll
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -131,5 +132,16 @@ extension SearchCitiesViewController: MKLocalSearchCompleterDelegate {
     
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
         print(error.localizedDescription)
+    }
+}
+
+
+class CustomTableViewCell: UITableViewCell {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
