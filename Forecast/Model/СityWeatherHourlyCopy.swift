@@ -3,8 +3,8 @@ import Foundation
 
 struct СityWeatherHourlyCopy {
     
-    let dt: Date
-    let temperature: Double
+    let date: Date
+    let tempKelvin: Double
     let id: Int16
     
     var systemIconName: String {
@@ -20,8 +20,8 @@ struct СityWeatherHourlyCopy {
         }
     }
     
-    var temperatureСelsius: String {
-        let temp = Int(temperature - 273)
+    var tempСelsiusString: String {
+        let temp = Int(tempKelvin - 273)
         if temp > 0 {
             return "+\(temp) °C"
         } else {
@@ -30,14 +30,14 @@ struct СityWeatherHourlyCopy {
     }
     
     /// Температура кельвин
-    var temperatureKelvin: String {
-        let temp = Int(temperature)
+    var tempKelvinString: String {
+        let temp = Int(tempKelvin)
         return "\(temp) K"
     }
     
     /// Температура  фаренгейт
-    var temperatureFahrenheit: String {
-        let temp = Int((temperature * 1.8 - 459))
+    var tempFahrenheitString: String {
+        let temp = Int((tempKelvin * 1.8 - 459))
         if temp > 0 {
             return "+\(temp) °F"
         } else {
@@ -48,26 +48,26 @@ struct СityWeatherHourlyCopy {
     var dtString: String {
         let dateFormatter = DateFormatter()
         dateFormatter.setLocalizedDateFormatFromTemplate("HH")
-        let localDate = dateFormatter.string(from: dt)
+        let localDate = dateFormatter.string(from: date)
         return localDate
     }
     
     func getTemperature (unit: String?) -> String {
         switch unit {
         case "C":
-            return temperatureСelsius
+            return tempСelsiusString
         case "F":
-            return temperatureFahrenheit
+            return tempFahrenheitString
         case "K":
-            return temperatureKelvin
+            return tempKelvinString
         default:
-            return temperatureСelsius
+            return tempСelsiusString
         }
     }
     
-    init(dt: Date, temp: Double, id: Int16) {
-        self.dt = dt
-        self.temperature = temp
+    init(date: Date, tempKelvin: Double, id: Int16) {
+        self.date = date
+        self.tempKelvin = tempKelvin
         self.id = id
     }
 }

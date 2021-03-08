@@ -241,8 +241,8 @@ struct СityWeatherCopy {
         
         for hourly in cityWeatherHourlyData.hourly {
             
-            let cityWeatherHourly = СityWeatherHourlyCopy(dt: hourly.dt,
-                                                           temp: hourly.temp,
+            let cityWeatherHourly = СityWeatherHourlyCopy(date: hourly.dt,
+                                                           tempKelvin: hourly.temp,
                                                            id: hourly.weather.first?.id ?? 0)
             
             cityWeatherHourlyArray.append(cityWeatherHourly)

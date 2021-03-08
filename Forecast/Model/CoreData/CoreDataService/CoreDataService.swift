@@ -57,8 +57,8 @@ extension CoreDataService: CoreDataServiceProtocol {
                 let cityWeatherHourly = CityWeatherHourly(context: context)
                 
                 cityWeatherHourly.id = cityWeatherHourlyCopy.id
-                cityWeatherHourly.date = cityWeatherHourlyCopy.dt
-                cityWeatherHourly.temperature = cityWeatherHourlyCopy.temperature
+                cityWeatherHourly.date = cityWeatherHourlyCopy.date
+                cityWeatherHourly.temperature = cityWeatherHourlyCopy.tempKelvin
                 cityWeather.addToHourly(cityWeatherHourly)
             }
             
@@ -94,8 +94,8 @@ extension CoreDataService: CoreDataServiceProtocol {
                                                                          latitude:  $0.latitude,
                                                                          longitude: $0.longitude,
                                                                          description: $0.description,
-                                                                         cityWeatherHourlyArray: $0.hourly.map({ return СityWeatherHourlyCopy(dt: $0.date,
-                                                                                                                                               temp: $0.temperature,
+                                                                         cityWeatherHourlyArray: $0.hourly.map({ return СityWeatherHourlyCopy(date: $0.date,
+                                                                                                                                               tempKelvin: $0.temperature,
                                                                                                                                                id: $0.id)
                                                                          }))}) ?? []
         }
@@ -129,8 +129,8 @@ extension CoreDataService: CoreDataServiceProtocol {
                                                    latitude: cityWeather.latitude,
                                                    longitude: cityWeather.longitude,
                                                    description: cityWeather.descriptionWeather,
-                                                   cityWeatherHourlyArray: cityWeather.hourly.map({ return СityWeatherHourlyCopy(dt: $0.date,
-                                                                                                                                  temp: $0.temperature,
+                                                   cityWeatherHourlyArray: cityWeather.hourly.map({ return СityWeatherHourlyCopy(date: $0.date,
+                                                                                                                                  tempKelvin: $0.temperature,
                                                                                                                                   id: $0.id)
                                                    }))
                 
