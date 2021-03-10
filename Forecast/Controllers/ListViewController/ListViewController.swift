@@ -5,7 +5,7 @@ import CoreData
 
 class ListViewController: UITableViewController {
     
-    private let coreDataService:            CoreDataServiceProtocol
+    private let coreDataService:            ReadableDatabase & WritableDatabase
     private weak var detailsViewController: DetailsViewController?
     private let userDefaultsManager:        UserDefaultsManagerProtocol
     private let queryService:               QueryServiceProtocol
@@ -14,7 +14,7 @@ class ListViewController: UITableViewController {
     
     init(queryService: QueryServiceProtocol,
          userDefaultsManager: UserDefaultsManagerProtocol,
-         coreDataService: CoreDataServiceProtocol,
+         coreDataService: ReadableDatabase & WritableDatabase,
          viewControllerFirst: DetailsViewController) {
         
         self.queryService = queryService

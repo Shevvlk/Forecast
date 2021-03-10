@@ -1,14 +1,16 @@
 
 import CoreData
 
-protocol CoreDataServiceProtocol {
-    func saveСityWeather (cityWeatherCopy: СityWeatherCopy)
+protocol ReadableDatabase {
     func getСitiesWeatherCopy() -> [СityWeatherCopy]
     func getСityWeatherCopy (coordinates: (Double,Double)) -> СityWeatherCopy?
+}
+
+protocol WritableDatabase {
+    func saveСityWeather (cityWeatherCopy: СityWeatherCopy)
     func deleteСityWeather (cityWeatherCopy: СityWeatherCopy)
     func rewritingСitiesWeather (cityWeatherCopyArray: [СityWeatherCopy])
 }
-
 
 final class CoreDataService {
     
@@ -29,7 +31,7 @@ final class CoreDataService {
     
 }
 
-extension CoreDataService: CoreDataServiceProtocol {
+extension CoreDataService: ReadableDatabase, WritableDatabase {
     
     func saveСityWeather(cityWeatherCopy: СityWeatherCopy) {
         

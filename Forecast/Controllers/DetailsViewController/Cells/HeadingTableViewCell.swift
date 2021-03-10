@@ -15,7 +15,6 @@ final class HeadingTableViewCell: UITableViewCell, ConfigurableWithAny, CellIden
         return label
     }()
     
-    
     let descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 17)
@@ -82,7 +81,7 @@ final class HeadingTableViewCell: UITableViewCell, ConfigurableWithAny, CellIden
     
     func confugire(with object: Any) {
         let model = object as? HeadingModel
-    
+        
         cityNameLabel.text = model?.cityName
         descriptionLabel.text = model?.description
         tempLabel.text = model?.temp

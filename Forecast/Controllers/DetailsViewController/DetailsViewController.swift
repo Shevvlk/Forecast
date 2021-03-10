@@ -5,7 +5,7 @@ class DetailsViewController: UITableViewController {
     
     private var userDefaultsManager: UserDefaultsManagerProtocol
     private let queryService:        QueryServiceProtocol
-    private let coreDataService:     CoreDataServiceProtocol
+    private let coreDataService:     ReadableDatabase
     
     private let headingTableViewCell = HeadingTableViewCell()
     private let collectionTableViewCell = СollectionTableViewCell()
@@ -26,7 +26,7 @@ class DetailsViewController: UITableViewController {
     
     init(queryService: QueryServiceProtocol,
          userDefaultsManager: UserDefaultsManagerProtocol,
-         coreDataService: CoreDataServiceProtocol) {
+         coreDataService: ReadableDatabase) {
         self.queryService = queryService
         self.userDefaultsManager = userDefaultsManager
         self.coreDataService = coreDataService
@@ -36,7 +36,6 @@ class DetailsViewController: UITableViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
