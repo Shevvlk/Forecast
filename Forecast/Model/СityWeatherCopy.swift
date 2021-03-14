@@ -9,7 +9,7 @@ struct СityWeatherCopy {
     /// Долгота
     let longitude: Double
     /// Температура Кельвин
-    let temperature: Double
+    let tempKelvin: Double
     /// Температура. Человеческое восприятие погоды. Кельвин
     let feelsLike: Double
     /// Идентификатор погодных условий
@@ -39,7 +39,7 @@ struct СityWeatherCopy {
     
     /// Температура цельсий
     var temperatureСelsius: String {
-        let temp = Int(temperature - 273)
+        let temp = Int(tempKelvin - 273)
         if temp > 0 {
             return "+\(temp) °C"
         } else {
@@ -49,13 +49,13 @@ struct СityWeatherCopy {
     
     /// Температура кельвин
     var temperatureKelvin: String {
-        let temp = Int(temperature)
+        let temp = Int(tempKelvin)
         return "\(temp) K"
     }
     
     /// Температура  фаренгейт
     var temperatureFahrenheit: String {
-        let temp = Int((temperature * 1.8 - 459))
+        let temp = Int((tempKelvin * 1.8 - 459))
         if temp > 0 {
             return "+\(temp) °F"
         } else {
@@ -218,6 +218,7 @@ struct СityWeatherCopy {
         }
     }
     
+    
     init?(cityWeatherData: СityWeatherData, cityWeatherHourlyData: СityWeatherHourlyData) {
         
         guard let id = cityWeatherData.weather.first?.id else {
@@ -225,7 +226,7 @@ struct СityWeatherCopy {
         }
         
         self.cityName = cityWeatherData.name
-        self.temperature = cityWeatherData.main.temp
+        self.tempKelvin = cityWeatherData.main.temp
         self.feelsLike = cityWeatherData.main.feelsLike
         self.conditionCode = id
         self.date = cityWeatherData.dt
@@ -266,7 +267,7 @@ struct СityWeatherCopy {
          cityWeatherHourlyArray: [СityWeatherHourlyCopy]) {
         
         self.cityName = cityName
-        self.temperature = temperature
+        self.tempKelvin = temperature
         self.feelsLike = feelsLikeTemperature
         self.conditionCode = conditionCode
         self.date = date

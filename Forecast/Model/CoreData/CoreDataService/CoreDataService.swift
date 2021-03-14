@@ -42,7 +42,7 @@ extension CoreDataService: ReadableDatabase, WritableDatabase {
             let cityWeather = CityWeather(context: context)
             
             cityWeather.cityName = cityWeatherCopy.cityName
-            cityWeather.temperature = cityWeatherCopy.temperature
+            cityWeather.temperature = cityWeatherCopy.tempKelvin
             cityWeather.conditionCode = cityWeatherCopy.conditionCode
             cityWeather.feelsLikeTemperature = cityWeatherCopy.feelsLike
             cityWeather.date = cityWeatherCopy.date
@@ -184,7 +184,7 @@ extension CoreDataService: ReadableDatabase, WritableDatabase {
                 if let city = try? context.fetch(request).first {
                     
                     city.cityName = currentWeather.cityName
-                    city.temperature = currentWeather.temperature
+                    city.temperature = currentWeather.tempKelvin
                     city.conditionCode = currentWeather.conditionCode
                     city.feelsLikeTemperature = currentWeather.feelsLike
                     city.date = currentWeather.date

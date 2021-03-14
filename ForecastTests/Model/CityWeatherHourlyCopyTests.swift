@@ -63,5 +63,5 @@ class CityWeatherHourlyCopyTests: XCTestCase {
         XCTAssertEqual(cityWeatherHourlyCopy.getTemperature(unit: "F"), "+41 °F")
         XCTAssertEqual(cityWeatherHourlyCopy.getTemperature(unit: "K"), "278 K")
     }
-
+    
 }

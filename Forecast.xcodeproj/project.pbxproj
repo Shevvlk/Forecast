@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A806E30825F95E2A00454624 /* CityWeatherCopyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A806E30725F95E2A00454624 /* CityWeatherCopyTests.swift */; };
+		A806E30D25FA392A00454624 /* ApiResourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A806E30C25FA392900454624 /* ApiResourceTests.swift */; };
+		A806E31525FA433600454624 /* ParseManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A806E31425FA433600454624 /* ParseManagerTests.swift */; };
+		A806E31925FB737800454624 /* NetworkManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A806E31825FB737800454624 /* NetworkManagerTests.swift */; };
 		A81BDFC825DC3C37002788F2 /* СollectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81BDFC725DC3C37002788F2 /* СollectionTableViewCell.swift */; };
 		A83D123025E3EB5100074F91 /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A83D122F25E3EB5100074F91 /* BackgroundView.swift */; };
 		A83D123825E3EC4100074F91 /* CityWeatherHourly+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A83D123425E3EC4100074F91 /* CityWeatherHourly+CoreDataClass.swift */; };
@@ -65,6 +69,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A806E30725F95E2A00454624 /* CityWeatherCopyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityWeatherCopyTests.swift; sourceTree = "<group>"; };
+		A806E30C25FA392900454624 /* ApiResourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResourceTests.swift; sourceTree = "<group>"; };
+		A806E31425FA433600454624 /* ParseManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseManagerTests.swift; sourceTree = "<group>"; };
+		A806E31825FB737800454624 /* NetworkManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerTests.swift; sourceTree = "<group>"; };
 		A81BDFC725DC3C37002788F2 /* СollectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СollectionTableViewCell.swift"; sourceTree = "<group>"; };
 		A83D122F25E3EB5100074F91 /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 		A83D123425E3EC4100074F91 /* CityWeatherHourly+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "CityWeatherHourly+CoreDataClass.swift"; path = "Forecast/Model/CoreData/CoreDataModel/CityWeatherHourly+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
@@ -139,8 +147,19 @@
 			isa = PBXGroup;
 			children = (
 				A86584E925F649FD00ECFDA6 /* CityWeatherHourlyCopyTests.swift */,
+				A806E30725F95E2A00454624 /* CityWeatherCopyTests.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		A806E30B25FA38C300454624 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				A806E30C25FA392900454624 /* ApiResourceTests.swift */,
+				A806E31425FA433600454624 /* ParseManagerTests.swift */,
+				A806E31825FB737800454624 /* NetworkManagerTests.swift */,
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 		A85F70EC25A213DD00600884 /* SettingsViewController */ = {
@@ -155,6 +174,7 @@
 		A86584E825F649FD00ECFDA6 /* ForecastTests */ = {
 			isa = PBXGroup;
 			children = (
+				A806E30B25FA38C300454624 /* Networking */,
 				A806E2E625F6A98A00454624 /* Model */,
 				A86584EB25F649FD00ECFDA6 /* Info.plist */,
 			);
@@ -497,7 +517,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A806E31925FB737800454624 /* NetworkManagerTests.swift in Sources */,
+				A806E30825F95E2A00454624 /* CityWeatherCopyTests.swift in Sources */,
 				A86584EA25F649FD00ECFDA6 /* CityWeatherHourlyCopyTests.swift in Sources */,
+				A806E30D25FA392A00454624 /* ApiResourceTests.swift in Sources */,
+				A806E31525FA433600454624 /* ParseManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,13 +8,14 @@ protocol NetworkRequest: AnyObject {
 
 final class NetworkManager<Resource: ApiResource>  {
     
-    var urlSession = URLSession(configuration: .default)
+    var urlSession: URLSession
     
     private let parseManager = ParseManager()
     private let resource: Resource
     
-    init(resource: Resource) {
+    init(resource: Resource, urlSession: URLSession = URLSession(configuration: .default)) {
         self.resource = resource
+        self.urlSession = urlSession
     }
     
 }

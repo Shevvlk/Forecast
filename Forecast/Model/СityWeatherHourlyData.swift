@@ -2,7 +2,7 @@
 import Foundation
 
 /// Почасовой прогноз
-struct СityWeatherHourlyData: Decodable {
+struct СityWeatherHourlyData: Decodable, Equatable {
     /// Координаты
     let lat, lon: Double
     let hourly: [Hourly]
@@ -13,7 +13,7 @@ struct СityWeatherHourlyData: Decodable {
     }
 }
 
-struct Hourly: Decodable {
+struct Hourly: Decodable, Equatable {
     /// Дата
     let dt: Date
     /// Температура

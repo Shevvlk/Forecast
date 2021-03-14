@@ -18,5 +18,4 @@ class ParseManager: ParseManagerProtocol {
             return .failure(NetworkManagerError.errorParseJSON)
         }
     }
-    
 }
