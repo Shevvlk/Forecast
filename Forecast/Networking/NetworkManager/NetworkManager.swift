@@ -10,12 +10,13 @@ final class NetworkManager<Resource: ApiResource>  {
     
     var urlSession: URLSession
     
-    private let parseManager = ParseManager()
+    private let parseManager: ParseManagerProtocol?
     private let resource: Resource
     
-    init(resource: Resource, urlSession: URLSession = URLSession(configuration: .default)) {
+    init(resource: Resource, urlSession: URLSession = URLSession(configuration: .default), parseManager: ParseManagerProtocol? = ParseManager()) {
         self.resource = resource
         self.urlSession = urlSession
+        self.parseManager = parseManager
     }
     
 }
@@ -45,11 +46,11 @@ extension NetworkManager: NetworkRequest {
                 return completionHandler(.failure(NetworkManagerError.errorMimeType))
             }
             
-            let resultOptional: Result<Resource.ModelType, Error>? = self?.parseManager.parseJSON(data: data)
+            let resultOptional: Result<Resource.ModelType, Error>? = self?.parseManager?.parseJSON(data: data)
             
             
             guard let result = resultOptional else {
-                return completionHandler(.failure(NetworkManagerError.errorParseJSON))
+                return completionHandler(.failure(NetworkManagerError.errorInstanceDestroyed))
             }
             
             completionHandler(result)

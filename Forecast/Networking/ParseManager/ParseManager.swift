@@ -5,7 +5,7 @@ protocol ParseManagerProtocol {
     func parseJSON<T: Decodable> (data: Data) -> Result<T, Error> 
 }
 
-class ParseManager: ParseManagerProtocol {
+struct ParseManager: ParseManagerProtocol {
     
     private let decoder = JSONDecoder()
     

@@ -19,7 +19,7 @@ class ApiResourceTests: XCTestCase {
         cityWeatherHourlyResource = nil
         super.tearDown()
     }
-   
+
     func testmMethodPath() {
         XCTAssertEqual(cityWeatherResource.methodPath, BasePath.weather.rawValue)
         XCTAssertEqual(cityWeatherHourlyResource.methodPath, BasePath.oneCall.rawValue)

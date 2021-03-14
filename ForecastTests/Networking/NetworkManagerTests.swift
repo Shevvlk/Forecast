@@ -24,7 +24,7 @@ class NetworkManagerTests: XCTestCase {
         
         let urlSessionMock = URLSessionMock(data: nil, error: nil, response: nil)
         
-        let networkManagerCW = NetworkManager(resource: cityWeatherResource, urlSession: urlSessionMock)
+        let networkManagerCW = NetworkManager(resource: cityWeatherResource, urlSession: urlSessionMock, parseManager: nil)
         networkManagerCW.fetchRequest(coordinates: (5, 6)) { _ in
             
         }
@@ -33,7 +33,7 @@ class NetworkManagerTests: XCTestCase {
         
         XCTAssertEqual(urlSessionMock.lastURL, urlCityWeatherResource)
         
-        let networkManagerCWH = NetworkManager(resource: cityWeatherHourlyResource, urlSession: urlSessionMock)
+        let networkManagerCWH = NetworkManager(resource: cityWeatherHourlyResource, urlSession: urlSessionMock, parseManager: nil)
         networkManagerCWH.fetchRequest(coordinates: (5, 6)) { _ in
             
         }
@@ -48,7 +48,7 @@ class NetworkManagerTests: XCTestCase {
         
         let urlSessionMock = URLSessionMock(data: nil, error: nil, response: nil)
         
-        let networkManagerCW = NetworkManager(resource: cityWeatherResource, urlSession: urlSessionMock)
+        let networkManagerCW = NetworkManager(resource: cityWeatherResource, urlSession: urlSessionMock, parseManager: nil)
         networkManagerCW.fetchRequest(coordinates: (5, 6)) { result in
             
             do {
@@ -60,6 +60,119 @@ class NetworkManagerTests: XCTestCase {
         }
     }
     
+    
+    func testErrorStatusCode () throws {
+        
+        let url = try XCTUnwrap(URL(string: "https://"))
+        
+        let response = HTTPURLResponse(url: url, statusCode: 404, httpVersion: nil, headerFields: nil)
+        
+        let urlSessionMock = URLSessionMock(data: Data(), error: nil, response: response)
+        
+        let networkManagerCW = NetworkManager(resource: cityWeatherResource, urlSession: urlSessionMock, parseManager: nil)
+        networkManagerCW.fetchRequest(coordinates: (5, 6)) { result in
+            
+            do {
+                _ = try result.get()
+                XCTFail()
+            } catch {
+                XCTAssertEqual(error as? NetworkManagerError, NetworkManagerError.errorStatusCode)
+            }
+        }
+    }
+    
+    
+    func testErrorMimeType () throws {
+        
+        let url = try XCTUnwrap(URL(string: "https://"))
+        
+        let response = HTTPURLResponse(url: url, mimeType: "", expectedContentLength: -1, textEncodingName: nil)
+        
+        let urlSessionMock = URLSessionMock(data: Data(), error: nil, response: response)
+        
+        let networkManagerCW = NetworkManager(resource: cityWeatherResource, urlSession: urlSessionMock, parseManager: nil)
+        networkManagerCW.fetchRequest(coordinates: (5, 6)) { result in
+            
+            do {
+                _ = try result.get()
+                XCTFail()
+            } catch {
+                XCTAssertEqual(error as? NetworkManagerError, NetworkManagerError.errorMimeType)
+            }
+        }
+    }
+    
+    func testErrorParseJSON () throws {
+        
+        let parseManagerStub = ParseManagerStub(model: nil)
+        
+        let url = try XCTUnwrap(URL(string: "https://"))
+        
+        let response = HTTPURLResponse(url: url, mimeType: "application/json", expectedContentLength: -1, textEncodingName: nil)
+        
+        let urlSessionMock = URLSessionMock(data: Data(), error: nil, response: response)
+        
+        let networkManagerCW = NetworkManager(resource: cityWeatherResource, urlSession: urlSessionMock, parseManager: parseManagerStub)
+        networkManagerCW.fetchRequest(coordinates: (5, 6)) { result in
+            
+            do {
+                _ = try result.get()
+                XCTFail()
+            } catch {
+                XCTAssertEqual(error as? NetworkManagerError, NetworkManagerError.errorParseJSON)
+            }
+        }
+    }
+    
+    func testErrorInstanceDestroyed () throws {
+        
+        let url = try XCTUnwrap(URL(string: "https://"))
+        
+        let response = HTTPURLResponse(url: url, mimeType: "application/json", expectedContentLength: -1, textEncodingName: nil)
+        
+        let urlSessionMock = URLSessionMock(data: Data(), error: nil, response: response)
+        
+        let networkManagerCW = NetworkManager(resource: cityWeatherResource, urlSession: urlSessionMock, parseManager: nil)
+        networkManagerCW.fetchRequest(coordinates: (5, 6)) { result in
+            
+            do {
+                _ = try result.get()
+                XCTFail()
+            } catch {
+                XCTAssertEqual(error as? NetworkManagerError, NetworkManagerError.errorInstanceDestroyed)
+            }
+        }
+    }
+    
+    
+    func testGettingSerializedDataModelInTheAbsenceOfAllErrors () throws {
+        
+        let coord = Coord(lat: 55.558741, lon: 37.378847)
+        let main = Main(temp: 4, feelsLike: 4, pressure: 1030, humidity: 80)
+        let wind = Wind(speed: 7)
+        let weather = Weather(id: 500, description: "ясно")
+        let clouds = Clouds(all: 0)
+        let cityWeatherData = СityWeatherData(name: "Moscow", coord: coord, main: main, wind: wind, weather: [weather], clouds: clouds, dt: Date())
+        
+        let parseManagerStub = ParseManagerStub(model: cityWeatherData)
+        
+        let url = try XCTUnwrap(URL(string: "https://"))
+        
+        let response = HTTPURLResponse(url: url, mimeType: "application/json", expectedContentLength: -1, textEncodingName: nil)
+        
+        let urlSessionMock = URLSessionMock(data: Data(), error: nil, response: response)
+        
+        let networkManagerCW = NetworkManager(resource: cityWeatherResource, urlSession: urlSessionMock, parseManager: parseManagerStub)
+        networkManagerCW.fetchRequest(coordinates: (5, 6)) { result in
+            
+            do {
+                let model = try result.get()
+                XCTAssertEqual(model, cityWeatherData)
+            } catch {
+                XCTFail()
+            }
+        }
+    }
     
 }
 
@@ -83,8 +196,7 @@ extension NetworkManagerTests {
         let data: Data?
         let error: Error?
         let response: URLResponse?
-        
-        private (set) var lastURL: URL?
+        var lastURL: URL?
         
         
         init(data: Data?, error: Error?, response: URLResponse?) {
@@ -105,4 +217,15 @@ extension NetworkManagerTests {
         }
     }
     
+    struct ParseManagerStub: ParseManagerProtocol {
+        
+        let model: Decodable?
+        
+        func parseJSON<T>(data: Data) -> Result<T, Error> where T : Decodable {
+            if let model = model {
+                return .success(model as! T)
+            }
+            return .failure(NetworkManagerError.errorParseJSON)
+        }
+    }
 }
